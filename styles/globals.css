@@ -1,16 +1,33 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input {
+    @apply h-7 w-20 p-0.5 z-10 leading-normal
+    border border-amber-500 rounded-lg focus:ring-1 focus:ring-sky-500 focus:border-sky-500 focus:outline-none
+    bg-gray-100
+    dark:bg-gray-900;
+  }
+
+  .input-sm {
+    @apply w-10
+  }
+
+  .body {
+    @apply px-5 lg:px-10 font-sans-serif
+    bg-gray-100 text-gray-800
+    dark:bg-gray-900 dark:text-gray-100
+  }
+
+  .card {
+    @apply text-center leading-loose text-lg rounded-xl shadow-lg p-3 lg:p-6
+    bg-white
+    dark:bg-gray-800
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

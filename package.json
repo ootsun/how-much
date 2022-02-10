@@ -10,7 +10,9 @@
   "dependencies": {
     "axios": "^0.25.0",
     "mongoose": "^6.2.1",
+    "multiparty": "^4.2.3",
     "next": "latest",
+    "next-connect": "^0.12.1",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.3.1",
     "react": "latest",

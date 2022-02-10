@@ -18,8 +18,9 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  logoUrl: {
-    type: String
+  logo: {
+    data: Buffer,
+    contentType: String
   }
 });
 

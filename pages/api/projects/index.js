@@ -5,6 +5,7 @@ import log from '../../../lib/log/logger.js';
 import * as fs from 'fs';
 
 async function create(req) {
+  const {user, name} = req.body;
   await dbConnect();
   let logo = null;
   if(req.files) {
@@ -14,11 +15,11 @@ async function create(req) {
     }
   }
   const project = await Project.create({
-    createdBy: 0,
-    name: req.body.name,
+    createdBy: user.id,
+    name: name,
     logo: logo,
   });
-  log.info(`Project ${req.body.name} was created by ${req.body.user.username}`);
+  log.info(`Project ${name} was created by ${user.username}`);
   return project;
 }
 

@@ -21,7 +21,7 @@ const OperationSchema = new mongoose.Schema({
   contractAddress: {
     type: String,
   },
-  methodName: {
+  functionName: {
     type: String,
     required: true
   },

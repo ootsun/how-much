@@ -5,18 +5,18 @@ import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 
 async function create(req) {
-  const {contractAddress, methodName, project, user} = req.body;
-  if(!(await functionExists(contractAddress, methodName))) {
-    throw new Error('Method [' + methodName + '] does not exist');
+  const {contractAddress, functionName, project, user} = req.body;
+  if(!(await functionExists(contractAddress, functionName))) {
+    throw new Error('Function [' + functionName + '] does not exist');
   }
   await dbConnect();
   const operation = await Operation.create({
     createdBy: user.id,
     project: project.id,
     contractAddress: contractAddress,
-    methodName: methodName,
+    functionName: functionName,
   });
-  log.info(`Operation ${methodName} for ${project.name} was created by ${user.username}`);
+  log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
   return operation;
 }
 

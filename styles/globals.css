@@ -15,7 +15,7 @@
   }
 
   .body {
-    @apply px-5 lg:px-10 font-sans-serif
+    @apply lg:px-10 font-sans-serif
     bg-gray-100 text-gray-800
     dark:bg-gray-900 dark:text-gray-100
   }
@@ -27,7 +27,7 @@
   }
 
   .menu-box {
-    @apply flex justify-center items-center;
+    @apply flex justify-center;
   }
 
   .menu-box:first-child > span {
@@ -39,17 +39,16 @@
   }
 
   .button {
-    @apply text-lg text-center flex items-center
-    text-white shadow-lg shadow-cyan-500/40 bg-cyan-500
+    @apply text-center flex items-center
+    text-white shadow-md shadow-cyan-500/40 bg-cyan-500
     dark:shadow-none dark:bg-cyan-600
     hover:bg-cyan-600 hover:shadow-cyan-600/40 hover:dark:bg-cyan-700
     disabled:bg-cyan-400 disabled:shadow-none disabled:dark:bg-cyan-500
-    rounded-lg px-5 py-2.5 h-fit
+    rounded-lg px-3 py-1.5 h-fit
   }
 
   .button-link {
-    @apply text-base px-3 py-1.5
-    shadow-slate-500/40 bg-slate-500
+    @apply shadow-slate-500/40 bg-slate-500
     dark:shadow-none dark:bg-slate-600
     hover:bg-slate-600 hover:shadow-slate-600/40 hover:dark:bg-slate-700
   }

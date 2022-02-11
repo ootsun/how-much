@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.25.0",
+    "ethers": "^5.5.4",
     "mongoose": "^6.2.1",
     "multiparty": "^4.2.3",
     "next": "latest",
@@ -16,10 +17,11 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.3.1",
     "react": "latest",
+    "react-burger-menu": "^3.0.6",
     "react-dom": "latest",
     "react-hook-form": "^7.23.0",
     "react-icons": "^4.3.1",
-    "web3": "^1.7.0",
+    "siwe": "^1.1.0",
     "winston": "^3.5.1"
   },
   "devDependencies": {

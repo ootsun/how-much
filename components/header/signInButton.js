@@ -2,7 +2,7 @@ import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useEffect, useState} from 'react';
 
-export default function ConnectWallet() {
+export default function SignInButton() {
 
   let [domain, setDomain] = useState(null);
   let [origin, setOrigin] = useState(null);
@@ -28,16 +28,27 @@ export default function ConnectWallet() {
     init();
   }, []);
 
-  function createSiweMessage (address, statement) {
-    const message = new SiweMessage({
-      domain,
-      address,
-      statement,
-      uri: origin,
-      version: '1',
-      chainId: '1'
+  async function createSiweMessage(address, statement) {
+    const res = await fetch('/api/nonce', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({address})
     });
-    return message.prepareMessage();
+    if(res.ok) {
+      const message = new SiweMessage({
+        domain,
+        address,
+        statement,
+        uri: origin,
+        version: '1',
+        chainId: '1',
+        nonce: await res.text()
+      });
+      return message.prepareMessage();
+    }
+    return false;
   }
 
   async function connectWalletAndSignIn($event, secondTry) {
@@ -56,13 +67,28 @@ export default function ConnectWallet() {
   }
 
   async function signInWithEthereum () {
-    const message = createSiweMessage(
+    const message = await createSiweMessage(
       await signer.getAddress(),
       'Sign in with Ethereum to the app.'
     );
-    const signature = await signer.signMessage(message);
-    if(signature) {
-      setIsSignedIn(true);
+    if(message) {
+      const signature = await signer.signMessage(message);
+      if(signature) {
+        const res = await fetch('/api/verify', {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message,
+            signature
+          }),
+        });
+        if(res.ok) {
+          setIsSignedIn(true);
+        }
+        console.log(await res.json());
+      }
     }
   }
 

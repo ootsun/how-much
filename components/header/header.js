@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
-import ConnectWallet from './connectWallet.js';
+import SignInButton from './signInButton.js';
 
 export default function Header() {
   return (
@@ -16,7 +16,7 @@ export default function Header() {
                   <span className="text-fuchsia-500 rotate-[22deg] inline-block">!</span>
                 </div>
               </div>
-              <ConnectWallet/>
+              <SignInButton/>
             </div>
           </Menu>
         </span>

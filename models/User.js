@@ -1,4 +1,5 @@
-import mongoose, {Schema} from 'mongoose'
+import mongoose, {Schema} from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const UserSchema = new mongoose.Schema({
   id: {
@@ -8,16 +9,16 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  username: {
-    type: String,
-  },
   address: {
     type: String,
+    unique: true
   },
   isAdmin: {
     type: Boolean,
     default: false,
   }
 });
+
+UserSchema.plugin(uniqueValidator);
 
 export default mongoose.models.User || mongoose.model('User', UserSchema)

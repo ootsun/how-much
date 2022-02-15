@@ -10,7 +10,9 @@
   "dependencies": {
     "axios": "^0.25.0",
     "ethers": "^5.5.4",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
+    "mongoose-unique-validator": "^3.0.0",
     "multiparty": "^4.2.3",
     "next": "latest",
     "next-connect": "^0.12.1",

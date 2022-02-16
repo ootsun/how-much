@@ -1,6 +1,7 @@
 import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useEffect, useState} from 'react';
+import ErrorModal from '../error-modal.js';
 
 export default function SignInButton() {
 
@@ -10,6 +11,7 @@ export default function SignInButton() {
   let [signer, setSigner] = useState(null);
   let [walletIsConnected, setWalletIsConnected] = useState(false);
   let [isSignedIn, setIsSignedIn] = useState(false);
+  let [modalMessage, setModalMessage] = useState(null);
 
   async function init() {
     if (window.ethereum) {
@@ -29,13 +31,20 @@ export default function SignInButton() {
   }, []);
 
   async function createSiweMessage(address, statement) {
-    const res = await fetch('/api/nonce', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({address})
-    });
+    let res = null;
+    try {
+      res = await fetch('/api/nonce', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({address})
+      });
+    } catch (e) {
+      setModalMessage("An error occured. Check you internet connectivity.");
+      toggleModal('errorModal');
+      return false;
+    }
     if(res.ok) {
       const message = new SiweMessage({
         domain,
@@ -48,6 +57,8 @@ export default function SignInButton() {
       });
       return message.prepareMessage();
     }
+    setModalMessage("An server side error occurred. Please, retry later.");
+    toggleModal('errorModal');
     return false;
   }
 
@@ -62,7 +73,8 @@ export default function SignInButton() {
       init();
       connectWalletAndSignIn($event, true);
     } else {
-      console.error("No provider");
+      setModalMessage('No browser wallet detected.');
+      toggleModal('errorModal');
     }
   }
 
@@ -86,8 +98,10 @@ export default function SignInButton() {
         });
         if(res.ok) {
           setIsSignedIn(true);
+        } else {
+          setModalMessage("The server couldn't verify your signature. Please, retry later.");
+          toggleModal('errorModal');
         }
-        console.log(await res.json());
       }
     }
   }
@@ -99,5 +113,10 @@ export default function SignInButton() {
     content = <button className="button" onClick={signInWithEthereum}>Sign in with Ethereum</button>;
   }
 
-  return content;
+  return (
+    <>
+      <ErrorModal
+        modalMessage={modalMessage}/>
+      {content}
+    </>);
 }

@@ -2,6 +2,8 @@ import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useEffect, useState} from 'react';
 import ErrorModal from '../error-modal.js';
+import {getNonce, getUserAddress, isAuthenticated, verifySignature} from '../../lib/client/authHandler.js';
+import truncateEthAddress from 'truncate-eth-address';
 
 export default function SignInButton() {
 
@@ -10,8 +12,8 @@ export default function SignInButton() {
   let [provider, setProvider] = useState(null);
   let [signer, setSigner] = useState(null);
   let [walletIsConnected, setWalletIsConnected] = useState(false);
-  let [isSignedIn, setIsSignedIn] = useState(false);
   let [modalMessage, setModalMessage] = useState(null);
+  let [isLoggedIn, setIsLoggedIn] = useState(false);
 
   async function init() {
     if (window.ethereum) {
@@ -28,18 +30,13 @@ export default function SignInButton() {
 
   useEffect(() => {
     init();
+    setIsLoggedIn(isAuthenticated());
   }, []);
 
   async function createSiweMessage(address, statement) {
     let res = null;
     try {
-      res = await fetch('/api/nonce', {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({address})
-      });
+      res = await getNonce(address);
     } catch (e) {
       setModalMessage("An error occured. Check you internet connectivity.");
       toggleModal('errorModal');
@@ -86,19 +83,8 @@ export default function SignInButton() {
     if(message) {
       const signature = await signer.signMessage(message);
       if(signature) {
-        const res = await fetch('/api/verify', {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message,
-            signature
-          }),
-        });
-        if(res.ok) {
-          setIsSignedIn(true);
-        } else {
+        const res = verifySignature(message, signature);
+        if(!res) {
           setModalMessage("The server couldn't verify your signature. Please, retry later.");
           toggleModal('errorModal');
         }
@@ -107,8 +93,8 @@ export default function SignInButton() {
   }
 
   let content = <button className="button" onClick={connectWalletAndSignIn}>Connect your wallet & sign in with Ethereum</button>;
-  if(isSignedIn) {
-    content = <p>You are signed in!</p>;
+  if(isLoggedIn) {
+    content = <p>You are signed in as {truncateEthAddress(getUserAddress())}</p>;
   } else if(walletIsConnected) {
     content = <button className="button" onClick={signInWithEthereum}>Sign in with Ethereum</button>;
   }

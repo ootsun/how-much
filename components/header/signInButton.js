@@ -12,9 +12,10 @@ export default function SignInButton() {
   let [provider, setProvider] = useState(null);
   let [signer, setSigner] = useState(null);
   let [walletIsConnected, setWalletIsConnected] = useState(false);
+  let [isLoading, setIsLoading] = useState(false);
   let [modalMessage, setModalMessage] = useState(null);
 
-  const { isAuthenticated, setIsAuthenticated } = useContext(authContext);
+  const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
 
   async function init() {
     if (window.ethereum) {
@@ -24,7 +25,7 @@ export default function SignInButton() {
       setProvider(p);
       setSigner(p.getSigner());
       const account = await p.send('eth_accounts', [])
-        .catch((e)=>console.error(e));
+        .catch((e) => console.error(e));
       setWalletIsConnected(account && account.length > 0);
     }
   }
@@ -38,11 +39,11 @@ export default function SignInButton() {
     try {
       res = await getNonce(address);
     } catch (e) {
-      setModalMessage("An error occured. Check you internet connectivity.");
+      setModalMessage('An error occured. Check you internet connectivity.');
       toggleModal('errorModal');
       return false;
     }
-    if(res.ok) {
+    if (res.ok) {
       const message = new SiweMessage({
         domain,
         address,
@@ -54,52 +55,63 @@ export default function SignInButton() {
       });
       return message.prepareMessage();
     }
-    setModalMessage("An server side error occurred. Please, retry later.");
+    setModalMessage('An server side error occurred. Please, retry later.');
     toggleModal('errorModal');
     return false;
   }
 
   async function connectWalletAndSignIn($event, secondTry) {
-    if(provider) {
+    setIsLoading(true);
+    if (provider) {
       const address = await provider.send('eth_requestAccounts', [])
         .catch(() => console.log('user rejected request'));
-      if(address) {
-        signInWithEthereum();
+      if (address) {
+        await signInWithEthereum();
       }
-    } else if(!secondTry) {
-      init();
-      connectWalletAndSignIn($event, true);
+    } else if (!secondTry) {
+      await init();
+      await connectWalletAndSignIn($event, true);
     } else {
       setModalMessage('No browser wallet detected.');
       toggleModal('errorModal');
+      setIsLoading(false);
     }
   }
 
-  async function signInWithEthereum () {
+  async function signInWithEthereum() {
+    setIsLoading(true);
     const message = await createSiweMessage(
       await signer.getAddress(),
       'Sign in with Ethereum to the app.'
     );
-    if(message) {
-      const signature = await signer.signMessage(message);
-      if(signature) {
-        const res = await verifySignature(message, signature);
-        if(res) {
-          setIsAuthenticated(true);
+    if (message) {
+      try {
+        const signature = await signer.signMessage(message);
+        if (signature) {
+          const res = await verifySignature(message, signature);
+          if (res) {
+            setIsAuthenticated(true);
+          } else {
+            setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
+            toggleModal('errorModal');
+          }
         }
-        else {
-          setModalMessage("The server couldn't verify your signature. Please, retry later.");
-          toggleModal('errorModal');
-        }
+      } catch (e) {
+        console.log(e);
       }
     }
+    setIsLoading(false);
   }
 
-  let content = <button className="button" onClick={connectWalletAndSignIn}>Connect your wallet & sign in with Ethereum</button>;
-  if(isAuthenticated) {
+  let content = <button className="button" onClick={connectWalletAndSignIn} disabled={isLoading}>
+    Connect your wallet & sign in with Ethereum
+  </button>;
+  if (isAuthenticated) {
     content = <p>You are signed in as {truncateEthAddress(getUserAddress())}</p>;
-  } else if(walletIsConnected) {
-    content = <button className="button" onClick={signInWithEthereum}>Sign in with Ethereum</button>;
+  } else if (walletIsConnected) {
+    content = <button className="button" onClick={signInWithEthereum} disabled={isLoading}>
+      Sign in with Ethereum
+    </button>;
   }
 
   return (

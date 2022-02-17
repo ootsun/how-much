@@ -1,8 +1,14 @@
 import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
 import SignInButton from './signInButton.js';
+import SignOutButton from './signOutButton.js';
+import {useContext} from 'react';
+import {authContext} from '../../lib/client/authHandler.js';
 
 export default function Header() {
+
+  const { isAuthenticated } = useContext(authContext);
+
   return (
     <header className="flex h-16">
       <div className="menu-box flex-1">
@@ -17,6 +23,7 @@ export default function Header() {
                 </div>
               </div>
               <SignInButton/>
+              {isAuthenticated && <SignOutButton/>}
             </div>
           </Menu>
         </span>

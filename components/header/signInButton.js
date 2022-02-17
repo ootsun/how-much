@@ -1,8 +1,8 @@
 import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import ErrorModal from '../error-modal.js';
-import {getNonce, getUserAddress, isAuthenticated, verifySignature} from '../../lib/client/authHandler.js';
+import {authContext, getNonce, getUserAddress, verifySignature} from '../../lib/client/authHandler.js';
 import truncateEthAddress from 'truncate-eth-address';
 
 export default function SignInButton() {
@@ -13,7 +13,8 @@ export default function SignInButton() {
   let [signer, setSigner] = useState(null);
   let [walletIsConnected, setWalletIsConnected] = useState(false);
   let [modalMessage, setModalMessage] = useState(null);
-  let [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const { isAuthenticated, setIsAuthenticated } = useContext(authContext);
 
   async function init() {
     if (window.ethereum) {
@@ -30,7 +31,6 @@ export default function SignInButton() {
 
   useEffect(() => {
     init();
-    setIsLoggedIn(isAuthenticated());
   }, []);
 
   async function createSiweMessage(address, statement) {
@@ -83,8 +83,11 @@ export default function SignInButton() {
     if(message) {
       const signature = await signer.signMessage(message);
       if(signature) {
-        const res = verifySignature(message, signature);
-        if(!res) {
+        const res = await verifySignature(message, signature);
+        if(res) {
+          setIsAuthenticated(true);
+        }
+        else {
           setModalMessage("The server couldn't verify your signature. Please, retry later.");
           toggleModal('errorModal');
         }
@@ -93,7 +96,7 @@ export default function SignInButton() {
   }
 
   let content = <button className="button" onClick={connectWalletAndSignIn}>Connect your wallet & sign in with Ethereum</button>;
-  if(isLoggedIn) {
+  if(isAuthenticated) {
     content = <p>You are signed in as {truncateEthAddress(getUserAddress())}</p>;
   } else if(walletIsConnected) {
     content = <button className="button" onClick={signInWithEthereum}>Sign in with Ethereum</button>;

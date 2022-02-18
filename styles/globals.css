@@ -26,31 +26,30 @@
     dark:bg-gray-800
   }
 
-  .menu-box {
-    @apply flex justify-center;
+  .link-wrapper {
+    @apply relative inline-flex items-center justify-center
+    p-0.5 overflow-hidden text-sm font-medium
+    rounded-lg bg-gradient-to-br from-orange-500 to-cyan-500
+    hover:text-white dark:text-white focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800
   }
 
-  .menu-box:first-child > span {
-    @apply mr-auto;
-  }
-
-  .menu-box:last-child > span {
-    @apply ml-auto;
+  .link-wrapper > a {
+    @apply relative px-5 py-1.5 transition-all ease-in duration-75
+    bg-gray-100 dark:bg-gray-900 rounded-md
   }
 
   .button {
-    @apply text-center flex items-center
-    text-white shadow-md shadow-cyan-500/40 bg-cyan-500
-    dark:shadow-none dark:bg-cyan-600
-    hover:bg-cyan-600 hover:shadow-cyan-600/40 hover:dark:bg-cyan-700
-    disabled:bg-cyan-400 disabled:shadow-none disabled:dark:bg-cyan-500
-    rounded-lg px-3 py-1.5 h-fit
+    @apply text-white bg-gradient-to-br from-cyan-500 to-fuchsia-500
+    hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800
+    font-medium rounded-lg text-sm px-5 py-2 text-center
   }
 
-  .button-link {
-    @apply shadow-slate-500/40 bg-slate-500
-    dark:shadow-none dark:bg-slate-600
-    hover:bg-slate-600 hover:shadow-slate-600/40 hover:dark:bg-slate-700
+  .menu-wrapper > *{
+    @apply my-2.5
+  }
+
+  .menu-wrapper > .link-wrapper > a {
+    @apply bg-gray-700 dark:bg-gray-900 text-white
   }
 }
 

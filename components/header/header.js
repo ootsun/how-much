@@ -4,6 +4,7 @@ import SignInButton from './signInButton.js';
 import SignOutButton from './signOutButton.js';
 import {useContext} from 'react';
 import {authContext} from '../../lib/client/authHandler.js';
+import {ProfileAvatar} from './profile-avatar.js';
 
 export default function Header() {
 
@@ -12,7 +13,7 @@ export default function Header() {
   return (
     <header className="flex h-16">
       <div className="menu-box flex-1">
-        <span>
+        <span className="md:hidden">
           <Menu styles={burgerStyles}>
             <div className="flex w-full">
               <div className="flex justify-center mb-5">
@@ -22,7 +23,7 @@ export default function Header() {
                   <span className="text-fuchsia-500 rotate-[22deg] inline-block">!</span>
                 </div>
               </div>
-              <SignInButton/>
+              {!isAuthenticated && <SignInButton/>}
               {isAuthenticated && <SignOutButton/>}
             </div>
           </Menu>
@@ -45,6 +46,12 @@ export default function Header() {
             <span className="text-pink-500 rotate-[22deg] inline-block">!</span>
           </a>
         </Link>
+        {!isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
+        {isAuthenticated && <>
+          <ProfileAvatar/>
+          <div className="hidden md:inline"><SignOutButton/></div>
+        </>
+        }
       </div>
     </header>
   );

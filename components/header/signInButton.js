@@ -106,9 +106,7 @@ export default function SignInButton() {
   let content = <button className="button" onClick={connectWalletAndSignIn} disabled={isLoading}>
     Connect your wallet & sign in with Ethereum
   </button>;
-  if (isAuthenticated) {
-    content = <p>You are signed in as {truncateEthAddress(getUserAddress())}</p>;
-  } else if (walletIsConnected) {
+  if (walletIsConnected) {
     content = <button className="button" onClick={signInWithEthereum} disabled={isLoading}>
       Sign in with Ethereum
     </button>;

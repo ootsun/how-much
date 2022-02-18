@@ -4,9 +4,13 @@ import Nonce from '../../../models/Nonce.js';
 import User from '../../../models/User.js';
 import jwt from 'jsonwebtoken';
 import log from '../../../lib/log/logger.js';
+import Avatar from 'avatar-builder';
+import * as cloudinary from 'cloudinary';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_VALIDITY_DURATION = process.env.JWT_VALIDITY_DURATION;
+
+const avatar = Avatar.builder(Avatar.Image.circleMask(Avatar.Image.identicon()), 128, 128, {cache: Avatar.Cache.lru()});
 
 async function verify(req) {
   const {message, signature} = req.body;
@@ -25,7 +29,12 @@ async function verify(req) {
 
     let user = await User.findOne({address: fields.address});
     if(!user) {
-      user = await User.create({address: fields.address});
+      const image = await avatar.create(fields.address);
+      const upload = await cloudinary.v2.uploader.upload(`data:image/png;base64,${image.toString('base64')}`, {
+        public_id: "avatars/" + fields.address,
+      });
+      user = await User.create({address: fields.address, avatarUrl: upload.secure_url});
+      log.info(`User with address ${user.address} successfully created`);
     }
 
     const token = jwt.sign({user: user}, JWT_SECRET, {expiresIn: JWT_VALIDITY_DURATION}, null);

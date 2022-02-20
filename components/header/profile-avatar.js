@@ -11,7 +11,7 @@ export function ProfileAvatar() {
         className="inline min-w-[3rem] min-h-[3rem] border-2 border-gray-400 rounded-full"
       />
       <div
-        className="text-xs bg-orange-300 rounded-lg text-orange-700 relative left-[-4.1rem] bottom-[-1.6rem] min-w-max p-1">{truncateEthAddress(getUserAddress())}</div>
+        className="text-xs bg-orange-500 rounded-lg text-white relative left-[-4.1rem] bottom-[-1.6rem] min-w-max p-1">{truncateEthAddress(getUserAddress())}</div>
     </div>
   );
 }

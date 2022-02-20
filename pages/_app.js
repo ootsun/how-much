@@ -16,9 +16,11 @@ function MyApp({Component, pageProps}) {
   return (
     <authContext.Provider value={{isAuthenticated, setIsAuthenticated}}>
       <div className="flex justify-between flex-col min-h-screen">
-        <Header/>
-        <div className="px-5">
-          <Component {...pageProps}/>
+        <div>
+          <Header/>
+          <main className="px-5 mt-5">
+            <Component {...pageProps}/>
+          </main>
         </div>
         <Footer/>
       </div>

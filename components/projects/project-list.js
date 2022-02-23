@@ -1,4 +1,6 @@
-export function ProjectList() {
+import {Logo} from './logo.js';
+
+export function ProjectList({projects}) {
 
   return (
     <div className="flex flex-col">
@@ -38,24 +40,19 @@ export function ProjectList() {
               </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                <tr className="hover:bg-gray-100 dark:hover:bg-gray-700">
+              {projects.map((project, i) =>
+                <tr className="hover:bg-gray-100 dark:hover:bg-gray-700" key={i}>
                   <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Ethereum
+                    {project.name}
                   </td>
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">$1999</td>
+                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <Logo url={project.logoUrl} alt={project.name}/>
+                  </td>
                   <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
                     <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                   </td>
                 </tr>
-                <tr className="hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Aave
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">$1999</td>
-                  <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                    <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                  </td>
-                </tr>
+              )}
               </tbody>
             </table>
           </div>

@@ -28,11 +28,8 @@ export function ProjectForm() {
   }
 
   async function onSubmit(form) {
-    const originalFileName = form.logo[0].name;
-    const tokens = originalFileName.split('.');
-    const extension = tokens[tokens.length - 1];
     const name = capitalizeFirstLetter(form.name);
-    const fileName = name + '.' + extension;
+    const fileName = form.logo[0].name;
 
     try {
       let res = await getUploadSignature(fileName);

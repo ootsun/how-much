@@ -1,13 +1,16 @@
 import functionExists from '../../../lib/ethereum/operationValidator.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Operation from '../../../models/Operation.js';
+// Keep the import -> need to initialize the schema
+import User from '../../../models/User.js';
+import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 
-async function findAll(req) {
+async function findAll() {
   await dbConnect();
   return Operation.find()
-    .populate("user", "address")
+    .populate("createdBy", "address")
     .populate("project", "name logoUrl");
 }
 

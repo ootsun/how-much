@@ -48,4 +48,4 @@ async function verify(req) {
   }
 }
 
-export default initApiRoute(null, verify, null, null, false);
+export default initApiRoute(null, {handle: verify}, null, null);

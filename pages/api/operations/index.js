@@ -4,6 +4,13 @@ import Operation from '../../../models/Operation.js';
 import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 
+async function findAll(req) {
+  await dbConnect();
+  return Operation.find()
+    .populate("user", "address")
+    .populate("project", "name logoUrl");
+}
+
 async function create(req) {
   const {contractAddress, functionName, project, user} = req.body;
   if(!(await functionExists(contractAddress, functionName))) {
@@ -20,4 +27,4 @@ async function create(req) {
   return operation;
 }
 
-export default initApiRoute(null, create, null, null, true);
+export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, null, null);

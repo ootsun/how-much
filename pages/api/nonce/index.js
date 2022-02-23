@@ -4,7 +4,7 @@ import Nonce from '../../../models/Nonce.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import isValid from '../../../lib/ethereum/addressValidator.js';
 
-async function createNonce(req) {
+async function create(req) {
   const {address} = req.body;
   if(!isValid(address)) {
     throw new Error('Address [' + address + '] is invalid');
@@ -21,4 +21,4 @@ async function createNonce(req) {
   return nonce;
 }
 
-export default initApiRoute(null, createNonce, null, null, false);
+export default initApiRoute(null, {handle: create}, null, null);

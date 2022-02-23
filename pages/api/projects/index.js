@@ -2,32 +2,29 @@ import initApiRoute from '../../../lib/utils/restApiHelper.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
-import * as fs from 'fs';
+import {getUser} from '../../../lib/utils/jwtTokenDecoder.js';
+import {capitalizeFirstLetter} from '../../../lib/utils/stringUtils.js';
 
 async function create(req) {
-  const {user, name} = req.body;
+  let {name, logoUrl} = req.body;
+  name = capitalizeFirstLetter(name);
+
   await dbConnect();
-  let logo = null;
-  if(req.files) {
-    logo = {
-      data: fs.readFileSync(req.files.logo[0].path),
-      contentType: req.files.logo[0].headers['content-type']
-    }
-  }
+  const user = getUser(req);
+
   const project = await Project.create({
-    createdBy: user.id,
+    createdBy: user._id,
     name: name,
-    logo: logo,
+    logoUrl: logoUrl,
   });
-  log.info(`Project ${name} was created by ${user.username}`);
+  log.info(`Project ${name} was created by ${user.address}`);
   return project;
 }
 
-export default initApiRoute(null, create, null, null, true);
-
-// Required to use the fileUploadMiddleware
-export const config = {
-  api: {
-    bodyParser: false
-  }
+async function findAll(req) {
+  await dbConnect();
+  return Project.find()
+    .populate("user", "address");
 }
+
+export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, null, null);

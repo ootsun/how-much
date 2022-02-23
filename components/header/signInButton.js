@@ -4,6 +4,7 @@ import {useContext, useEffect, useState} from 'react';
 import ErrorModal from '../error-modal.js';
 import {authContext, getNonce, getUserAddress, verifySignature} from '../../lib/client/authHandler.js';
 import truncateEthAddress from 'truncate-eth-address';
+import {LoadingCircle} from '../loading-circle.js';
 
 export default function SignInButton() {
 
@@ -104,11 +105,11 @@ export default function SignInButton() {
   }
 
   let content = <button className="button" onClick={connectWalletAndSignIn} disabled={isLoading}>
-    Connect your wallet & sign in with Ethereum
+    {isLoading && <LoadingCircle/>}Connect your wallet & sign in
   </button>;
   if (walletIsConnected) {
     content = <button className="button" onClick={signInWithEthereum} disabled={isLoading}>
-      Sign in with Ethereum
+      {isLoading && <LoadingCircle/>}Sign in
     </button>;
   }
 

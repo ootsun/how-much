@@ -11,10 +11,12 @@ const UserSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    unique: true
+    unique: true,
+    required: true
   },
   avatarUrl: {
-    type: String
+    type: String,
+    required: true
   },
   isAdmin: {
     type: Boolean,

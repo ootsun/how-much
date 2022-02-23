@@ -6,7 +6,7 @@ import {authContext, isStillAuthenticated} from '../lib/client/authHandler.js';
 
 function MyApp({Component, pageProps}) {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
     import('flowbite');

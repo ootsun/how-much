@@ -19,7 +19,7 @@ export default function Header() {
           <Menu styles={burgerStyles}>
             <div className="flex w-full justify-center flex-col items-center menu-wrapper">
               <WenClaim/>
-              {!isAuthenticated && <SignInButton/>}
+              {isAuthenticated !== null && !isAuthenticated && <SignInButton/>}
               {isAuthenticated &&
                 <>
                   <NavItems inBurger={true}/>
@@ -49,7 +49,7 @@ export default function Header() {
         <span className="hidden md:inline-flex ">
           <WenClaim/>
         </span>
-        {!isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
+        {isAuthenticated !== null && !isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
         {isAuthenticated && <>
           <div className="ml-auto md:ml-0"><ProfileAvatar/></div>
           <div className="hidden md:inline"><SignOutButton/></div>

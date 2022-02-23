@@ -31,7 +31,15 @@
     @apply text-white font-medium text-center text-sm
     bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-800
     disabled:bg-cyan-400 disabled:cursor-not-allowed
-    rounded-lg px-5 py-2.5 mr-2 mb-2
+    rounded-lg px-5 py-2.5
+  }
+
+  .link-active {
+    @apply text-cyan-600 dark:text-white
+  }
+
+  .link {
+    @apply block hover:text-cyan-600 dark:text-gray-400 dark:hover:text-white
   }
 
   .menu-wrapper > *{
@@ -40,6 +48,23 @@
 
   .menu-wrapper > .link-wrapper > a {
     @apply bg-gray-700 dark:bg-gray-900 text-white
+  }
+
+  .input {
+    @apply block py-2.5 px-0 w-full text-sm appearance-none
+    bg-transparent border-0 border-b-2 border-gray-300
+    dark:text-white dark:border-gray-600 dark:focus:border-fuchsia-500
+    focus:outline-none focus:ring-0 focus:border-fuchsia-600
+  }
+
+  .label {
+    @apply absolute top-3 -z-10 text-sm text-gray-500
+    dark:text-gray-400
+    duration-300 transform -translate-y-6 scale-75 origin-[0]
+  }
+
+  .error {
+    @apply text-sm text-orange-500
   }
 }
 

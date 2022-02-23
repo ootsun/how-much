@@ -30,7 +30,9 @@ export default function Header() {
           </Menu>
         </span>
         {isAuthenticated &&
-          <NavItems/>
+          <div className="hidden md:block">
+            <NavItems/>
+          </div>
         }
       </div>
       <h1 className="text-center text-4xl font-cursive flex-2 flex items-center mx-10">

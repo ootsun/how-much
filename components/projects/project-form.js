@@ -34,17 +34,18 @@ export function ProjectForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} autocomplete="off">
+      <input autoComplete="false" name="hidden" type="text" className="hidden"/>
       <div className="grid sm:grid-cols-2 sm:gap-6">
         <div className="relative z-0 mb-6 w-full group">
           <input type="text"
-                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                 className="input peer"
                  placeholder=" "
                  {...register('name', {required: 'Mandatory field'})}/>
           <label htmlFor="name"
-                 className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                 className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
             Project name</label>
-          {errors.name && <span>{errors.name.message}</span>}
+          {errors.name && <span className="error">{errors.name.message}</span>}
         </div>
         <div className="relative z-0 mb-6 w-full group">
           <input aria-describedby="logo_help" {...register('logo', {required: 'Mandatory field'})} type="file"
@@ -63,6 +64,5 @@ export function ProjectForm() {
           Create
         </button>
       </div>
-    </form>
-  );
+    </form>);
 }

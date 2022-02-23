@@ -2,8 +2,7 @@ import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useContext, useEffect, useState} from 'react';
 import ErrorModal from '../error-modal.js';
-import {authContext, getNonce, getUserAddress, verifySignature} from '../../lib/client/authHandler.js';
-import truncateEthAddress from 'truncate-eth-address';
+import {authContext, getNonce, verifySignature} from '../../lib/client/authHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 
 export default function SignInButton() {

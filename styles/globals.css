@@ -39,7 +39,7 @@
   }
 
   .link {
-    @apply block hover:text-cyan-600 dark:text-gray-400 dark:hover:text-white
+    @apply block hover:text-cyan-600 dark:text-gray-400 dark:hover:text-white transition duration-300
   }
 
   .menu-wrapper > *{
@@ -71,4 +71,19 @@
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+#toast-success {
+  animation: toast 1s;
+}
+
+@keyframes toast {
+  from {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }

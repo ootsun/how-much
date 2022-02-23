@@ -4,10 +4,12 @@ import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
 import {useState} from 'react';
 import ErrorModal from '../error-modal.js';
+import {Toast} from '../toast.js';
 
 export function ProjectForm() {
 
   const [modalMessage, setModalMessage] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
 
   const {register, handleSubmit, formState, reset} = useForm({
     mode: 'onTouched'
@@ -58,6 +60,7 @@ export function ProjectForm() {
         return;
       }
       reset();
+      setToastMessage('Project successfully created');
     } catch (e) {
       setModalMessage('An error occured. Check you internet connectivity.');
       toggleModal('errorModal');
@@ -67,9 +70,10 @@ export function ProjectForm() {
   return (
     <>
       <ErrorModal modalMessage={modalMessage}/>
+      <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
-        <div className="grid sm:grid-cols-3 sm:gap-6">
+        <div className="grid sm:grid-cols-2 sm:gap-6">
           <div className="relative z-0 mb-6 w-full group">
             <input type="text"
                    className="input peer"

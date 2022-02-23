@@ -1,5 +1,5 @@
 import mongoose, {Schema} from 'mongoose'
-import User from './User.js';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const ProjectSchema = new mongoose.Schema({
   id: {
@@ -16,12 +16,15 @@ const ProjectSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  logo: {
-    data: Buffer,
-    contentType: String
+  logoUrl: {
+    type: String,
+    required: true,
   }
 });
+
+ProjectSchema.plugin(uniqueValidator);
 
 export default mongoose.models.Project || mongoose.model('Project', ProjectSchema)

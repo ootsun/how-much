@@ -1,5 +1,6 @@
 import Head from 'next/head.js';
 import {ProjectForm} from '../components/projects/project-form.js';
+import {ProjectList} from '../components/projects/project-list.js';
 
 export default function Projects() {
 
@@ -13,7 +14,7 @@ export default function Projects() {
           <ProjectForm/>
         </section>
         <section className="card">
-          Liste
+          <ProjectList/>
         </section>
       </main>
     </>

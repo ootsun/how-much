@@ -1,9 +1,9 @@
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Project from '../../../models/Project.js';
-import log from '../../../lib/log/logger.js';
 import {getUser} from '../../../lib/utils/jwtTokenDecoder.js';
 import {capitalizeFirstLetter} from '../../../lib/utils/stringUtils.js';
+import log from '../../../lib/log/logger.js';
 
 async function create(req) {
   let {name, logoUrl} = req.body;

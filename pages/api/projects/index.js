@@ -32,47 +32,8 @@ export async function findAll() {
     .populate('createdBy', 'address');
 }
 
-async function update(req) {
-  let {_id, name, logoUrl} = req.body;
-  name = capitalizeFirstLetter(name);
-
-  await dbConnect();
-  const user = getUser(req);
-
-  const project = await Project.findByIdAndUpdate(_id, {
-      name,
-      logoUrl
-    },
-    {
-      runValidators: true
-    });
-  if (!project) {
-    throw new Error('Project with _id ' + _id + ' not found');
-  }
-  log.info(`Project ${name} was updated by ${user.address}`);
-  return project;
-}
-
-async function deleteProject(req) {
-  let {_id} = req.body;
-
-  await dbConnect();
-  const user = getUser(req);
-
-  const project = await Project.findByIdAndDelete(_id);
-  if (!project) {
-    throw new Error('Project with _id ' + _id + ' not found');
-  }
-
-  const res = await cloudinary.v2.uploader.destroy(PROJECTS_FOLDER_NAME + "/" + project.name);
-  log.info(`Delete cloudinary image result : ${res.result}`);
-
-  log.info(`Project ${project.name} was deleted by ${user.address}`);
-  return project;
-}
-
 export default initApiRoute(
   {handle: findAll},
   {handle: create, checkAuth: true},
-  {handle: update, checkAuth: true},
-  {handle: deleteProject, checkAuth: true});
+  null,
+  null);

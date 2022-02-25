@@ -26,7 +26,31 @@ async function create(req) {
 export async function findAll() {
   await dbConnect();
   return Project.find()
-    .populate("createdBy", "address");
+    .populate('createdBy', 'address');
 }
 
-export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, null, null);
+async function update(req) {
+  let {_id, name, logoUrl} = req.body;
+  name = capitalizeFirstLetter(name);
+
+  await dbConnect();
+  const user = getUser(req);
+
+  const project = await Project.findByIdAndUpdate(_id, {
+      name,
+      logoUrl
+    },
+    {
+      runValidators: true
+    });
+  if (!project) {
+    throw new Error('Project with _id ' + _id + ' not found');
+  }
+  log.info(`Project ${name} was updated by ${user.address}`);
+  return project;
+}
+
+export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, {
+  handle: update,
+  checkAuth: true
+}, null);

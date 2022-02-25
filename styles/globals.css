@@ -34,6 +34,10 @@
     rounded-lg px-5 py-2.5
   }
 
+  .secondary-button {
+    @apply text-gray-900 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100
+  }
+
   .link-active {
     @apply text-cyan-600 dark:text-white
   }

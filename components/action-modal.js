@@ -1,8 +1,7 @@
-export default function ErrorModal({message, customId}) {
+export default function ActionModal({title, message, callback, customId}) {
 
-  const title = "Error";
-
-  function handleClose() {
+  function handleClose(res) {
+    callback(res);
     toggleModal(customId, false);
   }
 
@@ -21,7 +20,8 @@ export default function ErrorModal({message, customId}) {
             </p>
           </div>
           <div className="flex flex-row-reverse py-3 rounded-b">
-            <button onClick={handleClose} type="button" className="button">Close</button>
+            <button onClick={() => handleClose(true)} type="button" className="button">Confirm</button>
+            <button onClick={() => handleClose(false)} type="button" className="button secondary-button mr-4">Cancel</button>
           </div>
         </div>
       </div>

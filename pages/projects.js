@@ -2,8 +2,12 @@ import Head from 'next/head.js';
 import {ProjectForm} from '../components/projects/project-form.js';
 import {ProjectList} from '../components/projects/project-list.js';
 import {findAll} from './api/projects/index.js';
+import {useState} from 'react';
 
 export default function Projects({projects}) {
+
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [updateList, setUpdateList] = useState(false);
 
   return (
     <>
@@ -12,10 +16,10 @@ export default function Projects({projects}) {
       </Head>
       <main>
         <section className="card mb-4">
-          <ProjectForm/>
+          <ProjectForm selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
-          <ProjectList projects={projects}/>
+          <ProjectList projects={projects} setSelectedProject={setSelectedProject} updateList={updateList} setUpdateList={setUpdateList}/>
         </section>
       </main>
     </>

@@ -4,6 +4,7 @@ import {useContext, useEffect, useState} from 'react';
 import ErrorModal from '../error-modal.js';
 import {authContext, getNonce, verifySignature} from '../../lib/client/authHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
+import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 
 export default function SignInButton() {
 
@@ -39,7 +40,7 @@ export default function SignInButton() {
     try {
       res = await getNonce(address);
     } catch (e) {
-      setModalMessage('An error occured. Check you internet connectivity.');
+      setModalMessage(ERROR_MESSAGES.connection);
       toggleModal('errorModal');
       return false;
     }
@@ -55,7 +56,7 @@ export default function SignInButton() {
       });
       return message.prepareMessage();
     }
-    setModalMessage('An server side error occurred. Please, retry later.');
+    setModalMessage(ERROR_MESSAGES.serverSide);
     toggleModal('errorModal');
     return false;
   }
@@ -115,7 +116,7 @@ export default function SignInButton() {
   return (
     <>
       <ErrorModal
-        modalMessage={modalMessage}/>
+        message={modalMessage}/>
       {content}
     </>);
 }

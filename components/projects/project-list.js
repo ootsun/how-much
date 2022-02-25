@@ -1,9 +1,38 @@
 import {Logo} from './logo.js';
+import {useEffect, useState} from 'react';
+import {findAll} from '../../lib/client/projectHandler.js';
+import ErrorModal from '../error-modal.js';
 
-export function ProjectList({projects}) {
+export function ProjectList({projects, setSelectedProject, updateList, setUpdateList}) {
+
+  const [errorModalMessage, setErrorModalMessage] = useState(null);
+  const [projectsState, setProjectsState] = useState([]);
+
+  useEffect(() => {
+    setProjectsState(projects);
+  }, []);
+
+  useEffect(async () => {
+    if (updateList) {
+      try {
+        const res = await findAll();
+        if(!res.ok) {
+          setErrorModalMessage('A server side error occurred. We could not load the projects.');
+          toggleModal('projectListErrorModal');
+          return;
+        }
+        setProjectsState(await res.json());
+      } catch (e) {
+        setErrorModalMessage('An error occurred. We could not load the projects. Check you internet connectivity.');
+        toggleModal('projectListErrorModal');
+      }
+      setUpdateList(false);
+    }
+  }, [updateList]);
 
   return (
     <div className="flex flex-col">
+      <ErrorModal message={errorModalMessage} customId="projectListErrorModal"/>
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle dark:bg-gray-800">
           <div className="mb-4">
@@ -27,11 +56,11 @@ export function ProjectList({projects}) {
               <thead className="bg-gray-100 dark:bg-gray-700">
               <tr>
                 <th scope="col"
-                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                    className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400">
                   Name
                 </th>
                 <th scope="col"
-                    className="py-3 px-6 text-xs font-medium tracking-wider text-left text-gray-700 uppercase dark:text-gray-400">
+                    className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400">
                   Logo
                 </th>
                 <th scope="col" className="relative py-3 px-6">
@@ -40,7 +69,7 @@ export function ProjectList({projects}) {
               </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-              {projects.map((project, i) =>
+              {projectsState.map((project, i) =>
                 <tr className="hover:bg-gray-100 dark:hover:bg-gray-700" key={i}>
                   <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {project.name}
@@ -49,7 +78,8 @@ export function ProjectList({projects}) {
                     <Logo url={project.logoUrl} alt={project.name}/>
                   </td>
                   <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                    <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="#" onClick={() => setSelectedProject(project)}
+                       className="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                   </td>
                 </tr>
               )}

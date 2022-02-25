@@ -35,7 +35,7 @@ export default function Header() {
           </div>
         }
       </div>
-      <h1 className="text-center text-4xl font-cursive flex-2 flex items-center mx-10">
+      <h1 className="text-center text-4xl font-cursive flex-2 flex items-center mx-3 md:mx-6">
         <Link href="/">
           <a>
             <span className="m-1">How much</span>
@@ -62,11 +62,11 @@ export default function Header() {
 
 const burgerStyles = {
   bmBurgerButton: {
-    position: 'fixed',
+    position: 'relative',
     width: '36px',
     height: '30px',
-    left: '1.25rem',
-    top: '18px'
+    'margin-left': '1.25rem',
+    'margin-top': '1rem',
   },
   bmBurgerBars: {
     background: '#373a47'

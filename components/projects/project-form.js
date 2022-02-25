@@ -162,7 +162,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
         <div className="grid sm:grid-cols-3 sm:gap-4">
-          <div className="relative mb-6 w-full">
+          <div className="relative mb-6 w-full z-0">
             <input type="text"
                    className="input peer"
                    placeholder=" "

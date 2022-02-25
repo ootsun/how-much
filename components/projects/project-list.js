@@ -6,22 +6,29 @@ import ErrorModal from '../error-modal.js';
 export function ProjectList({projects, setSelectedProject, updateList, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
-  const [projectsState, setProjectsState] = useState([]);
+  const [filter, setFilter] = useState(null);
+  const [allProjects, setAllProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
 
   useEffect(() => {
-    setProjectsState(projects);
+    setAllProjects(projects);
+    filterList();
   }, []);
+
+  useEffect(() => {
+    filterList();
+  }, [filter, allProjects])
 
   useEffect(async () => {
     if (updateList) {
       try {
         const res = await findAll();
-        if(!res.ok) {
+        if (!res.ok) {
           setErrorModalMessage('A server side error occurred. We could not load the projects.');
           toggleModal('projectListErrorModal');
           return;
         }
-        setProjectsState(await res.json());
+        setAllProjects(await res.json());
       } catch (e) {
         setErrorModalMessage('An error occurred. We could not load the projects. Check you internet connectivity.');
         toggleModal('projectListErrorModal');
@@ -29,6 +36,18 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
       setUpdateList(false);
     }
   }, [updateList]);
+
+  function onSearchInputChanged(e) {
+    setFilter(e.target.value.toLowerCase());
+  }
+
+  function filterList() {
+    if(filter) {
+      setFilteredProjects(allProjects.filter(project => project.name.toLowerCase().includes(filter)));
+    } else {
+      setFilteredProjects(allProjects);
+    }
+  }
 
   return (
     <div className="flex flex-col">
@@ -48,7 +67,8 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
               </div>
               <input type="text" id="table-search"
                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                     placeholder="Search for projects"/>
+                     placeholder="Search for projects"
+                     onChange={onSearchInputChanged}/>
             </div>
           </div>
           <div className="overflow-hidden">
@@ -69,7 +89,7 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
               </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-              {projectsState.map((project, i) =>
+              {filteredProjects.map((project, i) =>
                 <tr className="hover:bg-gray-100 dark:hover:bg-gray-700" key={i}>
                   <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {project.name}

@@ -6,6 +6,9 @@ import User from '../../../models/User.js';
 import {getUser} from '../../../lib/utils/jwtTokenDecoder.js';
 import {capitalizeFirstLetter} from '../../../lib/utils/stringUtils.js';
 import log from '../../../lib/log/logger.js';
+import * as cloudinary from 'cloudinary';
+
+const PROJECTS_FOLDER_NAME = process.env.CLOUDINARY_PROJECTS_FOLDER_NAME;
 
 async function create(req) {
   let {name, logoUrl} = req.body;
@@ -50,7 +53,26 @@ async function update(req) {
   return project;
 }
 
-export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, {
-  handle: update,
-  checkAuth: true
-}, null);
+async function deleteProject(req) {
+  let {_id} = req.body;
+
+  await dbConnect();
+  const user = getUser(req);
+
+  const project = await Project.findByIdAndDelete(_id);
+  if (!project) {
+    throw new Error('Project with _id ' + _id + ' not found');
+  }
+
+  const res = await cloudinary.v2.uploader.destroy(PROJECTS_FOLDER_NAME + "/" + project.name);
+  log.info(`Delete cloudinary image result : ${res.result}`);
+
+  log.info(`Project ${project.name} was deleted by ${user.address}`);
+  return project;
+}
+
+export default initApiRoute(
+  {handle: findAll},
+  {handle: create, checkAuth: true},
+  {handle: update, checkAuth: true},
+  {handle: deleteProject, checkAuth: true});

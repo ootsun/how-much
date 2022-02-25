@@ -1,9 +1,9 @@
 import {Logo} from './logo.js';
 import {useEffect, useState} from 'react';
-import {findAll} from '../../lib/client/projectHandler.js';
+import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
 import ErrorModal from '../error-modal.js';
 
-export function ProjectList({projects, setSelectedProject, updateList, setUpdateList}) {
+export function ProjectList({projects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [filter, setFilter] = useState(null);
@@ -19,20 +19,24 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
     filterList();
   }, [filter, allProjects])
 
+  async function refreshList() {
+    try {
+      const res = await findAll();
+      if (!res.ok) {
+        setErrorModalMessage('A server side error occurred. We could not load the projects.');
+        toggleModal('projectListErrorModal');
+        return;
+      }
+      setAllProjects(await res.json());
+    } catch (e) {
+      setErrorModalMessage('An error occurred. We could not load the projects. Check you internet connectivity.');
+      toggleModal('projectListErrorModal');
+    }
+  }
+
   useEffect(async () => {
     if (updateList) {
-      try {
-        const res = await findAll();
-        if (!res.ok) {
-          setErrorModalMessage('A server side error occurred. We could not load the projects.');
-          toggleModal('projectListErrorModal');
-          return;
-        }
-        setAllProjects(await res.json());
-      } catch (e) {
-        setErrorModalMessage('An error occurred. We could not load the projects. Check you internet connectivity.');
-        toggleModal('projectListErrorModal');
-      }
+      await refreshList();
       setUpdateList(false);
     }
   }, [updateList]);
@@ -46,6 +50,13 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
       setFilteredProjects(allProjects.filter(project => project.name.toLowerCase().includes(filter)));
     } else {
       setFilteredProjects(allProjects);
+    }
+  }
+
+  async function onDelete(project) {
+    if(selectedProject !== project) {
+      await deleteProject(project._id);
+      await refreshList();
     }
   }
 
@@ -98,8 +109,10 @@ export function ProjectList({projects, setSelectedProject, updateList, setUpdate
                     <Logo url={project.logoUrl} alt={project.name}/>
                   </td>
                   <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                    <a href="#" onClick={() => setSelectedProject(project)}
-                       className="text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <span onClick={() => setSelectedProject(project)}
+                       className="text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Edit</span>
+                    <span onClick={async () => await onDelete(project)}
+                          className={`text-blue-600 dark:text-blue-500 ${selectedProject !== project ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
                   </td>
                 </tr>
               )}

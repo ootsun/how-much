@@ -49,14 +49,14 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     }
   }, [selectedProject]);
 
-  function createFormData(form, uploadSignature, fileName) {
+  function createFormData(form, uploadSignature, public_id) {
     const formData = new FormData();
     formData.append('file', form.logo[0]);
     formData.append('api_key', uploadSignature.apiKey);
     formData.append('timestamp', uploadSignature.timestamp);
     formData.append('signature', uploadSignature.signature);
-    formData.append('folder', 'projectsLogo');
-    formData.append('public_id', fileName);
+    formData.append('folder', process.env.NEXT_PUBLIC_CLOUDINARY_PROJECTS_FOLDER_NAME);
+    formData.append('public_id', public_id);
     return formData;
   }
 
@@ -67,10 +67,9 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     return name + '.' + extension;
   }
 
-  async function uploadLogo(form, name) {
-    const fileName = createFileName(form, name);
+  async function uploadLogo(form, public_id) {
 
-    let res = await getUploadSignature(fileName);
+    let res = await getUploadSignature(public_id);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
       toggleModal('projectFormErrorModal');
@@ -78,7 +77,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     }
     const uploadSignature = await res.json();
 
-    const formData = createFormData(form, uploadSignature, fileName);
+    const formData = createFormData(form, uploadSignature, public_id);
 
     res = await uploadFormData(formData, uploadSignature.cloudName);
     if (!res.ok) {

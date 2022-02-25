@@ -4,15 +4,16 @@ import * as cloudinary from 'cloudinary';
 const APY_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
 const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+const PROJECTS_FOLDER_NAME = process.env.CLOUDINARY_PROJECTS_FOLDER_NAME;
 
 async function generateSignature(req) {
-  const {fileName} = req.body;
+  const {public_id} = req.body;
   const timestamp = Math.round((new Date).getTime() / 1000);
 
   const signature = cloudinary.v2.utils.api_sign_request({
-    timestamp: timestamp,
-    folder: 'projectsLogo',
-    public_id: fileName
+    timestamp,
+    folder: PROJECTS_FOLDER_NAME,
+    public_id
   }, CLOUDINARY_API_SECRET);
 
   return {

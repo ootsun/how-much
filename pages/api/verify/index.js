@@ -9,6 +9,7 @@ import * as cloudinary from 'cloudinary';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_VALIDITY_DURATION = process.env.JWT_VALIDITY_DURATION;
+const AVATARS_FOLDER_NAME = process.env.CLOUDINARY_AVATARS_FOLDER_NAME;
 
 const avatar = Avatar.builder(Avatar.Image.circleMask(Avatar.Image.identicon()), 128, 128, {cache: Avatar.Cache.lru()});
 
@@ -31,7 +32,7 @@ async function verify(req) {
     if(!user) {
       const image = await avatar.create(fields.address);
       const upload = await cloudinary.v2.uploader.upload(`data:image/png;base64,${image.toString('base64')}`, {
-        public_id: "avatars/" + fields.address,
+        public_id: AVATARS_FOLDER_NAME + "/" + fields.address,
       });
       user = await User.create({address: fields.address, avatarUrl: upload.secure_url});
       log.info(`User with address ${user.address} successfully created`);

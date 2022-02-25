@@ -90,7 +90,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
   }
 
   async function createProject(form) {
-    const name = capitalizeFirstLetter(form.name);
+    const name = capitalizeFirstLetter(form.name).trim();
     const logoUrl = await uploadLogo(form, name);
 
     if(logoUrl) {
@@ -105,7 +105,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
   }
 
   async function updateProject(form) {
-    const name = capitalizeFirstLetter(form.name);
+    const name = capitalizeFirstLetter(form.name).trim();
     let logoUrl = selectedProject.logoUrl;
     if (form.logo && form.logo.length > 0) {
       const res = await uploadLogo(form, name);

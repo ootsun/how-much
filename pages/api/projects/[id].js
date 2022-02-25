@@ -15,7 +15,7 @@ async function update(req) {
     query: { id }
   } = req;
   let {name, logoUrl} = req.body;
-  name = capitalizeFirstLetter(name);
+  name = capitalizeFirstLetter(name).trim();
 
   await dbConnect();
   const user = getUser(req);

@@ -162,7 +162,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
         <div className="grid sm:grid-cols-3 sm:gap-4">
-          <div className="relative mb-6 w-full z-0">
+          <div className="relative mb-3 md:mb-0 w-full z-0">
             <input type="text"
                    className="input peer"
                    placeholder=" "
@@ -172,7 +172,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
               Project name</label>
             {errors.name && <span className="error">{errors.name.message}</span>}
           </div>
-          <div className="relative mb-6 w-full">
+          <div className="relative w-full">
             <input
               aria-describedby="logo_help" {...register('logo', {required: selectedProject ? false : 'Mandatory field'})}
               type="file"
@@ -182,7 +182,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
             </div>
             {errors.logo && <span className="error">{errors.logo.message}</span>}
           </div>
-          <div className="relative mb-6 pb-4 w-full flex items-center">
+          <div className="relative pb-4 w-full flex items-center">
             {(selectedProject || (watchLogo && watchLogo.length > 0)) &&
               <>
                 <span>Preview :</span>

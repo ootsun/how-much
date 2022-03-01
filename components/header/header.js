@@ -65,8 +65,8 @@ const burgerStyles = {
     position: 'relative',
     width: '36px',
     height: '30px',
-    'margin-left': '1.25rem',
-    'margin-top': '1rem',
+    marginLeft: '1.25rem',
+    marginTop: '1rem',
   },
   bmBurgerBars: {
     background: '#373a47'

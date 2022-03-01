@@ -1,23 +1,89 @@
 import {Logo} from './logo.js';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
 import ErrorModal from '../error-modal.js';
+import {useTable, useSortBy, useGlobalFilter} from 'react-table';
+import {GlobalFilter} from '../global-filter.js';
+import {Toast} from '../toast.js';
+import {LoadingCircle} from '../loading-circle.js';
 
 export function ProjectList({projects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
-  const [filter, setFilter] = useState(null);
   const [allProjects, setAllProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [toastMessage, setToastMessage] = useState(null);
+  const [projectBeingDeleted, setProjectBeingDeleted] = useState(null);
 
   useEffect(() => {
     setAllProjects(projects);
-    filterList();
   }, []);
 
-  useEffect(() => {
-    filterList();
-  }, [filter, allProjects])
+  const data = useMemo(
+    () => allProjects,
+    [allProjects]
+  );
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Name',
+        accessor: 'name',
+      },
+      {
+        Header: 'Logo',
+        accessor: (project) =>
+          <Logo url={project.logoUrl} alt={project.name}/>,
+        disableSortBy: true
+      },
+      {
+        id: () => 'actions',
+        accessor: (project) => {
+          return (
+            <div className="flex flex-row-reverse">
+              {projectBeingDeleted !== project &&
+                <>
+                  <span onClick={async () => await onDelete(project)}
+                        className={`text-cyan-500 ${selectedProject !== project ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                  <span onClick={() => setSelectedProject(project)}
+                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+                </>
+              }
+              {projectBeingDeleted === project && <LoadingCircle color={true}/>}
+            </div>
+          )
+        },
+        disableSortBy: true
+      }
+    ],
+    [projectBeingDeleted]
+  );
+
+  const tableInstance = useTable({
+      columns,
+      data,
+      initialState: {
+        sortBy: [
+          {
+            id: 'name',
+            desc: false
+          }
+        ]
+      }
+    },
+    useGlobalFilter,
+    useSortBy);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter
+  } = tableInstance;
+
+  const {globalFilter} = state;
 
   async function refreshList() {
     try {
@@ -41,81 +107,75 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
     }
   }, [updateList]);
 
-  function onSearchInputChanged(e) {
-    setFilter(e.target.value.toLowerCase());
-  }
-
-  function filterList() {
-    if(filter) {
-      setFilteredProjects(allProjects.filter(project => project.name.toLowerCase().includes(filter)));
-    } else {
-      setFilteredProjects(allProjects);
-    }
-  }
-
   async function onDelete(project) {
-    if(selectedProject !== project) {
+    if (selectedProject !== project) {
+      setProjectBeingDeleted(project);
       await deleteProject(project._id);
+      setToastMessage('Project successfully deleted');
       await refreshList();
+      setProjectBeingDeleted(null);
     }
   }
 
   return (
     <div className="flex flex-col">
+      <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="projectListErrorModal"/>
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle dark:bg-gray-800">
           <div className="mb-4">
-            <label htmlFor="table-search" className="sr-only">Search</label>
-            <div className="relative mt-1">
-              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd"
-                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                        clipRule="evenodd"></path>
-                </svg>
-              </div>
-              <input type="text" id="table-search"
-                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                     placeholder="Search for projects"
-                     onChange={onSearchInputChanged}/>
-            </div>
+            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
           </div>
           <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
+            <table {...getTableProps()}
+                   className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
               <thead className="bg-gray-100 dark:bg-gray-700">
-              <tr>
-                <th scope="col"
-                    className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400">
-                  Name
-                </th>
-                <th scope="col"
-                    className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400">
-                  Logo
-                </th>
-                <th scope="col" className="relative py-3 px-6">
-                  <span className="sr-only">Edit</span>
-                </th>
-              </tr>
+              {
+                headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {
+                      headerGroup.headers.map(column => (
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                            className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 w-1/3">
+                          {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
+                          <span>
+                            <svg className="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                          </span> :
+                          <span>
+                            <svg className="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                    d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                            </svg>
+                          </span> : ''}
+                        </th>
+                      ))}
+                  </tr>
+                ))}
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-              {filteredProjects.map((project, i) =>
-                <tr className="hover:bg-gray-100 dark:hover:bg-gray-700" key={i}>
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {project.name}
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <Logo url={project.logoUrl} alt={project.name}/>
-                  </td>
-                  <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                    <span onClick={() => setSelectedProject(project)}
-                       className="text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Edit</span>
-                    <span onClick={async () => await onDelete(project)}
-                          className={`text-blue-600 dark:text-blue-500 ${selectedProject !== project ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
-                  </td>
-                </tr>
-              )}
+              <tbody {...getTableBodyProps()}
+                     className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+              {
+                rows.map(row => {
+                  prepareRow(row)
+                  return (
+                    <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                      {
+                        row.cells.map(cell => {
+                          return (
+                            <td {...cell.getCellProps()}
+                                className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              {cell.render('Cell')}
+                            </td>
+                          )
+                        })}
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

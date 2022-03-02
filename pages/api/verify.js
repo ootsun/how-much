@@ -1,9 +1,9 @@
 import {ErrorTypes, SiweMessage} from 'siwe';
-import initApiRoute from '../../../lib/utils/restApiHelper.js';
-import Nonce from '../../../models/Nonce.js';
-import User from '../../../models/User.js';
+import initApiRoute from '../../lib/utils/restApiHelper.js';
+import Nonce from '../../models/Nonce.js';
+import User from '../../models/User.js';
 import jwt from 'jsonwebtoken';
-import log from '../../../lib/log/logger.js';
+import log from '../../lib/log/logger.js';
 import Avatar from 'avatar-builder';
 import * as cloudinary from 'cloudinary';
 

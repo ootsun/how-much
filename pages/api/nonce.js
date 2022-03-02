@@ -1,8 +1,8 @@
-import initApiRoute from '../../../lib/utils/restApiHelper.js';
+import initApiRoute from '../../lib/utils/restApiHelper.js';
 import {generateNonce} from 'siwe';
-import Nonce from '../../../models/Nonce.js';
-import dbConnect from '../../../lib/database/dbConnect.js';
-import isValid from '../../../lib/ethereum/addressValidator.js';
+import Nonce from '../../models/Nonce.js';
+import dbConnect from '../../lib/database/dbConnect.js';
+import isValid from '../../lib/ethereum/addressValidator.js';
 
 async function create(req) {
   const {address} = req.body;

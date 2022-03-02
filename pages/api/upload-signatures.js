@@ -1,4 +1,4 @@
-import initApiRoute from '../../../lib/utils/restApiHelper.js';
+import initApiRoute from '../../lib/utils/restApiHelper.js';
 import * as cloudinary from 'cloudinary';
 
 const APY_KEY = process.env.CLOUDINARY_API_KEY;

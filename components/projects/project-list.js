@@ -6,6 +6,7 @@ import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
 import {GlobalFilter} from '../forms/global-filter.js';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
+import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 
 export function ProjectList({projects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
@@ -117,10 +118,23 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
   async function onDelete(project) {
     if (selectedProject !== project) {
       setProjectBeingDeleted(project);
-      await deleteProject(project._id);
-      setToastMessage('Project successfully deleted');
-      await refreshList();
-      setProjectBeingDeleted(null);
+      try {
+        const res = await deleteProject(project._id);
+        if (!res.ok) {
+          setErrorModalMessage(ERROR_MESSAGES.serverSide);
+          toggleModal('projectListErrorModal');
+          await refreshList();
+          setProjectBeingDeleted(null);
+          return;
+        }
+        setToastMessage('Project successfully deleted');
+        await refreshList();
+        setProjectBeingDeleted(null);
+      } catch (e) {
+        setErrorModalMessage(ERROR_MESSAGES.connection);
+        toggleModal('projectFormErrorModal');
+        setProjectBeingDeleted(null);
+      }
     }
   }
 
@@ -146,14 +160,16 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
                             className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 w-1/3">
                           {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                           <span>
-                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                             </svg>
                           </span> :
                           <span>
-                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
@@ -190,7 +206,7 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
             <ul className="inline-flex items-center -space-x-px">
               <li>
                 <button disabled={!canPreviousPage} onClick={() => previousPage()}
-                   className="page-arrow-button page-arrow-button-previous">
+                        className="page-arrow-button page-arrow-button-previous">
                   <span className="sr-only">Previous</span>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd"
@@ -203,7 +219,7 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
                 [...Array(pageCount)].map((x, i) =>
                   <li>
                     <button disabled={pageIndex === i} onClick={() => gotoPage(i)}
-                      className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
+                            className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
                       {i + 1}
                     </button>
                   </li>

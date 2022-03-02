@@ -3,19 +3,14 @@ import dbConnect from '../../../lib/database/dbConnect.js';
 import Project from '../../../models/Project.js';
 // Keep the import -> need to initialize the schema
 import User from '../../../models/User.js';
-import {getUser} from '../../../lib/utils/jwtTokenDecoder.js';
 import {capitalizeFirstLetter} from '../../../lib/utils/stringUtils.js';
 import log from '../../../lib/log/logger.js';
-import * as cloudinary from 'cloudinary';
-
-const PROJECTS_FOLDER_NAME = process.env.CLOUDINARY_PROJECTS_FOLDER_NAME;
 
 async function create(req) {
-  let {name, logoUrl} = req.body;
+  let {name, logoUrl, user} = req.body;
   name = capitalizeFirstLetter(name);
 
   await dbConnect();
-  const user = getUser(req);
 
   try {
     const project = await Project.create({
@@ -38,7 +33,7 @@ async function create(req) {
 export async function findAll() {
   await dbConnect();
   return Project.find()
-    .populate('createdBy', 'address');
+    .populate("createdBy", "address avatarUrl")
 }
 
 export default initApiRoute(

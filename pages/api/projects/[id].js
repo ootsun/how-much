@@ -14,24 +14,21 @@ async function update(req) {
   const {
     query: { id }
   } = req;
-  let {name, logoUrl} = req.body;
+  let {name, logoUrl, user} = req.body;
   name = capitalizeFirstLetter(name).trim();
 
   await dbConnect();
-  const user = getUser(req);
 
   try {
     const project = await Project.findByIdAndUpdate(id, {
         name,
         logoUrl
       },
-      {
-        runValidators: true
-      });
+      { runValidators: true, context: 'query' });
     if (!project) {
       throw new Error('Project with _id ' + id + ' not found');
     }
-    log.info(`Project ${name} was updated by ${user.address}`);
+    log.info(`Project ${project.name} was updated by ${user.address}`);
     return project;
   } catch (e) {
     if(e.errors?.name?.kind === 'unique' && e.errors?.name?.path === 'name') {
@@ -46,9 +43,9 @@ async function deleteProject(req) {
   const {
     query: { id }
   } = req;
+  const {user} = req.body;
 
   await dbConnect();
-  const user = getUser(req);
 
   const project = await Project.findByIdAndDelete(id);
   if (!project) {

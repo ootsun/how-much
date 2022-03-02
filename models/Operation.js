@@ -17,9 +17,11 @@ const OperationSchema = new mongoose.Schema({
   project: {
     type: Schema.Types.ObjectId,
     ref: 'Project',
+    required: true
   },
   contractAddress: {
     type: String,
+    required: true
   },
   functionName: {
     type: String,
@@ -29,5 +31,7 @@ const OperationSchema = new mongoose.Schema({
     type: Number
   }
 });
+
+OperationSchema.index({ contractAddress: 1, functionName: 1 }, { unique: true });
 
 export default mongoose.models.Operation || mongoose.model('Operation', OperationSchema)

@@ -10,22 +10,27 @@ import initApiRoute from '../../../lib/utils/restApiHelper.js';
 async function findAll() {
   await dbConnect();
   return Operation.find()
-    .populate("createdBy", "address")
+    .populate("createdBy", "address avatarUrl")
     .populate("project", "name logoUrl");
 }
 
 async function create(req) {
   const {contractAddress, functionName, project, user} = req.body;
+
   if(!(await functionExists(contractAddress, functionName))) {
-    throw new Error('Function [' + functionName + '] does not exist');
+    const error = new Error('Function [' + functionName + '] does not exist');
+    error.statusCode = 400;
+    throw error;
   }
+
   await dbConnect();
   const operation = await Operation.create({
-    createdBy: user.id,
-    project: project.id,
+    createdBy: user._id,
+    project: project._id,
     contractAddress: contractAddress,
     functionName: functionName,
   });
+
   log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
   return operation;
 }

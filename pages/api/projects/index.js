@@ -17,13 +17,22 @@ async function create(req) {
   await dbConnect();
   const user = getUser(req);
 
-  const project = await Project.create({
-    createdBy: user._id,
-    name: name,
-    logoUrl: logoUrl,
-  });
-  log.info(`Project ${name} was created by ${user.address}`);
-  return project;
+  try {
+    const project = await Project.create({
+      createdBy: user._id,
+      name: name,
+      logoUrl: logoUrl,
+    });
+    log.info(`Project ${name} was created by ${user.address}`);
+    return project;
+  } catch (e) {
+    if(e.errors?.name?.kind === 'unique' && e.errors?.name?.path === 'name') {
+      const error = new Error('This project already exists');
+      error.statusCode = 400;
+      throw error;
+    }
+    throw e;
+  }
 }
 
 export async function findAll() {

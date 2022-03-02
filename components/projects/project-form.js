@@ -96,11 +96,16 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     if(logoUrl) {
       const res = await create(name, logoUrl);
       if (!res.ok) {
-        setErrorModalMessage(ERROR_MESSAGES.serverSide);
+        if(res.status === 400) {
+          setErrorModalMessage("This project already exists");
+        } else {
+          setErrorModalMessage(ERROR_MESSAGES.serverSide);
+        }
         toggleModal('projectFormErrorModal');
-        return;
+        return false;
       }
       setToastMessage('Project successfully created');
+      return true;
     }
   }
 
@@ -112,29 +117,33 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       if(res) {
         logoUrl = res;
       } else {
-        return;
+        return false;
       }
     }
     const res = await update(selectedProject._id, name, logoUrl);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
       toggleModal('projectFormErrorModal');
-      return;
+      return false;
     }
     setSelectedProject(null);
     setPreviousSelectedProject(null);
     setToastMessage('Project successfully updated');
+    return true;
   }
 
   async function onSubmit(form) {
     try {
+      let res;
       if (selectedProject) {
-        await updateProject(form);
+        res = await updateProject(form);
       } else {
-        await createProject(form);
+        res = await createProject(form);
       }
-      setUpdateList(true);
-      reset();
+      if(res) {
+        setUpdateList(true);
+        reset();
+      }
     } catch (e) {
       setErrorModalMessage(ERROR_MESSAGES.connection);
       toggleModal('projectFormErrorModal');

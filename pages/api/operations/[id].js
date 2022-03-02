@@ -5,6 +5,7 @@ import Operation from '../../../models/Operation.js';
 import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
+import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
 async function update(req) {
   const {
@@ -26,6 +27,8 @@ async function update(req) {
       throw new Error('Operation with _id ' + id + ' not found');
     }
     log.info(`Operation ${operation.functionName} for ${operation.project.name} was updated by ${user.username}`);
+    await revalidate('operations');
+    revalidate();
     return operation;
   } catch (e) {
     console.log(e)
@@ -48,6 +51,8 @@ async function deleteOperation(req) {
   }
 
   log.info(`Operation ${operation.functionName} for ${operation.project.name} was deleted by ${user.username}`);
+  await revalidate('operations');
+  revalidate();
   return operation;
 }
 

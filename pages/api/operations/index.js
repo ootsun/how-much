@@ -6,6 +6,7 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
+import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
 async function findAll() {
   await dbConnect();
@@ -32,6 +33,8 @@ async function create(req) {
   });
 
   log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
+  await revalidate('operations');
+  revalidate();
   return operation;
 }
 

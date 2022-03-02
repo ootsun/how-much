@@ -1,9 +1,9 @@
 import {Logo} from './logo.js';
 import {useEffect, useMemo, useState} from 'react';
 import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
-import ErrorModal from '../error-modal.js';
+import ErrorModal from '../modals/error-modal.js';
 import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
-import {GlobalFilter} from '../global-filter.js';
+import {GlobalFilter} from '../forms/global-filter.js';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
 
@@ -123,8 +123,6 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
       setProjectBeingDeleted(null);
     }
   }
-
-  console.log(canPreviousPage, canNextPage, pageIndex)
 
   return (
     <div className="flex flex-col">

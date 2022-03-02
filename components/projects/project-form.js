@@ -3,13 +3,13 @@ import {create, getUploadSignature, update, uploadFormData} from '../../lib/clie
 import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
 import {useEffect, useState} from 'react';
-import ErrorModal from '../error-modal.js';
+import ErrorModal from '../modals/error-modal.js';
 import {Toast} from '../toast.js';
-import ActionModal from '../action-modal.js';
+import ActionModal from '../modals/action-modal.js';
 import {Logo} from './logo.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 
-export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}) {
+export function ProjectForm({projects, selectedProject, setSelectedProject, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [actionModalTitle, setActionModalTitle] = useState(null);
@@ -97,7 +97,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       const res = await create(name, logoUrl);
       if (!res.ok) {
         if(res.status === 400) {
-          setErrorModalMessage("This project already exists");
+          setErrorModalMessage(ERROR_MESSAGES.projectAlreadyExists);
         } else {
           setErrorModalMessage(ERROR_MESSAGES.serverSide);
         }
@@ -122,7 +122,11 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     }
     const res = await update(selectedProject._id, name, logoUrl);
     if (!res.ok) {
-      setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      if(res.status === 400) {
+        setErrorModalMessage(ERROR_MESSAGES.projectAlreadyExists);
+      } else {
+        setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      }
       toggleModal('projectFormErrorModal');
       return false;
     }
@@ -163,6 +167,13 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     reset();
   }
 
+  function nameIsUnique(value) {
+    if(!projects.some(project => project.name.toLowerCase() === value?.toLowerCase())) {
+      return true;
+    }
+    return ERROR_MESSAGES.projectAlreadyExists;
+  }
+
   return (
     <>
       <ActionModal title={actionModalTitle} message={actionModalMessage} callback={handleActionModalResponse} customId="projectFormActionModal"/>
@@ -175,7 +186,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('name', {required: 'Mandatory field'})}/>
+                   {...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>
             <label htmlFor="name"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Project name</label>

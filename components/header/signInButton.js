@@ -1,7 +1,7 @@
 import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useContext, useEffect, useState} from 'react';
-import ErrorModal from '../error-modal.js';
+import ErrorModal from '../modals/error-modal.js';
 import {authContext, getNonce, verifySignature} from '../../lib/client/authHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';

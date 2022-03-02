@@ -16,7 +16,7 @@ export default function Projects({projects}) {
       </Head>
       <main>
         <section className="card mb-4">
-          <ProjectForm selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
+          <ProjectForm projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
           <ProjectList projects={projects} setSelectedProject={setSelectedProject} selectedProject={selectedProject} updateList={updateList} setUpdateList={setUpdateList}/>

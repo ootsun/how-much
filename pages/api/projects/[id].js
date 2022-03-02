@@ -20,18 +20,26 @@ async function update(req) {
   await dbConnect();
   const user = getUser(req);
 
-  const project = await Project.findByIdAndUpdate(id, {
-      name,
-      logoUrl
-    },
-    {
-      runValidators: true
-    });
-  if (!project) {
-    throw new Error('Project with _id ' + id + ' not found');
+  try {
+    const project = await Project.findByIdAndUpdate(id, {
+        name,
+        logoUrl
+      },
+      {
+        runValidators: true
+      });
+    if (!project) {
+      throw new Error('Project with _id ' + id + ' not found');
+    }
+    log.info(`Project ${name} was updated by ${user.address}`);
+    return project;
+  } catch (e) {
+    if(e.errors?.name?.kind === 'unique' && e.errors?.name?.path === 'name') {
+      const error = new Error('This project already exists');
+      error.statusCode = 400;
+      throw error;
+    }
   }
-  log.info(`Project ${name} was updated by ${user.address}`);
-  return project;
 }
 
 async function deleteProject(req) {

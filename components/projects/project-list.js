@@ -3,7 +3,6 @@ import {useEffect, useMemo, useState} from 'react';
 import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
 import ErrorModal from '../modals/error-modal.js';
 import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
-import {GlobalFilter} from '../forms/global-filter.js';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
@@ -75,24 +74,6 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
     useGlobalFilter,
     useSortBy,
     usePagination);
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    previousPage,
-    nextPage,
-    canPreviousPage,
-    canNextPage,
-    gotoPage,
-    pageCount,
-    prepareRow,
-    state,
-    setGlobalFilter
-  } = tableInstance;
-
-  const {globalFilter, pageIndex} = state;
 
   async function refreshList() {
     try {

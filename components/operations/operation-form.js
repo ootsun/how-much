@@ -63,7 +63,7 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
     const res = await create(form.project, form.functionName, form.contractAddress);
     if (!res.ok) {
       if(res.status === 400) {
-        setErrorModalMessage(ERROR_MESSAGES.operationAlreadyExists);
+        setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
       } else {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
       }

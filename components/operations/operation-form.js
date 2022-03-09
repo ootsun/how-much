@@ -9,6 +9,7 @@ import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
 import {create} from '../../lib/client/operationHandler.js';
 import {Logo} from '../projects/logo.js';
+import {ProjectNameLogo} from '../projects/project-name-logo.js';
 
 export function OperationForm({operations, projects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
@@ -174,8 +175,8 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
                             value={project}>
                             {({selected}) => (
                               <>
-                                <span className="block truncate flex items-center">
-                                  <Logo url={project.logoUrl} alt={project.name}/><span className="ml-2">{project.name}</span>
+                                <span className="block truncate">
+                                  <ProjectNameLogo project={project}/>
                                 </span>
                                 {selected ? (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -194,17 +195,6 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
               control={control}
               name="project"
               rules={{required: 'Mandatory field'}}/>
-
-            {/*<input type="text"*/}
-            {/*       className="input peer"*/}
-            {/*       {...register('project', {required: 'Mandatory field'})}/>*/}
-            {/*<label htmlFor="project"*/}
-            {/*       className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">*/}
-            {/*  Project</label>*/}
-            {/*<ul*/}
-            {/*  className="hidden peer-focus:block absolute border-gray-300 border rounded bg-white w-full mt-2 max-h-40 overflow-y-scroll cursor-pointer">*/}
-            {/*  {optionLis}*/}
-            {/*</ul>*/}
             {errors.project && <span className="error">{errors.project.message}</span>}
           </div>
           <div className="relative mb-3 md:mb-0 w-full z-0">

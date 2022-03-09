@@ -21,7 +21,7 @@ export default function Operations({operations, projects}) {
           <OperationForm operations={operations} projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
-          {/*<OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList}/>*/}
+          <OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList}/>
         </section>
       </main>
     </>

@@ -8,6 +8,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.6",
     "avatar-builder": "^1.0.2",
     "axios": "^0.25.0",
     "cloudinary": "^1.28.1",

@@ -15,6 +15,7 @@ export default function Projects({projects}) {
         <title>Projects | How much ?!!</title>
       </Head>
       <main>
+        <h2 className="text-2xl mb-3">Projects</h2>
         <section className="card mb-4">
           <ProjectForm projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
         </section>

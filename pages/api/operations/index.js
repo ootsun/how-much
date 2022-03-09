@@ -8,7 +8,7 @@ import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
-async function findAll() {
+export async function findAll() {
   await dbConnect();
   return Operation.find()
     .populate("createdBy", "address avatarUrl")

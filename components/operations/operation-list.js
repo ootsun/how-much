@@ -7,6 +7,8 @@ import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {Table} from '../table.js';
+import {FunctionName} from './function-name.js';
+import {ContractAddress} from './contract-address.js';
 
 export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList}) {
 
@@ -29,14 +31,19 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
       {
         Header: 'Project',
         accessor: (operation) => <ProjectNameLogo project={operation.project}/>,
+        id: 'project.name'
       },
       {
         Header: 'Function name',
-        accessor: 'functionName',
+        accessor: (operation) => <FunctionName name={operation.functionName}/>,
+        id: 'functionName',
+        disableSortBy: true
       },
       {
         Header: 'Contract address',
-        accessor: 'contractAddress',
+        accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
+        id: 'contractAddress',
+        disableSortBy: true
       },
       {
         id: () => 'actions',
@@ -67,7 +74,7 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
       initialState: {
         sortBy: [
           {
-            id: 'project',
+            id: 'project.name',
             desc: false
           }
         ]

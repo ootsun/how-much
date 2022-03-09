@@ -35,7 +35,7 @@ export function Table({tableInstance}) {
                   {
                     headerGroup.headers.map(column => (
                       <th {...column.getHeaderProps(column.getSortByToggleProps())}
-                          className="py-3 px-6 font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 w-1/3">
+                          className={`py-3 px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                         <span>
                             <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"

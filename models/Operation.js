@@ -23,13 +23,25 @@ const OperationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  implementationAddress: {
+    type: String,
+  },
   functionName: {
     type: String,
     required: true
   },
+  minGasUsage: {
+    type: Number
+  },
+  maxGasUsage: {
+    type: Number
+  },
   averageGasUsage: {
     type: Number
-  }
+  },
+  lastGasUsages: {
+    type: [Number]
+  },
 });
 
 OperationSchema.index({ contractAddress: 1, functionName: 1 }, { unique: true });

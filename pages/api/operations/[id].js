@@ -45,12 +45,11 @@ async function deleteOperation(req) {
 
   await dbConnect();
 
-  const operation = await Operation.findByIdAndDelete(id);
+  const operation = await Operation.findByIdAndDelete(id).populate('project', 'name');
   if (!operation) {
     throw new Error('Operation with _id ' + id + ' not found');
   }
-
-  log.info(`Operation ${operation.functionName} for ${operation.project.name} was deleted by ${user.username}`);
+  log.info(`Operation ${operation.functionName} for ${operation.project.name} was deleted by ${user.address}`);
   await revalidate('operations');
   revalidate();
   return operation;

@@ -2,11 +2,11 @@ import initApiRoute from '../../lib/utils/restApiHelper.js';
 import {generateNonce} from 'siwe';
 import Nonce from '../../models/Nonce.js';
 import dbConnect from '../../lib/database/dbConnect.js';
-import isValid from '../../lib/ethereum/addressValidator.js';
+import {addressIsValid} from '../../lib/ethereum/ethereumUtils.js';
 
 async function create(req) {
   const {address} = req.body;
-  if(!isValid(address)) {
+  if(!addressIsValid(address)) {
     throw new Error('Address [' + address + '] is invalid');
   }
   const nonce = generateNonce();

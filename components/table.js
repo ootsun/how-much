@@ -33,8 +33,9 @@ export function Table({tableInstance}) {
               headerGroups.map((headerGroup, index) => (
                 <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
                   {
-                    headerGroup.headers.map(column => (
+                    headerGroup.headers.map((column, index) => (
                       <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                          key={`thheaderProps-${index}`}
                           className={`py-3 px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                         <span>
@@ -64,7 +65,8 @@ export function Table({tableInstance}) {
               (page.length > 0 && page.map((row, index) => {
                 prepareRow(row)
                 return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700" key={`trrow-${index}`}>
+                  <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700"
+                      key={`trrow-${index}`}>
                     {
                       row.cells.map((cell, index) => {
                         return (

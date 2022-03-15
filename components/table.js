@@ -30,8 +30,8 @@ export function Table({tableInstance}) {
                  className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
             <thead className="bg-gray-100 dark:bg-gray-700">
             {
-              headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
+              headerGroups.map((headerGroup, index) => (
+                <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
                   {
                     headerGroup.headers.map(column => (
                       <th {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -61,14 +61,15 @@ export function Table({tableInstance}) {
             <tbody {...getTableBodyProps()}
                    className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
             {
-              (page.length > 0 && page.map(row => {
+              (page.length > 0 && page.map((row, index) => {
                 prepareRow(row)
                 return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700" key={`trrow-${index}`}>
                     {
-                      row.cells.map(cell => {
+                      row.cells.map((cell, index) => {
                         return (
                           <td {...cell.getCellProps()}
+                              key={`tdcell-${index}`}
                               className="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {cell.render('Cell')}
                           </td>
@@ -99,11 +100,11 @@ export function Table({tableInstance}) {
               </button>
             </li>
             {
-              [...Array(pageCount)].map((x, i) =>
-                <li>
-                  <button disabled={pageIndex === i} onClick={() => gotoPage(i)}
+              [...Array(pageCount)].map((x, index) =>
+                <li key={`lipageCount-${index}`}>
+                  <button disabled={pageIndex === index} onClick={() => gotoPage(index)}
                           className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
-                    {i + 1}
+                    {index + 1}
                   </button>
                 </li>
               )

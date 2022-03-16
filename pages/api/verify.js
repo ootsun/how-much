@@ -4,14 +4,12 @@ import Nonce from '../../models/Nonce.js';
 import User from '../../models/User.js';
 import jwt from 'jsonwebtoken';
 import log from '../../lib/log/logger.js';
-import Avatar from 'avatar-builder';
 import * as cloudinary from 'cloudinary';
+import {generateAvatar} from '../../lib/utils/avatarGenerator.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_VALIDITY_DURATION = process.env.JWT_VALIDITY_DURATION;
 const AVATARS_FOLDER_NAME = process.env.CLOUDINARY_AVATARS_FOLDER_NAME;
-
-const avatar = Avatar.builder(Avatar.Image.circleMask(Avatar.Image.identicon()), 128, 128, {cache: Avatar.Cache.lru()});
 
 async function verify(req) {
   const {message, signature} = req.body;
@@ -30,8 +28,8 @@ async function verify(req) {
 
     let user = await User.findOne({address: fields.address});
     if(!user) {
-      const image = await avatar.create(fields.address);
-      const upload = await cloudinary.v2.uploader.upload(`data:image/png;base64,${image.toString('base64')}`, {
+      const image = await generateAvatar(fields.address);
+      const upload = await cloudinary.v2.uploader.upload(`data:image/svg+xml;base64,${Buffer.from(image).toString('base64')}`, {
         public_id: AVATARS_FOLDER_NAME + "/" + fields.address,
       });
       user = await User.create({address: fields.address, avatarUrl: upload.secure_url});

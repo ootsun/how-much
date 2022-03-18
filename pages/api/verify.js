@@ -29,7 +29,7 @@ async function verify(req) {
     let user = await User.findOne({address: fields.address});
     if(!user) {
       const image = await generateAvatar(fields.address);
-      const upload = await cloudinary.v2.uploader.upload(`data:image/svg+xml;base64,${Buffer.from(image).toString('base64')}`, {
+      const upload = await cloudinary.v2.uploader.upload(image, {
         public_id: AVATARS_FOLDER_NAME + "/" + fields.address,
       });
       user = await User.create({address: fields.address, avatarUrl: upload.secure_url});

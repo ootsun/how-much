@@ -129,7 +129,7 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
         <div className="grid sm:grid-cols-3 sm:gap-4 mb-3">
-          <div className="relative mb-3 md:mb-0 w-full z-0">
+          <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({field}) =>
                 <Combobox value={getValues('project')} onChange={(project) => setValue('project', project)}>

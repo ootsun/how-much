@@ -109,3 +109,18 @@ input[type=number] {
     opacity: 1;
   }
 }
+
+#clipboard-toast {
+  animation: clipboardToast 0.5s;
+}
+
+@keyframes clipboardToast {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

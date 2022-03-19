@@ -10,7 +10,7 @@ import {Table} from '../table.js';
 import {FunctionName} from './function-name.js';
 import {ContractAddress} from './contract-address.js';
 
-export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList}) {
+export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList, editable}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [allOperations, setAllOperations] = useState([]);
@@ -27,44 +27,7 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
   );
 
   const columns = useMemo(
-    () => [
-      {
-        Header: 'Project',
-        accessor: (operation) => <ProjectNameLogo project={operation.project}/>,
-        id: 'project.name'
-      },
-      {
-        Header: 'Function name',
-        accessor: (operation) => <FunctionName name={operation.functionName}/>,
-        id: 'functionName',
-        disableSortBy: true
-      },
-      {
-        Header: 'Contract address',
-        accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
-        id: 'contractAddress',
-        disableSortBy: true
-      },
-      {
-        id: () => 'actions',
-        accessor: (operation) => {
-          return (
-            <div className="flex flex-row-reverse">
-              {operationBeingDeleted !== operation &&
-                <>
-                  <span onClick={async () => await onDelete(operation)}
-                        className={`text-cyan-500 ${selectedOperation !== operation ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
-                  <span onClick={() => setSelectedOperation(operation)}
-                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
-                </>
-              }
-              {operationBeingDeleted === operation && <LoadingCircle color={true}/>}
-            </div>
-          )
-        },
-        disableSortBy: true
-      }
-    ],
+    () => createColumns(operationBeingDeleted, onDelete, selectedOperation, setSelectedOperation),
     [operationBeingDeleted]
   );
 
@@ -83,6 +46,52 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
     useGlobalFilter,
     useSortBy,
     usePagination);
+
+  function createColumns(operationBeingDeleted, onDelete, selectedOperation, setSelectedOperation) {
+    const columns = [
+      {
+        Header: 'Project',
+        accessor: (operation) => <ProjectNameLogo project={operation.project}/>,
+        id: 'project.name'
+      },
+      {
+        Header: 'Function name',
+        accessor: (operation) => <FunctionName name={operation.functionName}/>,
+        id: 'functionName',
+        disableSortBy: true
+      },
+      {
+        Header: 'Contract address',
+        accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
+        id: 'contractAddress',
+        disableSortBy: true
+      }
+    ];
+
+    if (editable) {
+      columns.push({
+        id: () => 'actions',
+        accessor: (operation) => {
+          return (
+            <div className="flex flex-row-reverse">
+              {operationBeingDeleted !== operation &&
+                <>
+                  <span onClick={async () => await onDelete(operation)}
+                        className={`text-cyan-500 ${selectedOperation !== operation ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                  <span onClick={() => setSelectedOperation(operation)}
+                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+                </>
+              }
+              {operationBeingDeleted === operation && <LoadingCircle color={true}/>}
+            </div>
+          )
+        },
+        disableSortBy: true
+      });
+    }
+
+    return columns;
+  }
 
   async function refreshList() {
     try {
@@ -130,10 +139,10 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
   }
 
   return (
-    <div className="flex flex-col">
+    <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
-      <Table tableInstance={tableInstance}/>
-    </div>
+      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'}/>
+    </>
   );
 }

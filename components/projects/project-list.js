@@ -121,10 +121,10 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
   }
 
   return (
-    <div className="flex flex-col">
+    <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="projectListErrorModal"/>
-      <Table tableInstance={tableInstance}/>
-    </div>
+      <Table tableInstance={tableInstance} filterPlaceholder={'Search for projects'}/>
+    </>
   );
 }

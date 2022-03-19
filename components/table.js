@@ -1,6 +1,6 @@
 import {GlobalFilter} from './forms/global-filter.js';
 
-export function Table({tableInstance}) {
+export function Table({tableInstance, filterPlaceholder}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -23,7 +23,7 @@ export function Table({tableInstance}) {
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle dark:bg-gray-800">
         <div className="mb-4">
-          <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+          <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={filterPlaceholder}/>
         </div>
         <div className="overflow-hidden">
           <table {...getTableProps()}

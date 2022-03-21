@@ -33,9 +33,9 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               headerGroups.map((headerGroup, index) => (
                 <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
                   {
-                    headerGroup.headers.map((column, index) => (
+                    headerGroup.headers.map(column => (
                       <th {...column.getHeaderProps(column.getSortByToggleProps())}
-                          key={`thheaderProps-${index}`}
+                          key={column.id}
                           className={`py-1 px-2 md:py-3 md:px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                         <span>
@@ -65,7 +65,8 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               (page.length > 0 && page.map((row, index) => {
                 prepareRow(row)
                 return (
-                  <tr {...row.getRowProps()} className={`${readonlyMode ? 'cursor-pointer' : ''} hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  <tr {...row.getRowProps()}
+                      className={`${readonlyMode ? 'cursor-pointer' : ''} hover:bg-gray-100 dark:hover:bg-gray-700`}
                       key={`trrow-${index}`} onClick={() => setSelected(row.original)}>
                     {
                       row.cells.map((cell, index) => {
@@ -81,9 +82,11 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                 )
               }))
               ||
-              <td colSpan={4} className="py-2 px-4 text-gray-700 text-center">
-                Nothing found
-              </td>
+              <tr>
+                <td colSpan={4} className="py-2 px-4 text-gray-700 text-center">
+                  Nothing found
+                </td>
+              </tr>
             }
             </tbody>
           </table>

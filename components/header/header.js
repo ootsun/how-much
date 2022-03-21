@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
-import SignInButton from './signInButton.js';
-import SignOutButton from './signOutButton.js';
+import SignInButton from './sign-in-button.js';
+import SignOutButton from './sign-out-button.js';
 import {useContext} from 'react';
 import {authContext} from '../../lib/client/authHandler.js';
 import {ProfileAvatar} from './profile-avatar.js';

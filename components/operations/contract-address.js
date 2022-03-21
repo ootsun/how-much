@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import truncateEthAddress from 'truncate-eth-address';
 import {useState} from 'react';
-import {ClipboardToast} from './clipboardToast.js';
+import {ClipboardToast} from './clipboard-toast.js';
 
 export function ContractAddress({address}) {
 

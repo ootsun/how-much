@@ -124,7 +124,7 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="projectListErrorModal"/>
-      <Table tableInstance={tableInstance} filterPlaceholder={'Search for projects'}/>
+      <Table tableInstance={tableInstance} filterPlaceholder={'Search for projects'} readonlyMode={false}/>
     </>
   );
 }

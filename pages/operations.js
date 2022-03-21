@@ -3,7 +3,7 @@ import {OperationForm} from '../components/operations/operation-form.js';
 import {OperationList} from '../components/operations/operation-list.js';
 import {findAll} from './api/operations/index.js';
 import {findAll as findAllProjects} from './api/projects/index.js';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export default function Operations({operations, projects}) {
 
@@ -21,7 +21,7 @@ export default function Operations({operations, projects}) {
           <OperationForm operations={operations} projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
-          <OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList}/>
+          <OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList} readonlyMode={false}/>
         </section>
       </main>
     </>

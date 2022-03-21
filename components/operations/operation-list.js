@@ -1,3 +1,5 @@
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../tailwind.config.js'
 import {useEffect, useMemo, useState} from 'react';
 import {deleteOperation, findAll} from '../../lib/client/operationHandler.js';
 import ErrorModal from '../modals/error-modal.js';
@@ -10,7 +12,7 @@ import {Table} from '../table.js';
 import {FunctionName} from './function-name.js';
 import {ContractAddress} from './contract-address.js';
 
-export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList, editable}) {
+export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList, readonlyMode}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [allOperations, setAllOperations] = useState([]);
@@ -27,7 +29,7 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
   );
 
   const columns = useMemo(
-    () => createColumns(operationBeingDeleted, onDelete, selectedOperation, setSelectedOperation),
+    () => createColumns(),
     [operationBeingDeleted]
   );
 
@@ -47,7 +49,9 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
     useSortBy,
     usePagination);
 
-  function createColumns(operationBeingDeleted, onDelete, selectedOperation, setSelectedOperation) {
+  function createColumns() {
+    const fullConfig = resolveConfig(tailwindConfig);
+
     const columns = [
       {
         Header: 'Project',
@@ -59,16 +63,19 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
         accessor: (operation) => <FunctionName name={operation.functionName}/>,
         id: 'functionName',
         disableSortBy: true
-      },
-      {
-        Header: 'Contract address',
-        accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
-        id: 'contractAddress',
-        disableSortBy: true
       }
     ];
 
-    if (editable) {
+    if(typeof window !== 'undefined' && window.innerWidth >= fullConfig.theme.screens.sm) {
+      columns.push({
+          Header: 'Contract address',
+          accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
+          id: 'contractAddress',
+          disableSortBy: true
+        });
+    }
+
+    if (!readonlyMode) {
       columns.push({
         id: () => 'actions',
         accessor: (operation) => {
@@ -142,7 +149,7 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
-      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'}/>
+      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'} readonlyMode={readonlyMode} setSelected={setSelectedOperation}/>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import {GlobalFilter} from './forms/global-filter.js';
 
-export function Table({tableInstance, filterPlaceholder}) {
+export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -36,7 +36,7 @@ export function Table({tableInstance, filterPlaceholder}) {
                     headerGroup.headers.map((column, index) => (
                       <th {...column.getHeaderProps(column.getSortByToggleProps())}
                           key={`thheaderProps-${index}`}
-                          className={`py-3 px-6 font-medium text-left w-1/${headerGroups.length}`}>
+                          className={`py-1 px-2 md:py-3 md:px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                         <span>
                             <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"
@@ -65,8 +65,8 @@ export function Table({tableInstance, filterPlaceholder}) {
               (page.length > 0 && page.map((row, index) => {
                 prepareRow(row)
                 return (
-                  <tr {...row.getRowProps()} className="hover:bg-gray-100 dark:hover:bg-gray-700"
-                      key={`trrow-${index}`}>
+                  <tr {...row.getRowProps()} className={`${readonlyMode ? 'cursor-pointer' : ''} hover:bg-gray-100 dark:hover:bg-gray-700`}
+                      key={`trrow-${index}`} onClick={() => setSelected(row.original)}>
                     {
                       row.cells.map((cell, index) => {
                         return (

@@ -1,4 +1,5 @@
 import {GlobalFilter} from './forms/global-filter.js';
+import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
 
 export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected}) {
   const {
@@ -97,18 +98,14 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               <button disabled={!canPreviousPage} onClick={() => previousPage()}
                       className="page-arrow-button page-arrow-button-previous">
                 <span className="sr-only">Previous</span>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd"
-                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                        clipRule="evenodd"></path>
-                </svg>
+                <ChevronLeftIcon className="h-4 w-4"/>
               </button>
             </li>
             {
               [...Array(pageCount)].map((x, index) =>
                 <li key={`lipageCount-${index}`}>
                   <button disabled={pageIndex === index} onClick={() => gotoPage(index)}
-                          className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
+                          className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
                     {index + 1}
                   </button>
                 </li>
@@ -118,11 +115,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               <button disabled={!canNextPage} onClick={() => nextPage()}
                       className="page-arrow-button page-arrow-button-next">
                 <span className="sr-only">Next</span>
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clipRule="evenodd"></path>
-                </svg>
+                <ChevronRightIcon className="h-4 w-4"/>
               </button>
             </li>
           </ul>

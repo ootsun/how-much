@@ -9,7 +9,6 @@ import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {Table} from '../table.js';
-import {FunctionName} from './function-name.js';
 import {ContractAddress} from './contract-address.js';
 
 export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList, readonlyMode}) {
@@ -60,13 +59,14 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
       },
       {
         Header: 'Function name',
-        accessor: (operation) => <FunctionName name={operation.functionName}/>,
+        accessor: (operation) => <span className="function-name">{operation.functionName}</span>,
         id: 'functionName',
         disableSortBy: true
       }
     ];
 
-    if(typeof window !== 'undefined' && window.innerWidth >= fullConfig.theme.screens.sm) {
+    const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
+    if(typeof window !== 'undefined' && window.innerWidth >= smNumber) {
       columns.push({
           Header: 'Contract address',
           accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,

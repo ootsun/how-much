@@ -88,6 +88,14 @@
   .page-arrow-button-next {
     @apply rounded-r-lg
   }
+
+  .function-name {
+    @apply bg-cyan-100 italic capitalize px-2 py-1 rounded
+  }
+
+  .information-circle {
+    @apply inline h-5 w-5 mr-1 text-cyan-500 align-sub
+  }
 }
 
 /* Firefox */

@@ -2,10 +2,14 @@ import Head from 'next/head';
 import {OperationList} from '../components/operations/operation-list.js';
 import {findAll} from './api/operations/index.js';
 import {useState} from 'react';
+import {ShoppingCart} from '../components/operations/shopping-cart.js';
+import {InformationCircleIcon, ShoppingCartIcon} from '@heroicons/react/outline';
 
 export default function Home({operations}) {
 
   const [selectedOperation, setSelectedOperation] = useState(null);
+  const [averageSum, setAverageSum] = useState(0);
+  const [maxSum, setMaxSum] = useState(0);
 
   return (
     <>
@@ -15,10 +19,35 @@ export default function Home({operations}) {
       <main>
         <section className="card mb-4">
           <p className="italic align-middle mb-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="inline h-5 w-5 text-cyan-500 align-sub" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Click on a row to add it in your cart</p>
+            <InformationCircleIcon className="information-circle"/>
+            Click on a row to remove it from your cart
+          </p>
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex">
+              <ShoppingCartIcon className="w-10 h-10 mr-2"/>
+              <h2 className="text-2xl hidden sm:block">Shopping cart</h2>
+            </div>
+            <span className="flex w-min text-sm">
+              <span className="flex w-min">
+                Avg:&nbsp;
+                <span className="bg-fuchsia-500 mx-1 text-white bold px-1">${averageSum}</span>
+              </span>
+              <span className="flex w-min">
+                Max:&nbsp;
+                <span className="bg-orange-500 mx-1 text-white bold px-1">${maxSum}</span>
+              </span>
+            </span>
+          </div>
+          <ShoppingCart lastSelected={selectedOperation}
+                        setLastSelected={setSelectedOperation}
+                        setAverageSum={setAverageSum}
+                        setMaxSum={setMaxSum}/>
+        </section>
+        <section className="card mb-4">
+          <p className="italic align-middle mb-1">
+            <InformationCircleIcon className="information-circle"/>
+            Click on a row to add it to your cart
+          </p>
           <OperationList operations={operations} setSelectedOperation={setSelectedOperation} readonlyMode={true}/>
         </section>
       </main>

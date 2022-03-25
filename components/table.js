@@ -68,7 +68,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                 return (
                   <tr {...row.getRowProps()}
                       className={`${readonlyMode ? 'cursor-pointer' : ''} hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      key={`trrow-${index}`} onClick={() => setSelected(row.original)}>
+                      key={`trrow-${index}`} onClick={readonlyMode ? () => setSelected(row.original) : null}>
                     {
                       row.cells.map((cell, index) => {
                         return (

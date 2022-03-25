@@ -15,8 +15,8 @@ async function getEtherPrice() {
 }
 
 async function refreshEtherPrice() {
-  etherPrice = await EtherscanProvider.getEtherPrice();
   lastRefresh = new Date().getTime();
+  etherPrice = await EtherscanProvider.getEtherPrice();
 }
 
 export default initApiRoute({handle: getEtherPrice}, null, null, null);

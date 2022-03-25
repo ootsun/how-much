@@ -19,9 +19,11 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     }
   }, [lastSelected]);
 
+  useEffect(refreshShoppingCartSums, [currentGasPrice]);
+
   useEffect(() => {
     const intervalId = refreshPricesAutomatically(setCurrentEtherPrice, setCurrentGasPrice);
-    return clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, []);
 
   function getPriceInUSD(gasQuantity) {
@@ -32,7 +34,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     }
   }
 
-  function refreshShoppingCartSums(operations) {
+  function refreshShoppingCartSums(operations = selectedOperations) {
     if (currentEtherPrice && currentGasPrice) {
       let averageSum = 0;
       let maxSum = 0;
@@ -49,7 +51,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     const index = selectedOperations.indexOf(operation);
     selectedOperations.splice(index, 1);
     setSelectedOperations(selectedOperations);
-    refreshShoppingCartSums(selectedOperations);
+    refreshShoppingCartSums();
   }
 
   return (

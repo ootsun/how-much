@@ -15,8 +15,8 @@ async function getGasPrice() {
 }
 
 async function refreshGasPrice() {
-  gasPriceInWei = (await provider.getGasPrice()).toString();
   lastRefresh = new Date().getTime();
+  gasPriceInWei = (await provider.getGasPrice()).toString();
 }
 
 export default initApiRoute({handle: getGasPrice}, null, null, null);

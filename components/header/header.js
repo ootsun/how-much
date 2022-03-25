@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
 import SignInButton from './sign-in-button.js';
 import SignOutButton from './sign-out-button.js';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {authContext} from '../../lib/client/authHandler.js';
 import {ProfileAvatar} from './profile-avatar.js';
 import {WenClaim} from './wen-claim.js';
@@ -11,19 +11,28 @@ import {NavItems} from './nav-items.js';
 export default function Header() {
 
   const {isAuthenticated} = useContext(authContext);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+  function closeMenu() {
+    setMenuIsOpen(false);
+  }
+
+  function handleStateChange(state) {
+    setMenuIsOpen(state.isOpen);
+  }
 
   return (
     <header className="flex h-16 justify-between">
       <div className="flex-1 flex md:items-center">
         <span className="md:hidden">
-          <Menu styles={burgerStyles}>
+          <Menu styles={burgerStyles} isOpen={menuIsOpen} onStateChange={handleStateChange}>
             <div className="flex w-full justify-center flex-col items-center menu-wrapper">
               <WenClaim/>
               {isAuthenticated !== null && !isAuthenticated && <SignInButton/>}
               {isAuthenticated &&
                 <>
-                  <NavItems inBurger={true}/>
-                  <SignOutButton/>
+                  <NavItems inBurger={true} closeMenu={closeMenu}/>
+                  <SignOutButton closeMenu={closeMenu}/>
                 </>
               }
             </div>

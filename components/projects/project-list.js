@@ -32,27 +32,29 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
       },
       {
         Header: 'Logo',
-        accessor: (project) =>
-          <Logo url={project.logoUrl} alt={project.name}/>,
-        disableSortBy: true
+        Cell: ({row}) => <Logo url={row.original.logoUrl} alt={row.original.name}/>,
+        accessor: 'project.logoUrl',
+        disableSortBy: true,
+        disableGlobalFilter: true
       },
       {
-        id: () => 'actions',
-        accessor: (project) => {
+        Cell: ({row}) => {
           return (
             <div className="flex flex-row-reverse">
-              {projectBeingDeleted !== project &&
+              {projectBeingDeleted !== row.original &&
                 <>
-                  <span onClick={async () => await onDelete(project)}
-                        className={`text-cyan-500 ${selectedProject !== project ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
-                  <span onClick={() => setSelectedProject(project)}
+                  <span onClick={async () => await onDelete(row.original)}
+                        className={`text-cyan-500 ${selectedProject !== row.original ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                  <span onClick={() => setSelectedProject(row.original)}
                         className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
                 </>
               }
-              {projectBeingDeleted === project && <LoadingCircle color={true}/>}
+              {projectBeingDeleted === row.original && <LoadingCircle color={true}/>}
             </div>
           )
         },
+        id: () => 'actions',
+        accessor: 'actions',
         disableSortBy: true
       }
     ],

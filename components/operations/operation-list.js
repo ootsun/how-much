@@ -11,7 +11,14 @@ import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {Table} from '../table.js';
 import {ContractAddress} from './contract-address.js';
 
-export function OperationList({operations, selectedOperation, setSelectedOperation, updateList, setUpdateList, readonlyMode}) {
+export function OperationList({
+                                operations,
+                                selectedOperation,
+                                setSelectedOperation,
+                                updateList,
+                                setUpdateList,
+                                readonlyMode
+                              }) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [allOperations, setAllOperations] = useState([]);
@@ -54,25 +61,28 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
     const columns = [
       {
         Header: 'Project',
-        accessor: (operation) => <ProjectNameLogo project={operation.project}/>,
+        Cell: ({row}) => <ProjectNameLogo project={row.original.project}/>,
+        accessor: 'project.name',
         id: 'project.name'
       },
       {
         Header: 'Function name',
-        accessor: (operation) => <span className="function-name">{operation.functionName}</span>,
+        Cell: ({row}) => <span className="function-name">{row.original.functionName}</span>,
+        accessor: 'functionName',
         id: 'functionName',
         disableSortBy: true
       }
     ];
 
     const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
-    if(typeof window !== 'undefined' && window.innerWidth >= smNumber) {
+    if (typeof window !== 'undefined' && window.innerWidth >= smNumber) {
       columns.push({
-          Header: 'Contract address',
-          accessor: (operation) => <ContractAddress address={operation.contractAddress}/>,
-          id: 'contractAddress',
-          disableSortBy: true
-        });
+        Header: 'Contract address',
+        Cell: ({row}) => <ContractAddress address={row.original.contractAddress}/>,
+        accessor: 'contractAddress',
+        id: 'contractAddress',
+        disableSortBy: true
+      });
     }
 
     if (!readonlyMode) {
@@ -93,7 +103,8 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
             </div>
           )
         },
-        disableSortBy: true
+        disableSortBy: true,
+        disableGlobalFilter: true
       });
     }
 
@@ -149,7 +160,8 @@ export function OperationList({operations, selectedOperation, setSelectedOperati
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
-      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'} readonlyMode={readonlyMode} setSelected={setSelectedOperation}/>
+      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'} readonlyMode={readonlyMode}
+             setSelected={setSelectedOperation}/>
     </>
   );
 }

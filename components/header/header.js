@@ -83,7 +83,8 @@ const burgerStyles = {
   },
   bmMenuWrap: {
     position: 'fixed',
-    height: '100%'
+    height: '100%',
+    top: 0
   },
   bmMenu: {
     background: 'rgb(55 65 81 / var(--tw-bg-opacity))',
@@ -101,6 +102,7 @@ const burgerStyles = {
     display: 'flex'
   },
   bmOverlay: {
-    background: 'rgba(0, 0, 0, 0.3)'
+    background: 'rgba(0, 0, 0, 0.3)',
+    top: 0
   }
 }

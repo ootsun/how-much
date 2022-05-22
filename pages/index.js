@@ -16,18 +16,18 @@ export default function Home({operations}) {
       <Head>
         <title>How much ?!!</title>
       </Head>
-      <main>
-        <section className="card mb-4">
+      <main className="lg:flex lg:flex-row-reverse">
+        <section className="card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start">
           <p className="italic align-middle mb-1">
             <InformationCircleIcon className="information-circle"/>
             Click on a row to remove it from your cart
           </p>
-          <div className="flex justify-between items-center mb-3">
+          <div className="flex justify-between items-center lg:block border-gray-200 border-b mb-1.5 pb-1.5">
             <div className="flex">
               <ShoppingCartIcon className="w-10 h-10 mr-2"/>
               <h2 className="text-2xl hidden sm:block">Shopping cart</h2>
             </div>
-            <span className="flex w-min text-sm">
+            <span className="flex w-min text-sm lg:justify-end lg:w-full">
               <span className="flex w-min">
                 Avg:&nbsp;
                 <span className="bg-fuchsia-500 mx-1 text-white bold px-1">${averageSum}</span>
@@ -43,7 +43,7 @@ export default function Home({operations}) {
                         setAverageSum={setAverageSum}
                         setMaxSum={setMaxSum}/>
         </section>
-        <section className="card mb-4">
+        <section className="card mb-4 lg:basis-2/3">
           <p className="italic align-middle mb-1">
             <InformationCircleIcon className="information-circle"/>
             Click on a row to add it to your cart

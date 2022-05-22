@@ -15,7 +15,8 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
     pageCount,
     prepareRow,
     setGlobalFilter,
-    state
+    state,
+    columns
   } = tableInstance;
 
   const {globalFilter, pageIndex} = state;
@@ -84,7 +85,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               }))
               ||
               <tr>
-                <td colSpan={4} className="py-2 px-4 text-gray-700 text-center">
+                <td colSpan={columns.length} className="py-2 px-4 text-gray-700 text-center">
                   Nothing found
                 </td>
               </tr>

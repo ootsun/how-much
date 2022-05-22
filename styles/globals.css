@@ -4,13 +4,13 @@
 
 @layer components {
   .body {
-    @apply lg:px-10 font-sans-serif
+    @apply lg:px-6 font-sans-serif
     bg-gray-100 text-gray-800
     dark:bg-gray-900 dark:text-gray-100
   }
 
   .card {
-    @apply rounded-xl shadow-lg p-3 lg:p-6
+    @apply rounded-xl shadow-lg p-3 lg:p-4
     bg-white
     dark:bg-gray-800
   }

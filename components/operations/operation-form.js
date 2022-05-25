@@ -8,17 +8,16 @@ import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
 import {create} from '../../lib/client/operationHandler.js';
-import {Logo} from '../projects/logo.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 
-export function OperationForm({operations, projects, selectedOperation, setSelectedOperation, setUpdateList}) {
+export function OperationForm({projects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [actionModalTitle, setActionModalTitle] = useState(null);
   const [actionModalMessage, setActionModalMessage] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [previousSelectedOperation, setPreviousSelectedOperation] = useState(null);
-  const [selectedProject, setSelectedProject] = useState(null);
   const [query, setQuery] = useState(' ');
+  const [openOptions, setOpenOptions] = useState(false);
 
   const filteredProjects =
     query === '' || query === ' '
@@ -31,7 +30,6 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
     mode: 'onTouched'
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
-  const watchProject = watch('project', null);
 
   async function replaceFormValues() {
     reset();
@@ -62,7 +60,7 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
   async function createOperation(form) {
     const res = await create(form.project, form.functionName, form.contractAddress);
     if (!res.ok) {
-      if(res.status === 400) {
+      if (res.status === 400) {
         setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
       } else {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
@@ -134,7 +132,9 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
               render={({field}) =>
                 <Combobox value={getValues('project')} onChange={(project) => setValue('project', project)}>
                   <div
-                    className="relative z-0">
+                    className="relative z-0"
+                    onClick={() => setOpenOptions(true)}
+                    onBlur={() => setTimeout(() => setOpenOptions(false), 100)}>
                     <Combobox.Input
                       {...field}
                       className="input peer pr-10"
@@ -143,7 +143,7 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
                       placeholder=" "
                     />
                     <Combobox.Label htmlFor="project"
-                                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    className="combobox-input-label">
                       Project</Combobox.Label>
                     <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                       <SelectorIcon
@@ -152,44 +152,37 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
                       />
                     </Combobox.Button>
                   </div>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                    afterLeave={() => setQuery('')}
-                  >
-                    <Combobox.Options
-                      className="bg-white border-gray-300 border rounded w-full mt-2 max-h-40 overflow-y-scroll cursor-pointer absolute py-1 mt-1 overflow-auto text-base">
-                      {filteredProjects.length === 0 && query !== '' && query !== ' ' ? (
-                        <div className="cursor-default select-none relative py-2 px-4 text-gray-700">
-                          Nothing found.
-                        </div>
-                      ) : (
-                        filteredProjects.map((project) => (
-                          <Combobox.Option
-                            key={project._id}
-                            className={({active}) =>
-                              `h-9 hover:bg-cyan-50 cursor-default select-none relative py-2 pl-10 pr-4 ${active ? 'bg-cyan-50' : ''}`
-                            }
-                            value={project}>
-                            {({selected}) => (
-                              <>
+                  <Combobox.Options
+                    static={openOptions}
+                    className="combobox-options">
+                    {filteredProjects.length === 0 && query !== '' && query !== ' ' ? (
+                      <div className="cursor-default select-none relative py-2 px-4 text-gray-700">
+                        Nothing found.
+                      </div>
+                    ) : (
+                      filteredProjects.map((project) => (
+                        <Combobox.Option
+                          key={project._id}
+                          className={({active}) =>
+                            `combobox-option pl-10 pr-4 ${active ? 'bg-cyan-50' : ''}`
+                          }
+                          value={project}>
+                          {({selected}) => (
+                            <>
                                 <span className="block truncate">
                                   <ProjectNameLogo project={project}/>
                                 </span>
-                                {selected ? (
-                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                              {selected ? (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                                       <CheckIcon className="w-5 h-5" aria-hidden="true"/>
                                   </span>
-                                ) : null}
-                              </>
-                            )}
-                          </Combobox.Option>
-                        ))
-                      )}
-                    </Combobox.Options>
-                  </Transition>
+                              ) : null}
+                            </>
+                          )}
+                        </Combobox.Option>
+                      ))
+                    )}
+                  </Combobox.Options>
                 </Combobox>
               }
               control={control}

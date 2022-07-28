@@ -18,7 +18,7 @@ export default function Operations({operations, projects}) {
       <main>
         <h2 className="text-2xl mb-3">Operations</h2>
         <section className="card mb-4">
-          <OperationForm projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
+          <OperationForm operations={operations} projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
           <OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList} readonlyMode={false}/>

@@ -96,20 +96,6 @@
   .information-circle {
     @apply inline h-5 w-5 mr-1 text-cyan-500 align-sub
   }
-
-  .combobox-input-label {
-    @apply label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500
-    peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6
-  }
-
-  .combobox-options {
-    @apply bg-white border-gray-300 border rounded w-full mt-2 max-h-40 overflow-y-scroll cursor-pointer
-    absolute py-1 mt-1 overflow-auto text-base
-  }
-
-  .combobox-option {
-    @apply h-9 hover:bg-cyan-50 cursor-default select-none relative py-2 whitespace-nowrap overflow-ellipsis overflow-hidden
-  }
 }
 
 /* Firefox */

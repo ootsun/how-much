@@ -92,11 +92,14 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
     }
   }
 
-  useEffect(async () => {
-    if (updateList) {
-      await refreshList();
-      setUpdateList(false);
+  useEffect(() => {
+    const init = async () => {
+      if (updateList) {
+        await refreshList();
+        setUpdateList(false);
+      }
     }
+    init();
   }, [updateList]);
 
   async function onDelete(project) {

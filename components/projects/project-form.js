@@ -37,16 +37,19 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
     }
   }
 
-  useEffect(async () => {
-    if (selectedProject && selectedProject !== previousSelectedProject) {
-      if (isDirty) {
-        setActionModalTitle('Warning');
-        setActionModalMessage('A project is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
-        toggleModal('projectFormActionModal');
-      } else {
-        await replaceFormValues();
+  useEffect(() => {
+    const init = async () => {
+      if (selectedProject && selectedProject !== previousSelectedProject) {
+        if (isDirty) {
+          setActionModalTitle('Warning');
+          setActionModalMessage('A project is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
+          toggleModal('projectFormActionModal');
+        } else {
+          await replaceFormValues();
+        }
       }
     }
+    init();
   }, [selectedProject]);
 
   function createFormData(form, uploadSignature, public_id) {

@@ -23,10 +23,14 @@ export function OperationList({
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [allOperations, setAllOperations] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
+  const [displayContractAddress, setDisplayContractAddress] = useState(true);
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
 
   useEffect(() => {
     setAllOperations(operations);
+    const fullConfig = resolveConfig(tailwindConfig);
+    const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
+    setDisplayContractAddress(typeof window !== 'undefined' && window.innerWidth >= smNumber);
   }, []);
 
   const data = useMemo(
@@ -56,8 +60,6 @@ export function OperationList({
     usePagination);
 
   function createColumns() {
-    const fullConfig = resolveConfig(tailwindConfig);
-
     const columns = [
       {
         Header: 'Project',
@@ -74,8 +76,7 @@ export function OperationList({
       }
     ];
 
-    const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
-    if (typeof window !== 'undefined' && window.innerWidth >= smNumber) {
+    if (displayContractAddress) {
       columns.push({
         Header: 'Contract address',
         Cell: ({row}) => <ContractAddress address={row.original.contractAddress}/>,
@@ -126,11 +127,14 @@ export function OperationList({
     }
   }
 
-  useEffect(async () => {
-    if (updateList) {
-      await refreshList();
-      setUpdateList(false);
+  useEffect(() => {
+    const init = async () => {
+      if (updateList) {
+        await refreshList();
+        setUpdateList(false);
+      }
     }
+    init();
   }, [updateList]);
 
   async function onDelete(operation) {

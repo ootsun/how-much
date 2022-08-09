@@ -47,16 +47,19 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
     }
   }
 
-  useEffect(async () => {
-    if (selectedOperation && selectedOperation !== previousSelectedOperation) {
-      if (isDirty) {
-        setActionModalTitle('Warning');
-        setActionModalMessage('A operation is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
-        toggleModal('operationFormActionModal');
-      } else {
-        await replaceFormValues();
+  useEffect(() => {
+    const init = async () => {
+      if (selectedOperation && selectedOperation !== previousSelectedOperation) {
+        if (isDirty) {
+          setActionModalTitle('Warning');
+          setActionModalMessage('A operation is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
+          toggleModal('operationFormActionModal');
+        } else {
+          await replaceFormValues();
+        }
       }
     }
+    init();
   }, [selectedOperation]);
 
   async function createOperation(form) {

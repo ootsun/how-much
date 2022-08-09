@@ -18,20 +18,21 @@ export default function SignInButton() {
 
   const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
 
-  async function init() {
-    if (window.ethereum) {
-      setDomain(window.location.host);
-      setOrigin(window.location.origin);
-      let p = new ethers.providers.Web3Provider(window.ethereum);
-      setProvider(p);
-      setSigner(p.getSigner());
-      const account = await p.send('eth_accounts', [])
-        .catch((e) => console.error(e));
-      setWalletIsConnected(account && account.length > 0);
-    }
-  }
+
 
   useEffect(() => {
+    const init = async () => {
+      if (window.ethereum) {
+        setDomain(window.location.host);
+        setOrigin(window.location.origin);
+        let p = new ethers.providers.Web3Provider(window.ethereum);
+        setProvider(p);
+        setSigner(p.getSigner());
+        const account = await p.send('eth_accounts', [])
+            .catch((e) => console.error(e));
+        setWalletIsConnected(account && account.length > 0);
+      }
+    }
     init();
   }, []);
 

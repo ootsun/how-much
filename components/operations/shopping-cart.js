@@ -4,6 +4,10 @@ import {ShoppingCartItem} from './shopping-cart-item.js';
 import {atCurrentGasPriceInUSD} from '../../lib/ethereum/ethereumUtils.js';
 import {roundPrice} from '../../lib/utils/numberUtils.js';
 
+// Avoid useEffect being run twice because of reactStrictMode
+// https://beta.reactjs.org/learn/you-might-not-need-an-effect#initializing-the-application
+let intervalId = null;
+
 export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setMaxSum}) {
 
   const [selectedOperations, setSelectedOperations] = useState([]);
@@ -22,8 +26,10 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
   useEffect(refreshShoppingCartSums, [currentGasPrice]);
 
   useEffect(() => {
-    const intervalId = refreshPricesAutomatically(setCurrentEtherPrice, setCurrentGasPrice);
-    return () => clearInterval(intervalId);
+    if(intervalId == null) {
+      intervalId = refreshPricesAutomatically(setCurrentEtherPrice, setCurrentGasPrice);
+      return () => clearInterval(intervalId);
+    }
   }, []);
 
   function getPriceInUSD(gasQuantity) {

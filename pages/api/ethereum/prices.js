@@ -16,7 +16,6 @@ async function getPrices() {
 }
 
 async function refreshPrices() {
-  lastRefresh = new Date().getTime();
   const resolve = await Promise.all([
     EtherscanProvider.getEtherPrice(),
     provider.getGasPrice()
@@ -25,6 +24,7 @@ async function refreshPrices() {
     etherPrice: resolve[0],
     gasPriceInWei: resolve[1].toString()
   };
+  lastRefresh = new Date().getTime();
 }
 
 export default initApiRoute({handle: getPrices}, null, null, null);

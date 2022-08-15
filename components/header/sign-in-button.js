@@ -18,21 +18,22 @@ export default function SignInButton() {
 
   const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
 
+  const modalId = 'signInButtonErrorModal';
 
+  const init = async () => {
+    if (window.ethereum) {
+      setDomain(window.location.host);
+      setOrigin(window.location.origin);
+      let p = new ethers.providers.Web3Provider(window.ethereum);
+      setProvider(p);
+      setSigner(p.getSigner());
+      const account = await p.send('eth_accounts', [])
+          .catch((e) => console.error(e));
+      setWalletIsConnected(account && account.length > 0);
+    }
+  }
 
   useEffect(() => {
-    const init = async () => {
-      if (window.ethereum) {
-        setDomain(window.location.host);
-        setOrigin(window.location.origin);
-        let p = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(p);
-        setSigner(p.getSigner());
-        const account = await p.send('eth_accounts', [])
-            .catch((e) => console.error(e));
-        setWalletIsConnected(account && account.length > 0);
-      }
-    }
     init();
   }, []);
 
@@ -42,7 +43,7 @@ export default function SignInButton() {
       res = await getNonce(address);
     } catch (e) {
       setModalMessage(ERROR_MESSAGES.connection);
-      toggleModal('errorModal');
+      toggleModal(modalId);
       return false;
     }
     if (res.ok) {
@@ -53,12 +54,12 @@ export default function SignInButton() {
         uri: origin,
         version: '1',
         chainId: '1',
-        nonce: await res.text()
+        nonce: await res.json()
       });
       return message.prepareMessage();
     }
     setModalMessage(ERROR_MESSAGES.serverSide);
-    toggleModal('errorModal');
+    toggleModal(modalId);
     return false;
   }
 
@@ -75,7 +76,7 @@ export default function SignInButton() {
       await connectWalletAndSignIn($event, true);
     } else {
       setModalMessage('No browser wallet detected.');
-      toggleModal('errorModal');
+      toggleModal(modalId);
       setIsLoading(false);
     }
   }
@@ -95,7 +96,7 @@ export default function SignInButton() {
             setIsAuthenticated(true);
           } else {
             setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
-            toggleModal('errorModal');
+            toggleModal(modalId);
           }
         }
       } catch (e) {
@@ -116,8 +117,7 @@ export default function SignInButton() {
 
   return (
     <>
-      <ErrorModal
-        message={modalMessage}/>
+      <ErrorModal message={modalMessage} customId={modalId}/>
       {content}
     </>);
 }

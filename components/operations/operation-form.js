@@ -7,7 +7,7 @@ import ActionModal from '../modals/action-modal.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
-import {create} from '../../lib/client/operationHandler.js';
+import {create, update} from '../../lib/client/operationHandler.js';
 import {Logo} from '../projects/logo.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 
@@ -35,7 +35,9 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
 
   async function replaceFormValues() {
     reset();
-    // setValue('name', selectedOperation.name);
+    setValue('project', selectedOperation.project);
+    setValue('functionName', selectedOperation.functionName);
+    setValue('contractAddress', selectedOperation.contractAddress);
     setPreviousSelectedOperation(selectedOperation);
   }
 
@@ -78,20 +80,16 @@ export function OperationForm({operations, projects, selectedOperation, setSelec
   }
 
   async function updateOperation(form) {
-    // const res = await update(selectedOperation._id, name, logoUrl);
-    // if (!res.ok) {
-    //   if(res.status === 400) {
-    //     setErrorModalMessage(ERROR_MESSAGES.operationAlreadyExists);
-    //   } else {
-    //     setErrorModalMessage(ERROR_MESSAGES.serverSide);
-    //   }
-    //   toggleModal('operationFormErrorModal');
-    //   return false;
-    // }
-    // setSelectedOperation(null);
-    // setPreviousSelectedOperation(null);
-    // setToastMessage('Operation successfully updated');
-    // return true;
+    const res = await update(selectedOperation._id, form.project, form.functionName, form.contractAddress);
+    if (!res.ok) {
+      setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      toggleModal('operationFormErrorModal');
+      return false;
+    }
+    setSelectedOperation(null);
+    setPreviousSelectedOperation(null);
+    setToastMessage('Operation successfully updated');
+    return true;
   }
 
   async function onSubmit(form) {

@@ -35,7 +35,6 @@ async function create(req) {
 
   log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
   await revalidate('operations');
-  revalidate();
   return operation;
 }
 

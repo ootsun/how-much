@@ -28,7 +28,6 @@ async function update(req) {
     }
     log.info(`Operation ${operation.functionName} for ${operation.project.name} was updated by ${user.username}`);
     await revalidate('operations');
-    revalidate();
     return operation;
   } catch (e) {
     console.log(e)
@@ -51,7 +50,6 @@ async function deleteOperation(req) {
   }
   log.info(`Operation ${operation.functionName} for ${operation.project.name} was deleted by ${user.address}`);
   await revalidate('operations');
-  revalidate();
   return operation;
 }
 

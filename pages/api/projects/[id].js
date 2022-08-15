@@ -32,7 +32,6 @@ async function update(req) {
     log.info(`Project ${project.name} was updated by ${user.address}`);
 
     await revalidate('projects');
-    revalidate();
     return project;
   } catch (e) {
     if(e.errors?.name?.kind === 'unique' && e.errors?.name?.path === 'name') {
@@ -62,7 +61,6 @@ async function deleteProject(req) {
   log.info(`Project ${project.name} was deleted by ${user.address}`);
 
   await revalidate('projects');
-  revalidate();
   return project;
 }
 

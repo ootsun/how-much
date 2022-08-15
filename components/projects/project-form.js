@@ -1,5 +1,5 @@
 import {useForm} from 'react-hook-form';
-import {create, getUploadSignature, update, uploadFormData} from '../../lib/client/projectHandler.js';
+import {create, getUploadSignature, update, uploadImage} from '../../lib/client/projectHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
 import {useEffect, useState} from 'react';
@@ -52,7 +52,7 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
     init();
   }, [selectedProject]);
 
-  function createFormData(form, uploadSignature, public_id) {
+  function createImageUploadFormData(form, uploadSignature, public_id) {
     const formData = new FormData();
     formData.append('file', form.logo[0]);
     formData.append('api_key', uploadSignature.apiKey);
@@ -61,13 +61,6 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
     formData.append('folder', process.env.NEXT_PUBLIC_CLOUDINARY_PROJECTS_FOLDER_NAME);
     formData.append('public_id', public_id);
     return formData;
-  }
-
-  function createFileName(form, name) {
-    const originalFileName = form.logo[0].name;
-    const tokens = originalFileName.split('.');
-    const extension = tokens[tokens.length - 1];
-    return name + '.' + extension;
   }
 
   async function uploadLogo(form, public_id) {
@@ -80,9 +73,9 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
     }
     const uploadSignature = await res.json();
 
-    const formData = createFormData(form, uploadSignature, public_id);
+    const formData = createImageUploadFormData(form, uploadSignature, public_id);
 
-    res = await uploadFormData(formData, uploadSignature.cloudName);
+    res = await uploadImage(formData, uploadSignature.cloudName);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
       toggleModal('projectFormErrorModal');
@@ -110,6 +103,9 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
       setToastMessage('Project successfully created');
       return true;
     }
+    setErrorModalMessage(ERROR_MESSAGES.imageUploadFailed);
+    toggleModal('projectFormErrorModal');
+    return false;
   }
 
   async function updateProject(form) {

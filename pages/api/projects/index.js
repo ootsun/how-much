@@ -21,7 +21,6 @@ async function create(req) {
     });
     log.info(`Project ${name} was created by ${user.address}`);
     await revalidate('projects');
-    revalidate();
     return project;
   } catch (e) {
     if(e.errors?.name?.kind === 'unique' && e.errors?.name?.path === 'name') {

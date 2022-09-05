@@ -19,9 +19,17 @@ const ProjectSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  symbol: {
+    type: String,
+    unique: true
+  },
   logoUrl: {
     type: String,
     required: true,
+  },
+  isERC20: {
+    type: Boolean,
+    default: false,
   }
 });
 

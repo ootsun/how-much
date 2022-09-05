@@ -30,6 +30,10 @@ const OperationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  methodId: {
+    type: String,
+    required: true
+  },
   minGasUsage: {
     type: Number
   },

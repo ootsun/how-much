@@ -8,7 +8,9 @@ export default function SignOutButton({closeMenu}) {
   function handleSignOut() {
     signOut();
     setIsAuthenticated(false);
-    closeMenu();
+    if(closeMenu) {
+      closeMenu();
+    }
   }
 
   return <button className="button" onClick={handleSignOut}>Sign out</button>;

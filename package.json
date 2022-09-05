@@ -5,7 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "lambda-oversize-hack": "npx rimraf ../../../node_modules/canvas",
-    "postbuild": "npm lambda-oversize-hack",
+    "postbuild": "npm run lambda-oversize-hack",
     "start": "next start",
     "lint": "next lint"
   },

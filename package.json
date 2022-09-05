@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "npm run lambda-oversize-hack && next build",
-    "lambda-oversize-hack": "npx rimraf ../../../node_modules/canvas/src",
+    "lambda-oversize-hack": "npx rimraf ./node_modules/canvas/src",
     "start": "next start",
     "lint": "next lint"
   },

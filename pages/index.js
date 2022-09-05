@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import {OperationList} from '../components/operations/operation-list.js';
-import {findAll} from './api/operations/index.js';
+import {findAllWithLastGasUsages} from './api/operations/index.js';
 import {useState} from 'react';
 import {ShoppingCart} from '../components/operations/shopping-cart.js';
 import {InformationCircleIcon, ShoppingCartIcon} from '@heroicons/react/outline';
@@ -56,7 +56,7 @@ export default function Home({operations}) {
 }
 
 export async function getStaticProps() {
-  const operations = await findAll();
+  const operations = await findAllWithLastGasUsages();
   // JSON.parse(JSON.stringify(operations)) -> see https://github.com/vercel/next.js/issues/11993
   return {
     props: {

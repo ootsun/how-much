@@ -15,6 +15,13 @@ export async function findAll() {
     .populate('project', 'name logoUrl');
 }
 
+export async function findAllWithLastGasUsages() {
+  await dbConnect();
+  return Operation.find({ lastGasUsages: { $exists: true, $ne: [] } })
+      .populate('createdBy', 'address avatarUrl')
+      .populate('project', 'name logoUrl');
+}
+
 async function create(req) {
   let {contractAddress, functionName, project, user} = req.body;
   functionName = functionName?.trim().toLowerCase();

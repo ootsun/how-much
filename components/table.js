@@ -1,5 +1,10 @@
 import {GlobalFilter} from './forms/global-filter.js';
-import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/outline';
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '@heroicons/react/outline';
 
 export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected}) {
   const {
@@ -20,6 +25,13 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
   } = tableInstance;
 
   const {globalFilter, pageIndex} = state;
+
+  const pageMustBeDisplayed = (pageToDisplay) => {
+      return pageCount <= 5
+          || (pageIndex <= 2 && pageToDisplay <= 4)
+          || (pageToDisplay >= pageIndex - 2 && pageToDisplay <= pageIndex + 2)
+          || (pageIndex >= pageCount - 2 && pageToDisplay >= pageCount - 5)
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -96,27 +108,45 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
         <nav aria-label="Page navigation" className="flex justify-center m-1">
           <ul className="inline-flex items-center -space-x-px">
             <li>
-              <button disabled={!canPreviousPage} onClick={() => previousPage()}
+              <button disabled={!canPreviousPage} onClick={() => gotoPage(0)}
                       className="page-arrow-button page-arrow-button-previous">
+                <span className="sr-only">Previous</span>
+                <ChevronDoubleLeftIcon className="h-4 w-4"/>
+              </button>
+            </li>
+            <li>
+              <button disabled={!canPreviousPage} onClick={() => previousPage()}
+                      className="page-arrow-button">
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon className="h-4 w-4"/>
               </button>
             </li>
             {
-              [...Array(pageCount)].map((x, index) =>
-                <li key={`lipageCount-${index}`}>
-                  <button disabled={pageIndex === index} onClick={() => gotoPage(index)}
-                          className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
-                    {index + 1}
-                  </button>
-                </li>
+              [...Array(pageCount)]
+                  .map((x, index) => {
+                    if(pageMustBeDisplayed(index)) {
+                      return <li key={`lipageCount-${index}`}>
+                        <button disabled={pageIndex === index} onClick={() => gotoPage(index)}
+                                className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
+                          {index + 1}
+                        </button>
+                      </li>
+                    }
+                  }
               )
             }
             <li>
               <button disabled={!canNextPage} onClick={() => nextPage()}
-                      className="page-arrow-button page-arrow-button-next">
+                      className="page-arrow-button">
                 <span className="sr-only">Next</span>
                 <ChevronRightIcon className="h-4 w-4"/>
+              </button>
+            </li>
+            <li>
+              <button disabled={!canNextPage} onClick={() => gotoPage(pageCount-1)}
+                      className="page-arrow-button page-arrow-button-next">
+                <span className="sr-only">Previous</span>
+                <ChevronDoubleRightIcon className="h-4 w-4"/>
               </button>
             </li>
           </ul>

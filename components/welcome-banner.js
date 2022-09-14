@@ -9,7 +9,7 @@ export default function WelcomeBanner() {
     }
 
     return (
-        <div className={`${show ? '' : 'hidden'} bg-white shadow-xl w-max absolute z-10 bottom-10 left-1/2 -translate-x-1/2 px-2 py-3 rounded-lg border`}>
+        <div className={`${show ? '' : 'hidden'} bg-white shadow-xl w-max absolute z-10 bottom-10 left-1/2 -translate-x-1/2 px-2 py-3 rounded-lg border dark:bg-gray-800`}>
             <p>Hi <span className="text-orange-500 font-bold">{process.env.NEXT_PUBLIC_WELCOME_BANNER_TARGET}</span>!
                 &nbsp;Be Aware that this tool is still in development. There are tons of bugs to fix and lots of functionalities are missing. But it should give you an idea of what it will become :)
                 <button type="button"

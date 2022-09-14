@@ -3,6 +3,7 @@ import Header from '../components/header/header.js';
 import Footer from '../components/footer.js';
 import {useEffect, useState} from 'react';
 import {authContext, isStillAuthenticated} from '../lib/client/authHandler.js';
+import WelcomeBanner from '../components/welcome-banner.js';
 
 function MyApp({Component, pageProps}) {
 
@@ -22,6 +23,7 @@ function MyApp({Component, pageProps}) {
             <Component {...pageProps}/>
           </main>
         </div>
+        <WelcomeBanner/>
         <Footer/>
       </div>
     </authContext.Provider>

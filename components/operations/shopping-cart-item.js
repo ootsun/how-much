@@ -5,7 +5,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
 
   return (
     <li onClick={() => onRemove(operation)}
-        className="py-1 pl-1 w-full hover:bg-gray-100 rounded-lg transition duration-200 cursor-pointer flex">
+        className="py-1 pl-1 w-full hover:bg-gray-100 rounded-lg transition duration-200 cursor-pointer flex animate-shopping-cart-item">
       <span className="basis-3/5 flex">
         <ProjectNameLogo project={operation.project}/>
         <span><span className="function-name ml-2">{operation.functionName}</span></span>

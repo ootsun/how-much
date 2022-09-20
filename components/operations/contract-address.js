@@ -14,7 +14,7 @@ export function ContractAddress({address}) {
   }
 
   return (
-    <span className="flex">
+    <span className="flex" onClick={event => event.stopPropagation()}>
       <ClipboardToast show={showToast} setShow={setShowToast}/>
       {truncateEthAddress(address)}
       <button className="link ml-1" onClick={copyAddress}>

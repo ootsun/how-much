@@ -44,7 +44,15 @@ const OperationSchema = new mongoose.Schema({
     type: Number
   },
   lastGasUsages: {
-    type: [Number]
+    type: [
+      {
+        txDate: {
+          type: Date,
+          default: Date.now,
+        },
+        value: Number,
+      },
+    ],
   },
 });
 

@@ -2,8 +2,6 @@ import functionExists from '../../../lib/ethereum/operationValidator.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Operation from '../../../models/Operation.js';
 // Keep the import -> need to initialize the schema
-import User from '../../../models/User.js';
-import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import initApiRoute from '../../../lib/utils/restApiHelper.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
@@ -17,9 +15,12 @@ export async function findAll() {
 
 export async function findAllWithLastGasUsages() {
   await dbConnect();
-  return Operation.find({ lastGasUsages: { $exists: true, $ne: [] } })
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    const allOperations = await Operation.find({ 'lastGasUsages.9': { $exists: true } })
       .populate('createdBy', 'address avatarUrl')
       .populate('project', 'name logoUrl');
+  return allOperations.filter(op => op.lastGasUsages[op.lastGasUsages.length - 9].txDate.getTime() > yesterday.getTime());
 }
 
 async function create(req) {
@@ -43,6 +44,13 @@ async function create(req) {
   log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
   await revalidate('operations');
   return operation;
+}
+
+const isPopular = () => {
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  return operation => operation.lastGasUsages.length >= 10
+      && operation.lastGasUsages[operation.lastGasUsages.length - 9].txDate.getTime() > new Date() - twoDaysAgo.getTime();
 }
 
 export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, null, null);

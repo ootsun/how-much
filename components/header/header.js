@@ -28,7 +28,7 @@ export default function Header() {
           <Menu styles={burgerStyles} isOpen={menuIsOpen} onStateChange={handleStateChange}>
             <div className="flex w-full justify-center flex-col items-center menu-wrapper">
               <WenClaim/>
-              {isAuthenticated !== null && !isAuthenticated && <SignInButton/>}
+              {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' && isAuthenticated !== null && !isAuthenticated && <SignInButton/>}
               {isAuthenticated &&
                 <>
                   <NavItems inBurger={true} closeMenu={closeMenu}/>
@@ -58,7 +58,7 @@ export default function Header() {
         <span className="hidden md:inline-flex ">
           <WenClaim/>
         </span>
-        {isAuthenticated !== null && !isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
+        {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' && isAuthenticated !== null && !isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
         {isAuthenticated && <>
           <div className="ml-auto md:ml-0"><ProfileAvatar/></div>
           <div className="hidden md:inline"><SignOutButton/></div>

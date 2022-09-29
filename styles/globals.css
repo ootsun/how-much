@@ -89,8 +89,32 @@
     @apply rounded-r-lg
   }
 
+  .rectangular-badge-sm {
+    @apply text-white italic capitalize px-2 py-1 rounded text-sm
+  }
+
+  .rectangular-badge {
+    @apply text-white italic capitalize px-2 py-1 rounded
+  }
+
   .function-name {
-    @apply bg-cyan-500 text-white italic capitalize px-2 py-1 rounded text-sm
+    @apply rectangular-badge-sm bg-cyan-500
+  }
+
+  .average-price-sm {
+    @apply rectangular-badge-sm bg-fuchsia-500
+  }
+
+  .max-price-sm {
+    @apply rectangular-badge-sm bg-orange-500
+  }
+
+  .average-price {
+    @apply rectangular-badge bg-fuchsia-500
+  }
+
+  .max-price {
+    @apply rectangular-badge bg-orange-500
   }
 
   .information-circle {

@@ -22,19 +22,19 @@ export default function Home({operations}) {
             <InformationCircleIcon className="information-circle"/>
             Click on a row to remove it from your cart
           </p>
-          <div className="flex justify-between items-center lg:block border-gray-200 border-b mb-1.5 pb-1.5">
-            <div className="flex">
+          <div className="flex justify-between items-center border-gray-200 border-b mb-1.5 pb-1.5">
+            <div className="flex basis-3/5 pr-1">
               <ShoppingCartIcon className="w-10 h-10 mr-2"/>
               <h2 className="text-2xl hidden sm:block">Shopping cart</h2>
             </div>
-            <span className="flex w-min text-sm lg:justify-end lg:w-full">
-              <span className="flex w-min">
-                Avg:&nbsp;
-                <span className="bg-fuchsia-500 mx-1 text-white bold px-1">${averageSum}</span>
+            <span className="basis-1/5 pr-1">
+              <span className="average-price">Avg&nbsp;
+                <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>
               </span>
-              <span className="flex w-min">
-                Max:&nbsp;
-                <span className="bg-orange-500 mx-1 text-white bold px-1">${maxSum}</span>
+            </span>
+            <span className="basis-1/5">
+              <span className="max-price">Max&nbsp;
+                <span className="border-l border-white ml-1 pl-1">${maxSum}</span>
               </span>
             </span>
           </div>

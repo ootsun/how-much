@@ -22,21 +22,24 @@ export default function Home({operations}) {
             <InformationCircleIcon className="information-circle"/>
             Click on a row to remove it from your cart
           </p>
-          <div className="flex justify-between items-center border-gray-200 border-b mb-1.5 pb-1.5">
+          <div className={`flex justify-between items-center pb-1.5 ${maxSum > 0 ? 'border-gray-200 border-b' : ''}`}>
             <div className="flex basis-3/5 pr-1">
               <ShoppingCartIcon className="w-10 h-10 mr-2"/>
               <h2 className="text-2xl hidden sm:block">Shopping cart</h2>
             </div>
-            <span className="basis-1/5 pr-1">
-              <span className="average-price">Avg&nbsp;
-                <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>
+            {maxSum > 0 && <>
+              <span className="basis-1/5 pr-1">
+                <span className="average-price">Avg&nbsp;
+                  <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>
+                </span>
               </span>
-            </span>
-            <span className="basis-1/5">
-              <span className="max-price">Max&nbsp;
-                <span className="border-l border-white ml-1 pl-1">${maxSum}</span>
+              <span className="basis-1/5">
+                <span className="max-price">Max&nbsp;
+                  <span className="border-l border-white ml-1 pl-1">${maxSum}</span>
+                </span>
               </span>
-            </span>
+            </>
+            }
           </div>
           <ShoppingCart lastSelected={selectedOperation}
                         setLastSelected={setSelectedOperation}

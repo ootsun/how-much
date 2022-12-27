@@ -169,3 +169,7 @@ input[type=number] {
   75% { opacity: 0.75; }
   100% { opacity: 1; }
 }
+
+.welcome-banner-wrapper {
+  max-width: calc(100% - 20px);
+}

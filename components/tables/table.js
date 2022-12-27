@@ -5,9 +5,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/outline';
-import {useEffect, useState} from "react";
 
-export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, setFetchPage}) {
+export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, setFetchPage, keyword, setKeyword}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -18,12 +17,11 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
     gotoPage,
     pageCount,
     prepareRow,
-    setGlobalFilter,
     state,
     columns
   } = tableInstance;
 
-  const {globalFilter, pageIndex} = state;
+  const {pageIndex} = state;
 
   const isServerSide = setFetchPage != null;
 
@@ -45,7 +43,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle dark:bg-gray-800">
         <div className="mb-4">
-          <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} placeholder={filterPlaceholder}/>
+          <GlobalFilter filter={keyword} setFilter={setKeyword} placeholder={filterPlaceholder}/>
         </div>
         <div className="overflow-hidden">
           <table {...getTableProps()}

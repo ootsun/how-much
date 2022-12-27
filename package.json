@@ -29,6 +29,7 @@
     "postcss-preset-env": "^7.3.1",
     "react": "latest",
     "react-burger-menu": "^3.0.6",
+    "react-debounce-input": "^3.3.0",
     "react-dom": "latest",
     "react-hook-form": "^7.23.0",
     "react-icons": "^4.3.1",

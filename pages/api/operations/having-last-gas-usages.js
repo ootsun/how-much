@@ -15,13 +15,24 @@ export async function findHavingLastGasUsages(pageIndex, keyword) {
   //First index starts at 1
   const page = pageIndex + 1;
   await dbConnect();
+  const query = {
+    lastGasUsages: {$exists: true, $ne: []}
+  };
+  if (keyword) {
+    const regex = {$regex: keyword, $options: 'i'};
+    query['$or'] = [
+      {
+        'project.name': regex
+      },
+      {
+        functionName: regex
+      },
+      {
+        contractAddress: regex
+      },
+    ];
+  }
   const aggregate = Operation.aggregate([
-    {
-      $match:
-        {
-          lastGasUsages: {$exists: true, $ne: []}
-        }
-    },
     {
       $lookup: {
         from: 'projects',
@@ -29,6 +40,9 @@ export async function findHavingLastGasUsages(pageIndex, keyword) {
         foreignField: '_id',
         as: 'project'
       },
+    },
+    {
+      $match: query
     },
     {
       $unwind: "$project"

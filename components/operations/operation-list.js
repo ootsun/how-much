@@ -24,6 +24,7 @@ export function OperationList({
   const [operations, setOperations] = useState(initialOperations.docs);
   const [totalPages, setTotalPages] = useState(initialOperations.totalPages);
   const [fetchPage, setFetchPage] = useState(null);
+  const [keyword, setKeyword] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [displayContractAddress, setDisplayContractAddress] = useState(true);
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
@@ -36,10 +37,10 @@ export function OperationList({
 
   useEffect(() => {
     const fetchNewPage = async () => {
-      if(fetchPage == null) {
+      if(fetchPage == null && keyword == null) {
         return;
       }
-      const res = await findHavingLastGasUsages(fetchPage, null);
+      const res = await findHavingLastGasUsages(fetchPage || 0, keyword);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
         toggleModal('operationListErrorModal');
@@ -50,7 +51,7 @@ export function OperationList({
       setTotalPages(searchResult.totalPages);
     }
     fetchNewPage();
-  }, [fetchPage]);
+  }, [fetchPage, keyword]);
 
   const data = useMemo(
     () => operations,
@@ -178,7 +179,9 @@ export function OperationList({
                        filterPlaceholder={'Search for operations'}
                        readonlyMode={readonlyMode}
                        setSelected={setSelectedOperation}
-                       setFetchPage={setFetchPage}/>
+                       setFetchPage={setFetchPage}
+                       keyword={keyword}
+                       setKeyword={setKeyword}/>
     </>
   );
 }

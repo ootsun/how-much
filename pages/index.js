@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import {OperationList} from '../components/operations/operation-list.js';
-import {findAllWithLastGasUsages} from './api/operations/index.js';
 import {useState} from 'react';
 import {ShoppingCart} from '../components/operations/shopping-cart.js';
 import {InformationCircleIcon, ShoppingCartIcon} from '@heroicons/react/outline';
+import {findHavingLastGasUsages} from "./api/operations/having-last-gas-usages.js";
 
-export default function Home({operations}) {
+export default function Home({initialOperations}) {
 
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [averageSum, setAverageSum] = useState(0);
@@ -51,7 +51,7 @@ export default function Home({operations}) {
             <InformationCircleIcon className="information-circle"/>
             Click on a row to add it to your cart
           </p>
-          <OperationList operations={operations} setSelectedOperation={setSelectedOperation} readonlyMode={true}/>
+          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation} readonlyMode={true}/>
         </section>
       </main>
     </>
@@ -59,11 +59,11 @@ export default function Home({operations}) {
 }
 
 export async function getStaticProps() {
-  const operations = await findAllWithLastGasUsages();
-  // JSON.parse(JSON.stringify(operations)) -> see https://github.com/vercel/next.js/issues/11993
+  const initialOperations = await findHavingLastGasUsages(0);
+  // JSON.parse(JSON.stringify(initialOperations)) -> see https://github.com/vercel/next.js/issues/11993
   return {
     props: {
-      operations: JSON.parse(JSON.stringify(operations)),
+      initialOperations: JSON.parse(JSON.stringify(initialOperations)),
     }
   }
 }

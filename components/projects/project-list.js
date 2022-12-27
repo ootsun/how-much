@@ -6,7 +6,7 @@ import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
-import {Table} from '../table.js';
+import {Table} from '../tables/table.js';
 
 export function ProjectList({projects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 

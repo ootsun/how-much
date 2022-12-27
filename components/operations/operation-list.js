@@ -1,18 +1,18 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../tailwind.config.js'
 import {useEffect, useMemo, useState} from 'react';
-import {deleteOperation, findAll} from '../../lib/client/operationHandler.js';
+import {deleteOperation, findAll, findHavingLastGasUsages} from '../../lib/client/operationHandler.js';
 import ErrorModal from '../modals/error-modal.js';
-import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
+import {useTable, usePagination} from 'react-table';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
-import {Table} from '../table.js';
 import {ContractAddress} from './contract-address.js';
+import {ServerSideTable} from "../tables/server-side-table.js";
 
 export function OperationList({
-                                operations,
+                                initialOperations,
                                 selectedOperation,
                                 setSelectedOperation,
                                 updateList,
@@ -21,21 +21,40 @@ export function OperationList({
                               }) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
-  const [allOperations, setAllOperations] = useState([]);
+  const [operations, setOperations] = useState(initialOperations.docs);
+  const [totalPages, setTotalPages] = useState(initialOperations.totalPages);
+  const [fetchPage, setFetchPage] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [displayContractAddress, setDisplayContractAddress] = useState(true);
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
 
   useEffect(() => {
-    setAllOperations(operations);
     const fullConfig = resolveConfig(tailwindConfig);
     const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
     setDisplayContractAddress(typeof window !== 'undefined' && window.innerWidth >= smNumber);
   }, []);
 
+  useEffect(() => {
+    const fetchNewPage = async () => {
+      if(fetchPage == null) {
+        return;
+      }
+      const res = await findHavingLastGasUsages(fetchPage, null);
+      if (!res.ok) {
+        setErrorModalMessage(ERROR_MESSAGES.serverSide);
+        toggleModal('operationListErrorModal');
+        return;
+      }
+      const searchResult = await res.json();
+      setOperations(searchResult.docs);
+      setTotalPages(searchResult.totalPages);
+    }
+    fetchNewPage();
+  }, [fetchPage]);
+
   const data = useMemo(
-    () => allOperations,
-    [allOperations]
+    () => operations,
+    [operations]
   );
 
   const columns = useMemo(
@@ -46,17 +65,12 @@ export function OperationList({
   const tableInstance = useTable({
       columns,
       data,
+      manualPagination: true,
+      pageCount: totalPages,
       initialState: {
-        sortBy: [
-          {
-            id: 'project.name',
-            desc: false
-          }
-        ]
+        pageIndex: fetchPage || 0
       }
     },
-    useGlobalFilter,
-    useSortBy,
     usePagination);
 
   function createColumns() {
@@ -72,7 +86,6 @@ export function OperationList({
         Cell: ({row}) => <span className="function-name">{row.original.functionName}</span>,
         accessor: 'functionName',
         id: 'functionName',
-        disableSortBy: true
       }
     ];
 
@@ -82,7 +95,6 @@ export function OperationList({
         Cell: ({row}) => <ContractAddress address={row.original.contractAddress}/>,
         accessor: 'contractAddress',
         id: 'contractAddress',
-        disableSortBy: true
       });
     }
 
@@ -93,19 +105,17 @@ export function OperationList({
           return (
             <div className="flex flex-row-reverse">
               {operationBeingDeleted !== operation &&
-                <>
+              <>
                   <span onClick={async () => await onDelete(operation)}
                         className={`text-cyan-500 ${selectedOperation !== operation ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
-                  <span onClick={() => setSelectedOperation(operation)}
-                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
-                </>
+                <span onClick={() => setSelectedOperation(operation)}
+                      className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+              </>
               }
               {operationBeingDeleted === operation && <LoadingCircle color={true}/>}
             </div>
           )
         },
-        disableSortBy: true,
-        disableGlobalFilter: true
       });
     }
 
@@ -120,7 +130,7 @@ export function OperationList({
         toggleModal('operationListErrorModal');
         return;
       }
-      setAllOperations(await res.json());
+      setOperations(await res.json());
     } catch (e) {
       setErrorModalMessage('An error occurred. We could not load the operations. Check you internet connectivity.');
       toggleModal('operationListErrorModal');
@@ -164,8 +174,11 @@ export function OperationList({
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
-      <Table tableInstance={tableInstance} filterPlaceholder={'Search for operations'} readonlyMode={readonlyMode}
-             setSelected={setSelectedOperation}/>
+      <ServerSideTable tableInstance={tableInstance}
+                       filterPlaceholder={'Search for operations'}
+                       readonlyMode={readonlyMode}
+                       setSelected={setSelectedOperation}
+                       setFetchPage={setFetchPage}/>
     </>
   );
 }

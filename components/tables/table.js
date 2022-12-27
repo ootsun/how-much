@@ -1,19 +1,18 @@
-import {GlobalFilter} from './forms/global-filter.js';
+import {GlobalFilter} from '../forms/global-filter.js';
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/outline';
+import {useEffect, useState} from "react";
 
-export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected}) {
+export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, setFetchPage}) {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     page,
-    previousPage,
-    nextPage,
     canPreviousPage,
     canNextPage,
     gotoPage,
@@ -25,6 +24,15 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
   } = tableInstance;
 
   const {globalFilter, pageIndex} = state;
+
+  const isServerSide = setFetchPage != null;
+
+  const navigate = (pageNumber) => {
+    gotoPage(pageNumber);
+    if(isServerSide) {
+      setFetchPage(pageNumber);
+    }
+  }
 
   const pageMustBeDisplayed = (pageToDisplay) => {
       return pageCount <= 5
@@ -48,7 +56,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                 <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
                   {
                     headerGroup.headers.map(column => (
-                      <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                      <th {...column.getHeaderProps(column.getSortByToggleProps ? column.getSortByToggleProps() : [])}
                           key={column.id}
                           className={`py-1 px-2 md:py-3 md:px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
@@ -108,16 +116,16 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
         <nav aria-label="Page navigation" className="flex justify-center m-1">
           <ul className="inline-flex items-center -space-x-px">
             <li>
-              <button disabled={!canPreviousPage} onClick={() => gotoPage(0)}
+              <button disabled={!canPreviousPage} onClick={() => navigate(0)}
                       className="page-arrow-button page-arrow-button-previous">
-                <span className="sr-only">Previous</span>
+                <span className="sr-only">First page</span>
                 <ChevronDoubleLeftIcon className="h-4 w-4"/>
               </button>
             </li>
             <li>
-              <button disabled={!canPreviousPage} onClick={() => previousPage()}
+              <button disabled={!canPreviousPage} onClick={() => navigate(pageIndex - 1)}
                       className="page-arrow-button">
-                <span className="sr-only">Previous</span>
+                <span className="sr-only">Previous page</span>
                 <ChevronLeftIcon className="h-4 w-4"/>
               </button>
             </li>
@@ -126,7 +134,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                   .map((x, index) => {
                     if(pageMustBeDisplayed(index)) {
                       return <li key={`lipageCount-${index}`}>
-                        <button disabled={pageIndex === index} onClick={() => gotoPage(index)}
+                        <button disabled={pageIndex === index} onClick={() => navigate(index)}
                                 className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
                           {index + 1}
                         </button>
@@ -136,16 +144,16 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
               )
             }
             <li>
-              <button disabled={!canNextPage} onClick={() => nextPage()}
+              <button disabled={!canNextPage} onClick={() => navigate(pageIndex + 1)}
                       className="page-arrow-button">
-                <span className="sr-only">Next</span>
+                <span className="sr-only">Next page</span>
                 <ChevronRightIcon className="h-4 w-4"/>
               </button>
             </li>
             <li>
-              <button disabled={!canNextPage} onClick={() => gotoPage(pageCount-1)}
+              <button disabled={!canNextPage} onClick={() => navigate(pageCount - 1)}
                       className="page-arrow-button page-arrow-button-next">
-                <span className="sr-only">Previous</span>
+                <span className="sr-only">Last page</span>
                 <ChevronDoubleRightIcon className="h-4 w-4"/>
               </button>
             </li>

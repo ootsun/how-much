@@ -23,11 +23,15 @@ export default function Home({initialOperations}) {
             Click on a row to remove it from your cart
           </p>
           <div className={`flex justify-between items-center pb-1.5 ${maxSum > 0 ? 'border-gray-200 border-b' : ''}`}>
-            <div className="flex basis-3/5 pr-1">
+            <div className="flex basis-3/5 pr-1 items-center">
               <ShoppingCartIcon className="w-10 h-10 mr-2"/>
-              <h2 className="text-2xl hidden sm:block">Shopping cart</h2>
+              <h2 className="text-2xl hidden sm:block">Shopping cart
+                {Number.parseFloat(maxSum) === 0 &&
+                  <span className="ml-1 text-gray-500 text-sm">(Empty)</span>
+                }
+              </h2>
             </div>
-            {maxSum > 0 && <>
+            {Number.parseFloat(maxSum) > 0 && <>
               <span className="basis-1/5 pr-1">
                 <span className="average-price">Avg&nbsp;
                   <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>

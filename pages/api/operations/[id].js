@@ -7,6 +7,19 @@ import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
+async function getById(req) {
+  const {
+    query: { id }
+  } = req;
+
+  const operation = await Operation.findById(id)
+    .populate('project', 'name logoUrl');
+  if (!operation) {
+    throw new Error('Operation with _id ' + id + ' not found');
+  }
+  return operation;
+}
+
 async function update(req) {
   const {
     query: { id }
@@ -22,7 +35,7 @@ async function update(req) {
         project: project._id
       },
       { runValidators: true})
-      .populate('project', 'name');
+      .populate('project', 'name logoUrl');
     if (!operation) {
       throw new Error('Operation with _id ' + id + ' not found');
     }
@@ -54,7 +67,7 @@ async function deleteOperation(req) {
 }
 
 export default initApiRoute(
-  null,
+  {handle: getById},
   null,
   {handle: update, checkAuth: true},
   {handle: deleteOperation, checkAuth: true});

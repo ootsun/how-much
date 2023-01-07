@@ -1,7 +1,7 @@
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../tailwind.config.js'
 import {useEffect, useMemo, useState} from 'react';
-import {deleteOperation, findAll, findHavingLastGasUsages} from '../../lib/client/operationHandler.js';
+import {deleteOperation, findAll, search} from '../../lib/client/operationHandler.js';
 import ErrorModal from '../modals/error-modal.js';
 import {useTable, usePagination} from 'react-table';
 import {Toast} from '../toast.js';
@@ -17,7 +17,8 @@ export function OperationList({
                                 setSelectedOperation,
                                 updateList,
                                 setUpdateList,
-                                readonlyMode
+                                readonlyMode,
+                                havingLastGasUsage
                               }) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
@@ -39,7 +40,8 @@ export function OperationList({
       if (searchCriteria == null) {
         return;
       }
-      const res = await findHavingLastGasUsages(searchCriteria);
+      searchCriteria.havingLastGasUsage = havingLastGasUsage;
+      const res = await search(searchCriteria);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
         toggleModal('operationListErrorModal');

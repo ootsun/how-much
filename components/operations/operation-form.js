@@ -11,13 +11,12 @@ import {create, update} from '../../lib/client/operationHandler.js';
 import {Logo} from '../projects/logo.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 
-export function OperationForm({operations, projects, selectedOperation, setSelectedOperation, setUpdateList}) {
+export function OperationForm({projects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [actionModalTitle, setActionModalTitle] = useState(null);
   const [actionModalMessage, setActionModalMessage] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [previousSelectedOperation, setPreviousSelectedOperation] = useState(null);
-  const [selectedProject, setSelectedProject] = useState(null);
   const [query, setQuery] = useState(' ');
 
   const filteredProjects =

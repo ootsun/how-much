@@ -1,11 +1,11 @@
 import Head from 'next/head.js';
 import {OperationForm} from '../components/operations/operation-form.js';
 import {OperationList} from '../components/operations/operation-list.js';
-import {findAll} from './api/operations/index.js';
 import {findAll as findAllProjects} from './api/projects/index.js';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
+import {search} from "./api/operations/search.js";
 
-export default function Operations({operations, projects}) {
+export default function Operations({initialOperations, projects}) {
 
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [updateList, setUpdateList] = useState(false);
@@ -18,10 +18,10 @@ export default function Operations({operations, projects}) {
       <main>
         <h2 className="text-2xl mb-3">Operations</h2>
         <section className="card mb-4">
-          <OperationForm operations={operations} projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
+          <OperationForm projects={projects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
-          <OperationList operations={operations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList} readonlyMode={false}/>
+          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList} readonlyMode={false} havingLastGasUsage={false}/>
         </section>
       </main>
     </>
@@ -29,12 +29,12 @@ export default function Operations({operations, projects}) {
 }
 
 export async function getStaticProps() {
-  const operations = await findAll();
+  const initialOperations = await search(0, null, false);
   const projects = await findAllProjects();
-  // JSON.parse(JSON.stringify(operations)) -> see https://github.com/vercel/next.js/issues/11993
+  // JSON.parse(JSON.stringify(initialOperations)) -> see https://github.com/vercel/next.js/issues/11993
   return {
     props: {
-      operations: JSON.parse(JSON.stringify(operations)),
+      initialOperations: JSON.parse(JSON.stringify(initialOperations)),
       projects: JSON.parse(JSON.stringify(projects)),
     }
   }

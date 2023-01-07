@@ -7,17 +7,17 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 
 async function handlePost(req) {
-  let {pageIndex, keyword} = req.body;
-  return findHavingLastGasUsages(pageIndex, keyword);
+  let {pageIndex, keyword, havingLastGasUsage} = req.body;
+  return search(pageIndex, keyword, havingLastGasUsage);
 }
 
-export async function findHavingLastGasUsages(pageIndex, keyword) {
+export async function search(pageIndex, keyword, havingLastGasUsage) {
   //First index starts at 1
   const page = pageIndex + 1;
   await dbConnect();
-  const query = {
+  const query = havingLastGasUsage ? {
     lastGasUsages: {$exists: true, $ne: []}
-  };
+  } : {};
   if (keyword) {
     const regex = {$regex: keyword, $options: 'i'};
     query['$or'] = [

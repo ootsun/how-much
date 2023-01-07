@@ -3,7 +3,7 @@ import {OperationList} from '../components/operations/operation-list.js';
 import {useState} from 'react';
 import {ShoppingCart} from '../components/operations/shopping-cart.js';
 import {InformationCircleIcon, ShoppingCartIcon} from '@heroicons/react/outline';
-import {findHavingLastGasUsages} from "./api/operations/having-last-gas-usages.js";
+import {search} from "./api/operations/search.js";
 
 export default function Home({initialOperations}) {
 
@@ -57,7 +57,7 @@ export default function Home({initialOperations}) {
             <InformationCircleIcon className="information-circle"/>
             Click on a row to add it to your cart
           </p>
-          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation} readonlyMode={true}/>
+          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation} readonlyMode={true} havingLastGasUsage={true}/>
         </section>
       </main>
     </>
@@ -65,7 +65,7 @@ export default function Home({initialOperations}) {
 }
 
 export async function getStaticProps() {
-  const initialOperations = await findHavingLastGasUsages(0);
+  const initialOperations = await search(0, null, true);
   // JSON.parse(JSON.stringify(initialOperations)) -> see https://github.com/vercel/next.js/issues/11993
   return {
     props: {

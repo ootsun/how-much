@@ -8,29 +8,45 @@ import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
 import {create, update} from '../../lib/client/operationHandler.js';
-import {Logo} from '../projects/logo.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
+import {search} from "../../lib/client/projectHandler.js";
 
-export function OperationForm({projects, selectedOperation, setSelectedOperation, setUpdateList}) {
+export function OperationForm({initialProjects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [actionModalTitle, setActionModalTitle] = useState(null);
   const [actionModalMessage, setActionModalMessage] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [previousSelectedOperation, setPreviousSelectedOperation] = useState(null);
-  const [query, setQuery] = useState(' ');
+  const [keyword, setKeyword] = useState(' ');
 
-  const filteredProjects =
-    query === '' || query === ' '
-      ? projects
-      : projects.filter((project) => {
-        return project.name.toLowerCase().includes(query.toLowerCase())
-      })
+  const [projects, setProjects] = useState(initialProjects.docs);
+  const [totalDocs, setTotalDocs] = useState(initialProjects.totalDocs);
 
   const {register, handleSubmit, formState, reset, setValue, getValues, watch, control} = useForm({
     mode: 'onTouched'
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchProject = watch('project', null);
+
+  useEffect(() => {
+    const fetchNewPage = async () => {
+      if(!keyword) {
+        setProjects(initialProjects.docs);
+        setTotalDocs(initialProjects.totalDocs);
+      } else {
+        const res = await search({pageIndex: 0, keyword});
+        if (!res.ok) {
+          setErrorModalMessage(ERROR_MESSAGES.serverSide);
+          toggleModal('operationFormErrorModal');
+          return;
+        }
+        const searchResult = await res.json();
+        setProjects(searchResult.docs);
+        setTotalDocs(searchResult.totalDocs);
+      }
+    }
+    fetchNewPage();
+  }, [keyword]);
 
   async function replaceFormValues() {
     reset();
@@ -116,6 +132,7 @@ export function OperationForm({projects, selectedOperation, setSelectedOperation
   }
 
   function functionNameIsUnique(value) {
+    //TODO
     return true;
     // return ERROR_MESSAGES.operationAlreadyExists;
   }
@@ -138,7 +155,7 @@ export function OperationForm({projects, selectedOperation, setSelectedOperation
                     <Combobox.Input
                       {...field}
                       className="input peer pr-10"
-                      onChange={(event) => setQuery(event.target.value)}
+                      onChange={(event) => setKeyword(event.target.value)}
                       displayValue={(project) => project ? project.name : ''}
                       placeholder=" "
                     />
@@ -157,16 +174,16 @@ export function OperationForm({projects, selectedOperation, setSelectedOperation
                     leave="transition ease-in duration-100"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
-                    afterLeave={() => setQuery('')}
+                    afterLeave={() => setKeyword('')}
                   >
                     <Combobox.Options
                       className="bg-white border-gray-300 border rounded w-full mt-2 max-h-40 overflow-y-scroll cursor-pointer absolute py-1 mt-1 overflow-auto text-base">
-                      {filteredProjects.length === 0 && query !== '' && query !== ' ' ? (
+                      {projects.length === 0 ? (
                         <div className="cursor-default select-none relative py-2 px-4 text-gray-700">
                           Nothing found.
                         </div>
                       ) : (
-                        filteredProjects.map((project) => (
+                        [...projects.map((project) => (
                           <Combobox.Option
                             key={project._id}
                             className={({active}) =>
@@ -186,7 +203,11 @@ export function OperationForm({projects, selectedOperation, setSelectedOperation
                               </>
                             )}
                           </Combobox.Option>
-                        ))
+                        )), ...[totalDocs > 10 ?
+                          <div className="cursor-default select-none relative py-2 pl-10 pr-4 text-gray-700" key="more-items">
+                            {totalDocs - 10} more projects...
+                          </div> : null]
+                        ]
                       )}
                     </Combobox.Options>
                   </Transition>

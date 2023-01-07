@@ -3,7 +3,6 @@ import {LoadingCircle} from '../loading-circle.js';
 
 export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) {
 
-  console.log(operation)
   return (
     <li onClick={() => onRemove(operation)}
         className="py-1 w-full hover:bg-gray-100 rounded-lg transition duration-200 cursor-pointer flex items-center animate-shopping-cart-item">

@@ -11,27 +11,29 @@ export default function Home({initialOperations}) {
   const [averageSum, setAverageSum] = useState(0);
   const [maxSum, setMaxSum] = useState(0);
 
+  const cartIsEmpty = Number.parseFloat(maxSum) === 0;
+
   return (
     <>
       <Head>
         <title>How much ?!!</title>
       </Head>
       <main className="lg:flex lg:flex-row-reverse">
-        <section className="card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start">
+        <section className={`${cartIsEmpty ? 'hidden sm:block' : 'block'} card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start`}>
           <p className="italic align-middle mb-1">
             <InformationCircleIcon className="information-circle"/>
-            Click on a row to remove it from your cart
+            Click on a row to remove it
           </p>
-          <div className={`flex justify-between items-center pb-1.5 ${maxSum > 0 ? 'border-gray-200 border-b' : ''}`}>
-            <div className="flex basis-3/5 pr-1 items-center">
+          <div className={`flex justify-between items-center pb-1.5 ${cartIsEmpty ? '' : 'border-gray-200 border-b'}`}>
+            <div className={`flex basis-3/5 pr-1 items-center`}>
               <ShoppingCartIcon className="w-10 h-10 mr-2"/>
               <h2 className="text-2xl hidden sm:block">Shopping cart
-                {Number.parseFloat(maxSum) === 0 &&
+                {cartIsEmpty &&
                   <span className="ml-1 text-gray-500 text-sm">(Empty)</span>
                 }
               </h2>
             </div>
-            {Number.parseFloat(maxSum) > 0 && <>
+            {!cartIsEmpty && <>
               <span className="basis-1/5 pr-1">
                 <span className="average-price">Avg&nbsp;
                   <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>

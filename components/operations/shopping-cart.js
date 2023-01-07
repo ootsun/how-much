@@ -23,7 +23,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
         const savedOps = [];
         for(const id of savedOpIds) {
           try {
-            const res = await getById('id');
+            const res = await getById(id);
             if (!res.ok) {
               const data = await res.json();
               console.error('Error while retrieving an operation based on shopping cart local storage :', data.error);

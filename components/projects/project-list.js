@@ -2,26 +2,43 @@ import {Logo} from './logo.js';
 import {useEffect, useMemo, useState} from 'react';
 import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
 import ErrorModal from '../modals/error-modal.js';
-import {useTable, useSortBy, useGlobalFilter, usePagination} from 'react-table';
+import {useTable, usePagination} from 'react-table';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Table} from '../tables/table.js';
+import {search} from "../../lib/client/projectHandler.js";
 
-export function ProjectList({projects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
+export function ProjectList({initialProjects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
-  const [allProjects, setAllProjects] = useState([]);
+  const [projects, setProjects] = useState(initialProjects.docs);
+  const [totalPages, setTotalPages] = useState(initialProjects.totalPages);
+  const [searchCriteria, setSearchCriteria] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [projectBeingDeleted, setProjectBeingDeleted] = useState(null);
 
   useEffect(() => {
-    setAllProjects(projects);
-  }, []);
+    const fetchNewPage = async () => {
+      if (searchCriteria == null) {
+        return;
+      }
+      const res = await search(searchCriteria);
+      if (!res.ok) {
+        setErrorModalMessage(ERROR_MESSAGES.serverSide);
+        toggleModal('projectListErrorModal');
+        return;
+      }
+      const searchResult = await res.json();
+      setProjects(searchResult.docs);
+      setTotalPages(searchResult.totalPages);
+    }
+    fetchNewPage();
+  }, [searchCriteria]);
 
   const data = useMemo(
-    () => allProjects,
-    [allProjects]
+    () => projects,
+    [projects]
   );
 
   const columns = useMemo(
@@ -64,17 +81,12 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
   const tableInstance = useTable({
       columns,
       data,
+      manualPagination: true,
+      pageCount: totalPages,
       initialState: {
-        sortBy: [
-          {
-            id: 'name',
-            desc: false
-          }
-        ]
+        pageIndex: searchCriteria?.pageIndex || 0
       }
     },
-    useGlobalFilter,
-    useSortBy,
     usePagination);
 
   async function refreshList() {
@@ -129,7 +141,12 @@ export function ProjectList({projects, selectedProject, setSelectedProject, upda
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="projectListErrorModal"/>
-      <Table tableInstance={tableInstance} filterPlaceholder={'Search for projects'} readonlyMode={false}/>
+      <Table tableInstance={tableInstance}
+             filterPlaceholder={'Search for projects'}
+             readonlyMode={false}
+             setSelected={setSelectedProject}
+             searchCriteria={searchCriteria}
+             setSearchCriteria={setSearchCriteria}/>
     </>
   );
 }

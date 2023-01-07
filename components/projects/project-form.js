@@ -9,7 +9,7 @@ import ActionModal from '../modals/action-modal.js';
 import {Logo} from './logo.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 
-export function ProjectForm({projects, selectedProject, setSelectedProject, setUpdateList}) {
+export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}) {
 
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [actionModalTitle, setActionModalTitle] = useState(null);
@@ -166,12 +166,12 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
     reset();
   }
 
-  function nameIsUnique(value) {
-    if(!projects.some(project => project.name.toLowerCase() === value?.toLowerCase())) {
-      return true;
-    }
-    return ERROR_MESSAGES.projectAlreadyExists;
-  }
+  // function nameIsUnique(value) {
+  //   if(!projects.some(project => project.name.toLowerCase() === value?.toLowerCase())) {
+  //     return true;
+  //   }
+  //   return ERROR_MESSAGES.projectAlreadyExists;
+  // }
 
   return (
     <>
@@ -185,7 +185,8 @@ export function ProjectForm({projects, selectedProject, setSelectedProject, setU
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>
+                   /*{...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>*/
+                   {...register('name', {required: 'Mandatory field'})}/>
             <label htmlFor="name"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Project name</label>

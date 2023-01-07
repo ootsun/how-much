@@ -1,5 +1,6 @@
 import mongoose, {Schema} from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator';
+import * as mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const ProjectSchema = new mongoose.Schema({
   id: {
@@ -33,6 +34,7 @@ const ProjectSchema = new mongoose.Schema({
   }
 });
 
+ProjectSchema.plugin(mongooseAggregatePaginate);
 ProjectSchema.plugin(uniqueValidator);
 
 export default mongoose.models.Project || mongoose.model('Project', ProjectSchema)

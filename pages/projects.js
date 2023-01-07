@@ -1,10 +1,10 @@
 import Head from 'next/head.js';
 import {ProjectForm} from '../components/projects/project-form.js';
 import {ProjectList} from '../components/projects/project-list.js';
-import {findAll} from './api/projects/index.js';
 import {useState} from 'react';
+import {search} from "./api/projects/search.js";
 
-export default function Projects({projects}) {
+export default function Projects({initialProjects}) {
 
   const [selectedProject, setSelectedProject] = useState(null);
   const [updateList, setUpdateList] = useState(false);
@@ -17,10 +17,10 @@ export default function Projects({projects}) {
       <main>
         <h2 className="text-2xl mb-3">Projects</h2>
         <section className="card mb-4">
-          <ProjectForm projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
+          <ProjectForm selectedProject={selectedProject} setSelectedProject={setSelectedProject} setUpdateList={setUpdateList}/>
         </section>
         <section className="card">
-          <ProjectList projects={projects} setSelectedProject={setSelectedProject} selectedProject={selectedProject} updateList={updateList} setUpdateList={setUpdateList}/>
+          <ProjectList initialProjects={initialProjects} setSelectedProject={setSelectedProject} selectedProject={selectedProject} updateList={updateList} setUpdateList={setUpdateList}/>
         </section>
       </main>
     </>
@@ -28,11 +28,11 @@ export default function Projects({projects}) {
 }
 
 export async function getStaticProps() {
-  const projects = await findAll();
-  // JSON.parse(JSON.stringify(projects)) -> see https://github.com/vercel/next.js/issues/11993
+  const initialProjects = await search(0, null);
+  // JSON.parse(JSON.stringify(initialProjects)) -> see https://github.com/vercel/next.js/issues/11993
   return {
     props: {
-      projects: JSON.parse(JSON.stringify(projects))
+      initialProjects: JSON.parse(JSON.stringify(initialProjects))
     }
   }
 }

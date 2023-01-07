@@ -5,8 +5,9 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/outline';
+import {useEffect} from "react";
 
-export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, setFetchPage, keyword, setKeyword}) {
+export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, searchCriteria, setSearchCriteria}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -23,13 +24,15 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
 
   const {pageIndex} = state;
 
-  const isServerSide = setFetchPage != null;
+  useEffect(() => {
+    gotoPage(searchCriteria?.pageIndex || 0);
+  }, [searchCriteria]);
 
   const navigate = (pageNumber) => {
-    gotoPage(pageNumber);
-    if(isServerSide) {
-      setFetchPage(pageNumber);
-    }
+    setSearchCriteria({
+      pageIndex: pageNumber,
+      keyword: searchCriteria?.keyword || null
+    });
   }
 
   const pageMustBeDisplayed = (pageToDisplay) => {
@@ -43,7 +46,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle dark:bg-gray-800">
         <div className="mb-4">
-          <GlobalFilter filter={keyword} setFilter={setKeyword} placeholder={filterPlaceholder}/>
+          <GlobalFilter searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria} placeholder={filterPlaceholder}/>
         </div>
         <div className="overflow-hidden">
           <table {...getTableProps()}

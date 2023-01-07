@@ -63,7 +63,9 @@ export async function findHavingLastGasUsages(pageIndex, keyword) {
     page,
     limit: 10,
   };
-  return Operation.aggregatePaginate(aggregate, options);
+  const result = await Operation.aggregatePaginate(aggregate, options);
+  result.page--;
+  return result;
 }
 
 export default initApiRoute(null, {handle: handlePost}, null, null);

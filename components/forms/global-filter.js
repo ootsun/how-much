@@ -1,7 +1,14 @@
 import {SearchIcon} from '@heroicons/react/outline';
 import {DebounceInput} from "react-debounce-input";
 
-export function GlobalFilter({filter, setFilter, placeholder}) {
+export function GlobalFilter({searchCriteria, setSearchCriteria, placeholder}) {
+
+  const search = (e) => {
+    setSearchCriteria({
+      pageIndex: 0,
+      keyword: e.target.value
+    });
+  }
 
   return (
     <>
@@ -13,9 +20,9 @@ export function GlobalFilter({filter, setFilter, placeholder}) {
         <DebounceInput type="text" id="table-search"
                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                        placeholder={placeholder}
-                       value={filter || ''}
+                       value={searchCriteria?.keyword || ''}
                        debounceTimeout={300}
-                       onChange={(e) => setFilter(e.target.value)}/>
+                       onChange={search}/>
       </div>
     </>
   );

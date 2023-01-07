@@ -9,7 +9,7 @@ import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
-import {ServerSideTable} from "../tables/server-side-table.js";
+import {Table} from "../tables/table.js";
 
 export function OperationList({
                                 initialOperations,
@@ -23,8 +23,7 @@ export function OperationList({
   const [errorModalMessage, setErrorModalMessage] = useState(null);
   const [operations, setOperations] = useState(initialOperations.docs);
   const [totalPages, setTotalPages] = useState(initialOperations.totalPages);
-  const [fetchPage, setFetchPage] = useState(null);
-  const [keyword, setKeyword] = useState(null);
+  const [searchCriteria, setSearchCriteria] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [displayContractAddress, setDisplayContractAddress] = useState(true);
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
@@ -37,10 +36,10 @@ export function OperationList({
 
   useEffect(() => {
     const fetchNewPage = async () => {
-      if(fetchPage == null && keyword == null) {
+      if (searchCriteria == null) {
         return;
       }
-      const res = await findHavingLastGasUsages(fetchPage || 0, keyword);
+      const res = await findHavingLastGasUsages(searchCriteria);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
         toggleModal('operationListErrorModal');
@@ -51,7 +50,7 @@ export function OperationList({
       setTotalPages(searchResult.totalPages);
     }
     fetchNewPage();
-  }, [fetchPage, keyword]);
+  }, [searchCriteria]);
 
   const data = useMemo(
     () => operations,
@@ -69,7 +68,7 @@ export function OperationList({
       manualPagination: true,
       pageCount: totalPages,
       initialState: {
-        pageIndex: fetchPage || 0
+        pageIndex: searchCriteria?.pageIndex || 0
       }
     },
     usePagination);
@@ -175,13 +174,12 @@ export function OperationList({
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
-      <ServerSideTable tableInstance={tableInstance}
-                       filterPlaceholder={'Search for operations'}
-                       readonlyMode={readonlyMode}
-                       setSelected={setSelectedOperation}
-                       setFetchPage={setFetchPage}
-                       keyword={keyword}
-                       setKeyword={setKeyword}/>
+      <Table tableInstance={tableInstance}
+             filterPlaceholder={'Search for operations'}
+             readonlyMode={readonlyMode}
+             setSelected={setSelectedOperation}
+             searchCriteria={searchCriteria}
+             setSearchCriteria={setSearchCriteria}/>
     </>
   );
 }

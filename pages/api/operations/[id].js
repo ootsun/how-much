@@ -9,10 +9,21 @@ import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
 async function getById(req) {
   const {
-    query: { id }
+    query: {id}
   } = req;
 
-  const operation = await Operation.findById(id)
+  const operation = await Operation.findById(id,
+    {
+      lastGasUsages: 0,
+      createdAt: 0,
+      createdBy: 0,
+      implementationAddress: 0,
+      minGasUsage: 0,
+      methodId: 0,
+      'project.createdAt': 0,
+      'project.createdBy': 0,
+      'project.symbol': 0
+    })
     .populate('project', 'name logoUrl');
   if (!operation) {
     throw new Error('Operation with _id ' + id + ' not found');
@@ -22,7 +33,7 @@ async function getById(req) {
 
 async function update(req) {
   const {
-    query: { id }
+    query: {id}
   } = req;
   const {contractAddress, functionName, project, user} = req.body;
 
@@ -34,7 +45,7 @@ async function update(req) {
         functionName,
         project: project._id
       },
-      { runValidators: true})
+      {runValidators: true})
       .populate('project', 'name logoUrl');
     if (!operation) {
       throw new Error('Operation with _id ' + id + ' not found');
@@ -51,7 +62,7 @@ async function update(req) {
 
 async function deleteOperation(req) {
   const {
-    query: { id }
+    query: {id}
   } = req;
   const {user} = req.body;
 

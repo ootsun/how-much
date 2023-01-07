@@ -20,22 +20,31 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     const retrieveFromLocalStorage = async () => {
       const savedOpIds = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SELECTED_OPS_KEY));
       if(savedOpIds) {
-        const savedOps = [];
+        const promises = [];
         for(const id of savedOpIds) {
-          try {
-            const res = await getById(id);
-            if (!res.ok) {
-              const data = await res.json();
-              console.error('Error while retrieving an operation based on shopping cart local storage :', data.error);
-              return;
-            }
-            savedOps.push(await res.json());
-          } catch (e) {
-            console.error('Error while retrieving an operation based on shopping cart local storage :', e);
-          }
+          promises.push(getById(id));
         }
-        setSelectedOperations(savedOps);
-        refreshShoppingCartSums(savedOps);
+
+        try {
+          const responses = await Promise.all(promises);
+          const savedOps = [];
+          for(const res of responses) {
+            try {
+              if (!res.ok) {
+                const data = await res.json();
+                console.error('Error while retrieving an operation based on shopping cart local storage :', data.error);
+                return;
+              }
+              savedOps.push(await res.json());
+            } catch (e) {
+              console.error('Error while retrieving an operation based on shopping cart local storage :', e);
+            }
+          }
+          setSelectedOperations(savedOps);
+          refreshShoppingCartSums(savedOps);
+        } catch (e) {
+          console.error('Error while retrieving an operation based on shopping cart local storage :', e);
+        }
       }
     }
     retrieveFromLocalStorage();

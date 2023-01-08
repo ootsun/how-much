@@ -9,7 +9,8 @@ import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, SelectorIcon} from '@heroicons/react/solid';
 import {create, update} from '../../lib/client/operationHandler.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
-import {search} from "../../lib/client/projectHandler.js";
+import {search as searchProject} from "../../lib/client/projectHandler.js";
+import {search} from "../../lib/client/operationHandler.js";
 
 export function OperationForm({initialProjects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
@@ -18,15 +19,16 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   const [toastMessage, setToastMessage] = useState(null);
   const [previousSelectedOperation, setPreviousSelectedOperation] = useState(null);
   const [keyword, setKeyword] = useState(' ');
+  const [functionNames, setFunctionNames] = useState([]);
 
   const [projects, setProjects] = useState(initialProjects.docs);
   const [totalDocs, setTotalDocs] = useState(initialProjects.totalDocs);
 
-  const {register, handleSubmit, formState, reset, setValue, getValues, watch, control} = useForm({
+  const {register, handleSubmit, formState, reset, setValue, getValues, watch, control, trigger} = useForm({
     mode: 'onTouched'
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
-  const watchProject = watch('project', null);
+  const watchFunctionName = watch('functionName', null);
 
   useEffect(() => {
     const fetchNewPage = async () => {
@@ -34,7 +36,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
         setProjects(initialProjects.docs);
         setTotalDocs(initialProjects.totalDocs);
       } else {
-        const res = await search({pageIndex: 0, keyword});
+        const res = await searchProject({pageIndex: 0, keyword});
         if (!res.ok) {
           setErrorModalMessage(ERROR_MESSAGES.serverSide);
           toggleModal('operationFormErrorModal');
@@ -132,9 +134,31 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   }
 
   function functionNameIsUnique(value) {
-    //TODO
+    if(!functionNames.length || !watchFunctionName) {
+      return true;
+    }
+
+    if(functionNames.some(fnct => fnct.functionName.trim().toLowerCase() === value.trim().toLowerCase())) {
+      return ERROR_MESSAGES.operationAlreadyExists;
+    }
+
     return true;
-    // return ERROR_MESSAGES.operationAlreadyExists;
+  }
+
+  const onProjectChange = (project) => {
+    loadFunctionNames(project);
+    return setValue('project', project);
+  }
+
+  const loadFunctionNames = async (project) => {
+    const res = await search({projectId: project._id});
+    if (!res.ok) {
+      setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      toggleModal('operationFormErrorModal');
+      return;
+    }
+    setFunctionNames(await res.json());
+    await trigger('functionName');
   }
 
   return (
@@ -149,7 +173,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({field}) =>
-                <Combobox value={getValues('project')} onChange={(project) => setValue('project', project)}>
+                <Combobox value={getValues('project')} onChange={onProjectChange}>
                   <div
                     className="relative z-0">
                     <Combobox.Input

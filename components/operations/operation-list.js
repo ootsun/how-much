@@ -9,7 +9,7 @@ import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
-import {Table} from "../tables/table.js";
+import {Table} from "../table.js";
 
 export function OperationList({
                                 initialOperations,
@@ -102,7 +102,7 @@ export function OperationList({
 
     if (!readonlyMode) {
       columns.push({
-        id: () => 'actions',
+        id: 'actions',
         accessor: (operation) => {
           return (
             <div className="flex flex-row-reverse">

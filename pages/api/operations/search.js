@@ -7,7 +7,10 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 
 async function handlePost(req) {
-  let {pageIndex, keyword, havingLastGasUsage} = req.body;
+  let {pageIndex, keyword, havingLastGasUsage, projectId} = req.body;
+  if(projectId) {
+    return searchAllFunctionNameByProject(projectId);
+  }
   return search(pageIndex, keyword, havingLastGasUsage);
 }
 
@@ -66,6 +69,15 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
   const result = await Operation.aggregatePaginate(aggregate, options);
   result.page--;
   return result;
+}
+
+async function searchAllFunctionNameByProject(projectId) {
+  await dbConnect();
+
+  return Operation.find({project: projectId},
+    {
+      functionName: 1
+    });
 }
 
 export default initApiRoute(null, {handle: handlePost}, null, null);

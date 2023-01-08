@@ -1,4 +1,4 @@
-import {GlobalFilter} from '../forms/global-filter.js';
+import {GlobalFilter} from './forms/global-filter.js';
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,

@@ -1,5 +1,5 @@
 import {useForm} from 'react-hook-form';
-import {create, getUploadSignature, update, uploadImage} from '../../lib/client/projectHandler.js';
+import {create, getUploadSignature, search, update, uploadImage} from '../../lib/client/projectHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
 import {useEffect, useState} from 'react';
@@ -166,12 +166,24 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     reset();
   }
 
-  // function nameIsUnique(value) {
-  //   if(!projects.some(project => project.name.toLowerCase() === value?.toLowerCase())) {
-  //     return true;
-  //   }
-  //   return ERROR_MESSAGES.projectAlreadyExists;
-  // }
+  async function nameIsUnique(value) {
+    const res = await search({
+      pageIndex: 0,
+      keyword: value,
+      fullMatch: true
+    });
+    if (!res.ok) {
+      setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      toggleModal('projectFormErrorModal');
+      return;
+    }
+    const searchResult = await res.json();
+    if (searchResult.totalDocs === 0
+      || (selectedProject && searchResult.docs[0]._id === selectedProject._id)) {
+      return true;
+    }
+    return ERROR_MESSAGES.projectAlreadyExists;
+  }
 
   return (
     <>
@@ -185,8 +197,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   /*{...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>*/
-                   {...register('name', {required: 'Mandatory field'})}/>
+                   {...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>
             <label htmlFor="name"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Project name</label>

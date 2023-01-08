@@ -22,7 +22,7 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
     lastGasUsages: {$exists: true, $ne: []}
   } : {};
   if (keyword) {
-    const regex = {$regex: keyword, $options: 'i'};
+    const regex = {$regex: keyword.trim(), $options: 'i'};
     query['$or'] = [
       {
         'project.name': regex

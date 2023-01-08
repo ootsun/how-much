@@ -6,18 +6,19 @@ import initApiRoute from "../../../lib/utils/restApiHelper.js";
 import User from '../../../models/User.js';
 
 async function handlePost(req) {
-  let {pageIndex, keyword} = req.body;
-  return search(pageIndex, keyword);
+  let {pageIndex, keyword, fullMatch} = req.body;
+  return search(pageIndex, keyword, fullMatch);
 }
 
-export async function search(pageIndex, keyword) {
+export async function search(pageIndex, keyword, fullMatch) {
   //First index starts at 1
   const page = pageIndex + 1;
   await dbConnect();
   const query = {};
-  if (keyword) {
-    const regex = {$regex: keyword, $options: 'i'};
-    query.name = regex;
+  if (keyword && !fullMatch) {
+    query.name = {$regex: keyword.trim(), $options: 'i'};
+  } else if(keyword && fullMatch) {
+    query.name = {$regex: `^${keyword.trim()}$`, $options: 'i'};
   }
   const aggregate = Project.aggregate([
     {

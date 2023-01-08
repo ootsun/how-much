@@ -3,28 +3,32 @@ import {BLOCK_INTERVAL_IN_MS} from '../../../lib/ethereum/ethereumUtils.js';
 import {ethers} from 'ethers';
 import {provider} from '../../../lib/ethereum/ethereumUtils.js';
 
-let prices = null;
-let lastRefresh = null;
+const NB_MS_IN_10_MIN = 10 * 60 * 1000;
+
+let prices = {};
+let lastGasPriceRefresh = null;
+let lastEtherPriceRefresh = null;
+
 const EtherscanProvider = new ethers.providers.EtherscanProvider();
-refreshPrices();
 
 async function getPrices() {
-  if(!lastRefresh || lastRefresh < new Date().getTime() - BLOCK_INTERVAL_IN_MS) {
-    await refreshPrices();
+  if(!lastGasPriceRefresh || lastGasPriceRefresh < new Date().getTime() - BLOCK_INTERVAL_IN_MS) {
+    await refreshGasPrice();
+  }
+  if(!lastEtherPriceRefresh || lastEtherPriceRefresh < new Date().getTime() - NB_MS_IN_10_MIN) {
+    await refreshEthereumPrice();
   }
   return prices;
 }
 
-async function refreshPrices() {
-  const resolve = await Promise.all([
-    EtherscanProvider.getEtherPrice(),
-    provider.getGasPrice()
-  ]);
-  prices = {
-    etherPrice: resolve[0],
-    gasPriceInWei: resolve[1].toString()
-  };
-  lastRefresh = new Date().getTime();
+async function refreshGasPrice() {
+  prices.gasPriceInWei = (await provider.getGasPrice()).toString();
+  lastGasPriceRefresh = new Date().getTime();
+}
+
+async function refreshEthereumPrice() {
+  prices.etherPrice = await EtherscanProvider.getEtherPrice();
+  lastEtherPriceRefresh = new Date().getTime();
 }
 
 export default initApiRoute({handle: getPrices}, null, null, null);

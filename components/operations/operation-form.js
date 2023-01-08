@@ -32,7 +32,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
 
   useEffect(() => {
     const fetchNewPage = async () => {
-      if(!keyword) {
+      if (!keyword) {
         setProjects(initialProjects.docs);
         setTotalDocs(initialProjects.totalDocs);
       } else {
@@ -56,6 +56,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
     setValue('functionName', selectedOperation.functionName);
     setValue('contractAddress', selectedOperation.contractAddress);
     setPreviousSelectedOperation(selectedOperation);
+    await loadFunctionNames(selectedOperation.project);
   }
 
   async function handleActionModalResponse(res) {
@@ -84,7 +85,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   async function createOperation(form) {
     const res = await create(form.project, form.functionName, form.contractAddress);
     if (!res.ok) {
-      if(res.status === 400) {
+      if (res.status === 400) {
         setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
       } else {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
@@ -134,11 +135,12 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   }
 
   function functionNameIsUnique(value) {
-    if(!functionNames.length || !watchFunctionName) {
+    if (!functionNames.length || !watchFunctionName) {
       return true;
     }
 
-    if(functionNames.some(fnct => fnct.functionName.trim().toLowerCase() === value.trim().toLowerCase())) {
+    if (functionNames.some(operation => operation.functionName.trim().toLowerCase() === value.trim().toLowerCase()
+      && (!selectedOperation || operation._id !== selectedOperation._id))) {
       return ERROR_MESSAGES.operationAlreadyExists;
     }
 
@@ -228,7 +230,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                             )}
                           </Combobox.Option>
                         )), ...[totalDocs > 10 ?
-                          <div className="cursor-default select-none relative py-2 pl-10 pr-4 text-gray-700" key="more-items">
+                          <div className="cursor-default select-none relative py-2 pl-10 pr-4 text-gray-700"
+                               key="more-items">
                             {totalDocs - 10} more projects...
                           </div> : null]
                         ]

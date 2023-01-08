@@ -1,6 +1,6 @@
-import mongoose, {Schema} from 'mongoose'
+import {Schema, models, model} from 'mongoose'
 
-const NonceSchema = new mongoose.Schema({
+const NonceSchema = new Schema({
   id: {
     type: Schema.Types.ObjectId,
   },
@@ -18,4 +18,4 @@ const NonceSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.models.Nonce || mongoose.model('Nonce', NonceSchema)
+export default models.Nonce || model('Nonce', NonceSchema)

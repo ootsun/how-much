@@ -1,5 +1,5 @@
 import initApiRoute from '../../lib/utils/restApiHelper.js';
-import * as cloudinary from 'cloudinary';
+import {v2 as cloudinaryV2} from 'cloudinary';
 
 const APY_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
@@ -10,7 +10,7 @@ async function generateSignature(req) {
   const {public_id} = req.body;
   const timestamp = Math.round((new Date).getTime() / 1000);
 
-  const signature = cloudinary.v2.utils.api_sign_request({
+  const signature = cloudinaryV2.utils.api_sign_request({
     timestamp,
     folder: PROJECTS_FOLDER_NAME,
     public_id

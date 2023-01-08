@@ -2,9 +2,9 @@ import {ErrorTypes, SiweMessage} from 'siwe';
 import initApiRoute from '../../lib/utils/restApiHelper.js';
 import Nonce from '../../models/Nonce.js';
 import User from '../../models/User.js';
-import jwt from 'jsonwebtoken';
+import {sign} from 'jsonwebtoken';
 import log from '../../lib/log/logger.js';
-import * as cloudinary from 'cloudinary';
+import {v2 as cloudinaryV2} from 'cloudinary';
 import {generateAvatar} from '../../lib/utils/avatarGenerator.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -30,14 +30,14 @@ async function verify(req) {
     if(!user) {
       const image = await generateAvatar(fields.address);
       const base64 = new Buffer(image).toString('base64');
-      const upload = await cloudinary.v2.uploader.upload(`data:image/png;base64,${base64}`, {
+      const upload = await cloudinaryV2.uploader.upload(`data:image/png;base64,${base64}`, {
         public_id: AVATARS_FOLDER_NAME + "/" + fields.address,
       });
       user = await User.create({address: fields.address, avatarUrl: upload.secure_url});
       log.info(`User with address ${user.address} successfully created`);
     }
 
-    const token = jwt.sign({user: user}, JWT_SECRET, {expiresIn: JWT_VALIDITY_DURATION}, null);
+    const token = sign({user: user}, JWT_SECRET, {expiresIn: JWT_VALIDITY_DURATION}, null);
     log.info(`User with address ${user.address} successfully logged in`);
     return {token: token};
   } catch(error) {

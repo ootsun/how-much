@@ -1,8 +1,8 @@
-import mongoose, {Schema} from 'mongoose'
+import {Schema, models, model} from 'mongoose'
 import User from './User.js';
 import * as mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-const OperationSchema = new mongoose.Schema({
+const OperationSchema = new Schema({
   id: {
     type: Schema.Types.ObjectId,
   },
@@ -60,4 +60,4 @@ const OperationSchema = new mongoose.Schema({
 OperationSchema.plugin(mongooseAggregatePaginate);
 OperationSchema.index({ contractAddress: 1, functionName: 1 }, { unique: true });
 
-export default mongoose.models.Operation || mongoose.model('Operation', OperationSchema)
+export default models.Operation || model('Operation', OperationSchema)

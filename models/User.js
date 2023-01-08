@@ -1,7 +1,7 @@
-import mongoose, {Schema} from 'mongoose';
+import {Schema, models, model} from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   id: {
     type: Schema.Types.ObjectId,
   },
@@ -26,4 +26,4 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.plugin(uniqueValidator);
 
-export default mongoose.models.User || mongoose.model('User', UserSchema)
+export default models.User || model('User', UserSchema)

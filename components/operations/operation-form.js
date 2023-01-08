@@ -29,6 +29,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchFunctionName = watch('functionName', null);
+  const watchContractAddress = watch('contractAddress', null);
 
   useEffect(() => {
     const fetchNewPage = async () => {
@@ -135,11 +136,12 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   }
 
   function functionNameIsUnique(value) {
-    if (!functionNames.length || !watchFunctionName) {
+    if (!functionNames.length || !watchFunctionName || !watchContractAddress) {
       return true;
     }
 
-    if (functionNames.some(operation => operation.functionName.trim().toLowerCase() === value.trim().toLowerCase()
+    if (functionNames.some(operation => operation.functionName.toLowerCase() === value.trim().toLowerCase()
+      && operation.contractAddress.trim().toLowerCase() === watchContractAddress.toLowerCase()
       && (!selectedOperation || operation._id !== selectedOperation._id))) {
       return ERROR_MESSAGES.operationAlreadyExists;
     }
@@ -259,7 +261,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('contractAddress', {required: 'Mandatory field'})}/>
+                   {...register('contractAddress', {required: 'Mandatory field', validate: functionNameIsUnique})}/>
             <label htmlFor="contractAddress"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Contract address</label>

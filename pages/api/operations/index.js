@@ -18,6 +18,7 @@ export async function findAll() {
 async function create(req) {
   let {contractAddress, functionName, project, user} = req.body;
   functionName = functionName?.trim().toLowerCase();
+  contractAddress = contractAddress.trim();
   const exists = await functionExists(contractAddress, functionName);
   if (exists === false) {
     const error = new Error('Function [' + functionName + '] does not exist');

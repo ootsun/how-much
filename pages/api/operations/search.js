@@ -76,7 +76,8 @@ async function searchAllFunctionNameByProject(projectId) {
 
   return Operation.find({project: projectId},
     {
-      functionName: 1
+      functionName: 1,
+      contractAddress: 1
     });
 }
 

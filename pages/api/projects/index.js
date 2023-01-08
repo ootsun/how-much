@@ -9,7 +9,7 @@ import {revalidate} from '../../../lib/utils/revalidationHandler.js';
 
 async function create(req) {
   let {name, logoUrl, user} = req.body;
-  name = capitalizeFirstLetter(name);
+  name = capitalizeFirstLetter(name.trim());
 
   await dbConnect();
 

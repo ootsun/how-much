@@ -12,7 +12,8 @@ async function getById(req) {
     query: {id}
   } = req;
 
-  console.time('operation-id' + id)
+  await dbConnect();
+
   const operation = await Operation.findById(id,
     {
       lastGasUsages: 0,
@@ -26,7 +27,6 @@ async function getById(req) {
       'project.symbol': 0
     })
     .populate('project', 'name logoUrl');
-  console.timeEnd('operation-id'+ id)
   if (!operation) {
     throw new Error('Operation with _id ' + id + ' not found');
   }

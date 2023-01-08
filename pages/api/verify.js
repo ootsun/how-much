@@ -6,6 +6,7 @@ import {sign} from 'jsonwebtoken';
 import log from '../../lib/log/logger.js';
 import {v2 as cloudinaryV2} from 'cloudinary';
 import {generateAvatar} from '../../lib/utils/avatarGenerator.js';
+import dbConnect from "../../lib/database/dbConnect.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_VALIDITY_DURATION = process.env.JWT_VALIDITY_DURATION;
@@ -20,6 +21,8 @@ async function verify(req) {
   const siweMessage = new SiweMessage(message);
   try {
     const fields = await siweMessage.validate(signature);
+
+    await dbConnect();
 
     const nonce = await Nonce.findOne({address: fields.address});
     if (fields.nonce !== nonce.value) {

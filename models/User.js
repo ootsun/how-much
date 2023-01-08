@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   address: {
     type: String,
     unique: true,
+    uniqueCaseInsensitive: true,
     required: true
   },
   avatarUrl: {

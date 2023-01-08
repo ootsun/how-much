@@ -18,11 +18,13 @@ const ProjectSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    uniqueCaseInsensitive: true
   },
   symbol: {
     type: String,
-    unique: true
+    unique: true,
+    uniqueCaseInsensitive: true
   },
   logoUrl: {
     type: String,

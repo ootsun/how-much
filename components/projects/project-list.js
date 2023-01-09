@@ -8,6 +8,7 @@ import {LoadingCircle} from '../loading-circle.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Table} from '../table.js';
 import {search} from "../../lib/client/projectHandler.js";
+import {Skeleton} from "../skeleton.js";
 
 export function ProjectList({initialProjects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
@@ -17,13 +18,16 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
   const [searchCriteria, setSearchCriteria] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
   const [projectBeingDeleted, setProjectBeingDeleted] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchNewPage = async () => {
       if (searchCriteria == null) {
         return;
       }
+      setLoading(true);
       const res = await search(searchCriteria);
+      setLoading(false);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
         toggleModal('projectListErrorModal');
@@ -37,45 +41,13 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
   }, [searchCriteria]);
 
   const data = useMemo(
-    () => projects,
-    [projects]
+    () => (loading ? Array(10).fill({}) : projects),
+    [projects, loading]
   );
 
   const columns = useMemo(
-    () => [
-      {
-        Header: 'Name',
-        accessor: 'name',
-      },
-      {
-        Header: 'Logo',
-        Cell: ({row}) => <Logo url={row.original.logoUrl} alt={row.original.name}/>,
-        accessor: 'project.logoUrl',
-        disableSortBy: true,
-        disableGlobalFilter: true
-      },
-      {
-        Cell: ({row}) => {
-          return (
-            <div className="flex flex-row-reverse">
-              {projectBeingDeleted !== row.original &&
-                <>
-                  <span onClick={async () => await onDelete(row.original)}
-                        className={`text-cyan-500 ${selectedProject !== row.original ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
-                  <span onClick={() => setSelectedProject(row.original)}
-                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
-                </>
-              }
-              {projectBeingDeleted === row.original && <LoadingCircle color={true}/>}
-            </div>
-          )
-        },
-        id: () => 'actions',
-        accessor: 'actions',
-        disableSortBy: true
-      }
-    ],
-    [projectBeingDeleted]
+    () => createColumns(),
+    [projectBeingDeleted, loading]
   );
 
   const tableInstance = useTable({
@@ -88,6 +60,48 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
       }
     },
     usePagination);
+
+  function createColumns() {
+    return [
+        {
+          Header: 'Name',
+          accessor: 'name',
+          Cell: ({row}) =>
+            loading ?
+              <Skeleton/> :
+              <span>{row.original.name}</span>,
+        },
+        {
+          Header: 'Logo',
+          Cell: ({row}) => loading ?
+            <Skeleton logo={true}/> :
+            <Logo url={row.original.logoUrl} alt={row.original.name} loading={loading}/>,
+          accessor: 'project.logoUrl',
+          disableSortBy: true,
+          disableGlobalFilter: true
+        },
+        {
+          Cell: ({row}) => {
+            return (
+              <div className="flex flex-row-reverse">
+                {projectBeingDeleted !== row.original &&
+                <>
+                  <span onClick={async () => await onDelete(row.original)}
+                        className={`text-cyan-500 ${selectedProject !== row.original ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                  <span onClick={() => setSelectedProject(row.original)}
+                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+                </>
+                }
+                {projectBeingDeleted === row.original && <LoadingCircle color={true}/>}
+              </div>
+            )
+          },
+          id: () => 'actions',
+          accessor: 'actions',
+          disableSortBy: true
+        }
+      ];
+  }
 
   async function refreshList() {
     try {

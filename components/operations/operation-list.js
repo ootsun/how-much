@@ -10,6 +10,7 @@ import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
+import {Skeleton} from "../skeleton.js";
 
 export function OperationList({
                                 initialOperations,
@@ -28,6 +29,7 @@ export function OperationList({
   const [toastMessage, setToastMessage] = useState(null);
   const [displayContractAddress, setDisplayContractAddress] = useState(true);
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fullConfig = resolveConfig(tailwindConfig);
@@ -41,7 +43,9 @@ export function OperationList({
         return;
       }
       searchCriteria.havingLastGasUsage = havingLastGasUsage;
+      setLoading(true);
       const res = await search(searchCriteria);
+      setLoading(false);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
         toggleModal('operationListErrorModal');
@@ -55,13 +59,13 @@ export function OperationList({
   }, [searchCriteria]);
 
   const data = useMemo(
-    () => operations,
-    [operations]
+    () => (loading ? Array(10).fill({}) : operations),
+    [operations, loading]
   );
 
   const columns = useMemo(
     () => createColumns(),
-    [operationBeingDeleted]
+    [operationBeingDeleted, loading]
   );
 
   const tableInstance = useTable({
@@ -79,13 +83,16 @@ export function OperationList({
     const columns = [
       {
         Header: 'Project',
-        Cell: ({row}) => <ProjectNameLogo project={row.original.project}/>,
+        Cell: ({row}) => <ProjectNameLogo project={row.original.project} loading={loading}/>,
         accessor: 'project.name',
         id: 'project.name'
       },
       {
         Header: 'Function name',
-        Cell: ({row}) => <span className="function-name">{row.original.functionName}</span>,
+        Cell: ({row}) =>
+          loading ?
+            <Skeleton functionName={true}/> :
+            <span className="function-name">{row.original.functionName}</span>,
         accessor: 'functionName',
         id: 'functionName',
       }
@@ -94,7 +101,9 @@ export function OperationList({
     if (displayContractAddress) {
       columns.push({
         Header: 'Contract address',
-        Cell: ({row}) => <ContractAddress address={row.original.contractAddress}/>,
+        Cell: ({row}) => loading ?
+          <Skeleton contractAddress={true}/> :
+          <ContractAddress address={row.original.contractAddress}/>,
         accessor: 'contractAddress',
         id: 'contractAddress',
       });

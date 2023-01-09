@@ -1,16 +1,9 @@
-import Image from 'next/image';
-
 export function Logo({url, alt}) {
 
   return (
-    <div className="w-5 h-5 relative inline-block">
-      <Image
+      <img
         src={url}
         alt={alt}
-        className="inline"
-        layout='fill'
-        objectFit='contain'
-      />
-    </div>
+        className="inline w-5 h-5 relative inline-block"/>
   );
 }

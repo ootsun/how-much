@@ -173,3 +173,23 @@ input[type=number] {
 .welcome-banner-wrapper {
   max-width: calc(100% - 20px);
 }
+
+.skeleton {
+  opacity: .7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.skeleton-text {
+  border-radius: .125rem;
+  display: block;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}

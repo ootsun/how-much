@@ -51,7 +51,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
         <div className="overflow-hidden">
           <table {...getTableProps()}
                  className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
-            <thead className="bg-gray-100 dark:bg-gray-700">
+            { !readonlyMode && <thead className="bg-gray-100 dark:bg-gray-700">
             {
               headerGroups.map((headerGroup, index) => (
                 <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
@@ -82,6 +82,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                 </tr>
               ))}
             </thead>
+            }
             <tbody {...getTableBodyProps()}
                    className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
             {

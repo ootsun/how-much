@@ -5,9 +5,17 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/outline';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {useMobileDisplay} from "../lib/client/useMobileDisplay.js";
 
-export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelected, searchCriteria, setSearchCriteria}) {
+export function Table({
+                        tableInstance,
+                        filterPlaceholder,
+                        readonlyMode,
+                        setSelected,
+                        searchCriteria,
+                        setSearchCriteria
+                      }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -24,6 +32,10 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
 
   const {pageIndex} = state;
 
+  const [lessNavButtons, setLessNavButtons] = useState(true);
+  const isMobileDisplay = useMobileDisplay();
+  useEffect(() => setLessNavButtons(isMobileDisplay), [isMobileDisplay]);
+
   useEffect(() => {
     gotoPage(searchCriteria?.pageIndex || 0);
   }, [searchCriteria]);
@@ -36,22 +48,29 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
   }
 
   const pageMustBeDisplayed = (pageToDisplay) => {
-      return pageCount <= 5
-          || (pageIndex <= 2 && pageToDisplay <= 4)
-          || (pageToDisplay >= pageIndex - 2 && pageToDisplay <= pageIndex + 2)
-          || (pageIndex >= pageCount - 2 && pageToDisplay >= pageCount - 5)
+    return !lessNavButtons ?
+      //Display 1 -> 5 if pageIndex <= 2 (pageToDisplay starts at 0)
+      (pageIndex <= 2 && pageToDisplay <= 4)
+      //Display pageIndex - 2, pageIndex - 1, pageIndex, pageIndex + 1 and pageIndex + 2
+      || (pageToDisplay >= pageIndex - 2 && pageToDisplay <= pageIndex + 2)
+      //Display pageCount - 4 -> pageCount if pageIndex >= pageCount - 2
+      || (pageIndex >= pageCount - 2 && pageToDisplay >= pageCount - 5) :
+      (pageIndex <= 1 && pageToDisplay <= 2)
+      || (pageToDisplay >= pageIndex - 1 && pageToDisplay <= pageIndex + 1)
+      || (pageIndex >= pageCount - 1 && pageToDisplay >= pageCount - 3)
   }
 
   return (
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle dark:bg-gray-800">
         <div className="mb-4">
-          <GlobalFilter searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria} placeholder={filterPlaceholder}/>
+          <GlobalFilter searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria}
+                        placeholder={filterPlaceholder}/>
         </div>
         <div className="overflow-hidden">
           <table {...getTableProps()}
                  className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
-            { !readonlyMode && <thead className="bg-gray-100 dark:bg-gray-700">
+            {!readonlyMode && <thead className="bg-gray-100 dark:bg-gray-700">
             {
               headerGroups.map((headerGroup, index) => (
                 <tr {...headerGroup.getHeaderGroupProps()} key={`trheaderGroups-${index}`}>
@@ -133,8 +152,8 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
             </li>
             {
               [...Array(pageCount)]
-                  .map((x, index) => {
-                    if(pageMustBeDisplayed(index)) {
+                .map((x, index) => {
+                    if (pageMustBeDisplayed(index)) {
                       return <li key={`lipageCount-${index}`}>
                         <button disabled={pageIndex === index} onClick={() => navigate(index)}
                                 className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
@@ -143,7 +162,7 @@ export function Table({tableInstance, filterPlaceholder, readonlyMode, setSelect
                       </li>
                     }
                   }
-              )
+                )
             }
             <li>
               <button disabled={!canNextPage} onClick={() => navigate(pageIndex + 1)}

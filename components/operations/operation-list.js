@@ -11,6 +11,7 @@ import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
+import {useMobileDisplay} from "../../lib/client/useMobileDisplay.js";
 
 export function OperationList({
                                 initialOperations,
@@ -31,11 +32,8 @@ export function OperationList({
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fullConfig = resolveConfig(tailwindConfig);
-    const smNumber = Number.parseInt(fullConfig.theme.screens.sm.replace('px', ''));
-    setDisplayContractAddress(typeof window !== 'undefined' && window.innerWidth >= smNumber);
-  }, []);
+  const isMobileDisplay = useMobileDisplay();
+  useEffect(() => {setDisplayContractAddress(!isMobileDisplay)}, [isMobileDisplay]);
 
   useEffect(() => {
     const fetchNewPage = async () => {
@@ -65,7 +63,7 @@ export function OperationList({
 
   const columns = useMemo(
     () => createColumns(),
-    [operationBeingDeleted, loading]
+    [operationBeingDeleted, loading, displayContractAddress]
   );
 
   const tableInstance = useTable({

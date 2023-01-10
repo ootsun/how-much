@@ -82,13 +82,13 @@ export function OperationList({
   function createColumns() {
     const columns = [
       {
-        Header: 'Project',
+        Header: readonlyMode ? '' : 'Project',
         Cell: ({row}) => <ProjectNameLogo project={row.original.project} loading={loading}/>,
         accessor: 'project.name',
         id: 'project.name'
       },
       {
-        Header: 'Function name',
+        Header: readonlyMode ? '' : 'Function name',
         Cell: ({row}) =>
           loading ?
             <Skeleton functionName={true}/> :
@@ -100,7 +100,7 @@ export function OperationList({
 
     if (displayContractAddress) {
       columns.push({
-        Header: 'Contract address',
+        Header: readonlyMode ? '' : 'Contract address',
         Cell: ({row}) => loading ?
           <Skeleton contractAddress={true}/> :
           <ContractAddress address={row.original.contractAddress}/>,

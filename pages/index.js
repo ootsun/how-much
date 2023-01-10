@@ -20,7 +20,7 @@ export default function Home({initialOperations}) {
       </Head>
       <main className="lg:flex lg:flex-row-reverse">
         <section className={`${cartIsEmpty ? 'hidden sm:block' : 'block'} card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start`}>
-          <p className="italic align-middle mb-1">
+          <p className="italic align-middle mb-1 ml-1">
             <InformationCircleIcon className="information-circle"/>
             Click on a row to remove it
           </p>

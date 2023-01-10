@@ -116,7 +116,7 @@ export function Table({
                         return (
                           <td {...cell.getCellProps()}
                               key={`tdcell-${index}`}
-                              className="py-2 px-3 md:py-4 md:px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              className={`py-2 ${index === 0 ? 'pl-0' : ''} px-3 md:py-4 md:px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white`}>
                             {cell.render('Cell')}
                           </td>
                         )

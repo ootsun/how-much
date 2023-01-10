@@ -20,14 +20,14 @@ export default function Home({initialOperations}) {
       </Head>
       <main className="lg:flex lg:flex-row-reverse">
         <section className={`${cartIsEmpty ? 'hidden sm:block' : 'block'} card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start`}>
-          <p className="italic align-middle mb-1 ml-1">
+          <p className="italic align-middle mb-1 md:ml-3">
             <InformationCircleIcon className="information-circle"/>
             Click on a row to remove it
           </p>
           <div className={`flex justify-between items-center pb-1.5 ${cartIsEmpty ? '' : 'border-gray-200 border-b'}`}>
             <div className={`flex basis-3/5 pr-1 items-center`}>
-              <ShoppingCartIcon className="w-10 h-10 mr-2"/>
-              <h2 className="text-2xl hidden sm:block">Shopping cart
+              <ShoppingCartIcon className="w-10 h-10 ml-[-10px] md:ml-0.5"/>
+              <h2 className="text-2xl hidden sm:block leading-6">Shopping cart
                 {cartIsEmpty &&
                   <span className="ml-1 text-gray-500 text-sm">(Empty)</span>
                 }
@@ -53,7 +53,7 @@ export default function Home({initialOperations}) {
                         setMaxSum={setMaxSum}/>
         </section>
         <section className="card mb-4 lg:basis-2/3">
-          <p className="italic align-middle mb-1">
+          <p className="italic align-middle mb-1 md:ml-6">
             <InformationCircleIcon className="information-circle"/>
             Click on a row to add it to your cart
           </p>

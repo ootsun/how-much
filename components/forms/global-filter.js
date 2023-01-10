@@ -13,7 +13,7 @@ export function GlobalFilter({searchCriteria, setSearchCriteria, placeholder}) {
   return (
     <>
       <label htmlFor="table-search" className="sr-only">Search</label>
-      <div className="relative mt-1 ml-1">
+      <div className="relative mt-1 ml-0.5 md:ml-6">
         <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
           <SearchIcon className="w-5 h-5 text-fuchsia-500"/>
         </div>

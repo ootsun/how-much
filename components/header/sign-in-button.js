@@ -16,7 +16,7 @@ export default function SignInButton() {
   let [isLoading, setIsLoading] = useState(false);
   let [modalMessage, setModalMessage] = useState(null);
 
-  const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
+  const {setIsAuthenticated} = useContext(authContext);
 
   const modalId = 'signInButtonErrorModal';
 
@@ -97,13 +97,14 @@ export default function SignInButton() {
           } else {
             setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
             toggleModal(modalId);
+            setIsLoading(false);
           }
         }
       } catch (e) {
         console.log(e);
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
   }
 
   let content = <button className="button" onClick={connectWalletAndSignIn} disabled={isLoading}>

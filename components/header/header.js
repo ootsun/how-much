@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
-import SignInButton from './sign-in-button.js';
-import SignOutButton from './sign-out-button.js';
+import ConnectionButton from './connection-button.js';
 import {useContext, useState} from 'react';
 import {authContext} from '../../lib/client/authHandler.js';
 import {ProfileAvatar} from './profile-avatar.js';
@@ -28,20 +27,21 @@ export default function Header() {
           <Menu styles={burgerStyles} isOpen={menuIsOpen} onStateChange={handleStateChange}>
             <div className="flex w-full justify-center flex-col items-center menu-wrapper">
               <WenClaim/>
-              {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' && isAuthenticated !== null && !isAuthenticated && <SignInButton/>}
-              {isAuthenticated &&
-                <>
+              {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' &&
+              <>
+                {isAuthenticated &&
                   <NavItems inBurger={true} closeMenu={closeMenu}/>
-                  <SignOutButton closeMenu={closeMenu}/>
-                </>
+                }
+                <ConnectionButton closeMenu={closeMenu}/>
+              </>
               }
             </div>
           </Menu>
         </span>
         {isAuthenticated &&
-          <div className="hidden md:block">
-            <NavItems/>
-          </div>
+        <div className="hidden md:block">
+          <NavItems/>
+        </div>
         }
       </div>
       <h1 className="text-center text-4xl font-cursive flex-2 flex items-center mx-3 md:mx-6">
@@ -58,10 +58,10 @@ export default function Header() {
         <span className="hidden md:inline-flex ">
           <WenClaim/>
         </span>
-        {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' && isAuthenticated !== null && !isAuthenticated && <div className="hidden md:inline"><SignInButton/></div>}
-        {isAuthenticated && <>
-          <div className="ml-auto md:ml-0"><ProfileAvatar/></div>
-          <div className="hidden md:inline"><SignOutButton/></div>
+        {process.env.NEXT_PUBLIC_AUTHENTICATION_ENABLED === 'true' &&
+        <>
+          {isAuthenticated && <div className="ml-auto md:ml-0"><ProfileAvatar/></div>}
+          <div className="hidden md:inline"><ConnectionButton/></div>
         </>
         }
       </div>

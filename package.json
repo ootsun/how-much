@@ -11,6 +11,10 @@
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
+    "@web3-onboard/coinbase": "^2.2.0",
+    "@web3-onboard/injected-wallets": "^2.5.0",
+    "@web3-onboard/react": "^2.5.4",
+    "@web3-onboard/walletconnect": "^2.2.2",
     "axios": "^0.25.0",
     "boring-avatars": "^1.6.3",
     "cloudinary": "^1.28.1",

@@ -11,7 +11,7 @@ import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
-import {useMobileDisplay} from "../../lib/client/useMobileDisplay.js";
+import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
 
 export function OperationList({
                                 initialOperations,
@@ -32,7 +32,7 @@ export function OperationList({
   const [operationBeingDeleted, setOperationBeingDeleted] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const isMobileDisplay = useMobileDisplay();
+  const isMobileDisplay = useMobileDisplayHook();
   useEffect(() => {setDisplayContractAddress(!isMobileDisplay)}, [isMobileDisplay]);
 
   useEffect(() => {
@@ -173,7 +173,7 @@ export function OperationList({
         setOperationBeingDeleted(null);
       } catch (e) {
         setErrorModalMessage(ERROR_MESSAGES.connection);
-        toggleModal('operationFormErrorModal');
+        toggleModal('operationListErrorModal');
         setOperationBeingDeleted(null);
       }
     }

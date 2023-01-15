@@ -6,7 +6,7 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/outline';
 import {useEffect, useState} from "react";
-import {useMobileDisplay} from "../lib/client/useMobileDisplay.js";
+import {useMobileDisplayHook} from "../lib/client/hooks/useMobileDisplayHook.js";
 
 export function Table({
                         tableInstance,
@@ -33,7 +33,7 @@ export function Table({
   const {pageIndex} = state;
 
   const [lessNavButtons, setLessNavButtons] = useState(true);
-  const isMobileDisplay = useMobileDisplay();
+  const isMobileDisplay = useMobileDisplayHook();
   useEffect(() => setLessNavButtons(isMobileDisplay), [isMobileDisplay]);
 
   useEffect(() => {

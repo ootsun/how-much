@@ -1,11 +1,9 @@
 import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
-import {useContext, useEffect, useState} from 'react';
-import ErrorModal from '../modals/error-modal.js';
+import {useContext, useState} from 'react';
 import {authContext, getNonce, signOut, verifySignature} from '../../lib/client/authHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
-import {ERROR_MESSAGES} from '../../lib/client/constants.js';
-import {init, useConnectWallet, useWallets} from "@web3-onboard/react";
+import {init, useConnectWallet} from "@web3-onboard/react";
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseWallet from '@web3-onboard/coinbase';
@@ -14,19 +12,8 @@ const injected = injectedModule();
 const walletConnect = walletConnectModule();
 const coinbase = coinbaseWallet();
 
-const infuraKey = '2a4aae7e54ad474f8c0aa91edd39e5cd';
-const rpcUrl = `https://mainnet.infura.io/v3/${infuraKey}`;
-const appMetadata = {
-  name: 'How Much',
-  icon: 'https://alchemix.fi/images/icons/alcx_med.svg',
-  logo: 'https://alchemix.fi/images/icons/ALCX_Std_logo.svg',
-  // icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true" class="information-circle"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-  // logo: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true" class="information-circle"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
-  description: 'My app using Onboard',
-  recommendedInjectedWallets: [
-    {name: 'MetaMask', url: 'https://metamask.io'}
-  ]
-};
+const rpcUrl = `https://mainnet.infura.io/v3/NO_INFURA_KEY_NEEDED_FOR_THIS_APP`;
+
 // initialize Onboard
 init({
   wallets: [injected, walletConnect, coinbase],
@@ -39,13 +26,12 @@ init({
     }
   ],
   appMetadata: {
-    name: 'Alchemix',
-    icon: 'https://alchemix.fi/images/icons/alcx_med.svg',
-    logo: 'https://alchemix.fi/images/icons/ALCX_Std_logo.svg',
-    description: 'Self repaying, non-liquidatable loans. Your only debt is time.',
+    name: 'How Much',
+    icon: 'logo.svg',
+    logo: 'logo-large.png',
+    description: 'How much is a free online tool to help you estimate your transaction costs on Ethereum.',
     recommendedInjectedWallets: [
       { name: 'MetaMask', url: 'https://metamask.io/' },
-      { name: 'Tally', url: 'https://tally.cash/' },
     ],
   },
   accountCenter: {

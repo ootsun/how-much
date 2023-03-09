@@ -7,6 +7,7 @@ import {init, useConnectWallet} from "@web3-onboard/react";
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseWallet from '@web3-onboard/coinbase';
+import Router from 'next/router';
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule();
@@ -125,6 +126,7 @@ export default function ConnectionButton({closeMenu}) {
     if (closeMenu) {
       closeMenu();
     }
+    await Router.push('/');
   }
 
   return (

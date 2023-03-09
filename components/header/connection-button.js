@@ -1,13 +1,14 @@
 import {ethers} from 'ethers';
 import {SiweMessage} from 'siwe';
 import {useContext, useState} from 'react';
-import {authContext, getNonce, signOut, verifySignature} from '../../lib/client/authHandler.js';
+import {getNonce, signOut, verifySignature} from '../../lib/client/authHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {init, useConnectWallet} from "@web3-onboard/react";
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseWallet from '@web3-onboard/coinbase';
 import Router from 'next/router';
+import {authContext, editorContext} from "../../pages/_app.js";
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule();
@@ -51,6 +52,7 @@ export default function ConnectionButton({closeMenu}) {
   // let [modalMessage, setModalMessage] = useState(null);
 
   const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
+  const {setCanEdit} = useContext(editorContext);
 
   const [{wallet, connecting}, connect, disconnect] = useConnectWallet();
 
@@ -102,13 +104,14 @@ export default function ConnectionButton({closeMenu}) {
       if (message) {
         const signature = await s.signMessage(message);
         if (signature) {
-          const res = await verifySignature(message, signature);
-          if (res) {
+          const user = await verifySignature(message, signature);
+          if (user) {
             setIsAuthenticated(true);
+            setCanEdit(user.canEdit);
           } else {
             // setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
             // toggleModal("operationListErrorModal");
-            console.error(res);
+            console.error('User is null');
           }
         }
       }

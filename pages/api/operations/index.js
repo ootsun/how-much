@@ -34,9 +34,9 @@ async function create(req) {
     functionName: functionName,
   });
 
-  log.info(`Operation ${functionName} for ${project.name} was created by ${user.username}`);
+  log.info(`Operation ${functionName} for ${project.name} was created by ${user.address}`);
   await revalidate('operations');
   return operation;
 }
 
-export default initApiRoute({handle: findAll}, {handle: create, checkAuth: true}, null, null);
+export default initApiRoute({handle: findAll}, {handle: create, checkCanEdit: true}, null, null);

@@ -1,6 +1,6 @@
 import {Controller, useForm} from 'react-hook-form';
 import {LoadingCircle} from '../loading-circle.js';
-import {useEffect, useState, Fragment} from 'react';
+import {useEffect, useState, Fragment, useContext} from 'react';
 import ErrorModal from '../modals/error-modal.js';
 import {Toast} from '../toast.js';
 import ActionModal from '../modals/action-modal.js';
@@ -11,6 +11,7 @@ import {create, update} from '../../lib/client/operationHandler.js';
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {search as searchProject} from "../../lib/client/projectHandler.js";
 import {search} from "../../lib/client/operationHandler.js";
+import {editorContext} from "../../pages/_app.js";
 
 export function OperationForm({initialProjects, selectedOperation, setSelectedOperation, setUpdateList}) {
   const [errorModalMessage, setErrorModalMessage] = useState(null);
@@ -30,6 +31,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchFunctionName = watch('functionName', null);
   const watchContractAddress = watch('contractAddress', null);
+
+  const {canEdit} = useContext(editorContext);
 
   useEffect(() => {
     const fetchNewPage = async () => {
@@ -177,7 +180,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({field}) =>
-                <Combobox value={getValues('project')} onChange={onProjectChange}>
+                <Combobox value={getValues('project')} onChange={onProjectChange} disabled={!canEdit}>
                   <div
                     className="relative z-0">
                     <Combobox.Input
@@ -251,7 +254,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('functionName', {required: 'Mandatory field', validate: functionNameIsUnique})}/>
+                   {...register('functionName', {required: 'Mandatory field', validate: functionNameIsUnique})}
+                   disabled={!canEdit}/>
             <label htmlFor="functionName"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Function name</label>
@@ -261,7 +265,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('contractAddress', {required: 'Mandatory field', validate: functionNameIsUnique})}/>
+                   {...register('contractAddress', {required: 'Mandatory field', validate: functionNameIsUnique})}
+                   disabled={!canEdit}/>
             <label htmlFor="contractAddress"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Contract address</label>
@@ -271,13 +276,13 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
         <div className="flex flex-row-reverse">
           <button type="submit"
                   className="button"
-                  disabled={isSubmitting || !isValid || !isDirty}>
+                  disabled={isSubmitting || !isValid || !isDirty || !canEdit}>
             {isSubmitting && <LoadingCircle/>}
             {selectedOperation ? 'Edit' : 'Create'}
           </button>
           <button type="button"
                   className={`button secondary-button mr-4 ${selectedOperation ? '' : 'hidden'}`}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !canEdit}
                   onClick={onCancel}>
             Cancel
           </button>

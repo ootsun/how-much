@@ -40,6 +40,6 @@ export async function findAll() {
 
 export default initApiRoute(
   {handle: findAll},
-  {handle: create, checkAuth: true},
+  {handle: create, checkCanEdit: true},
   null,
   null);

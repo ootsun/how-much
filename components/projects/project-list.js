@@ -1,5 +1,5 @@
 import {Logo} from './logo.js';
-import {useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {deleteProject, findAll} from '../../lib/client/projectHandler.js';
 import ErrorModal from '../modals/error-modal.js';
 import {useTable, usePagination} from 'react-table';
@@ -9,6 +9,7 @@ import {ERROR_MESSAGES} from '../../lib/client/constants.js';
 import {Table} from '../table.js';
 import {search} from "../../lib/client/projectHandler.js";
 import {Skeleton} from "../skeleton.js";
+import {editorContext} from "../../pages/_app.js";
 
 export function ProjectList({initialProjects, selectedProject, setSelectedProject, updateList, setUpdateList}) {
 
@@ -19,6 +20,8 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
   const [toastMessage, setToastMessage] = useState(null);
   const [projectBeingDeleted, setProjectBeingDeleted] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const {canEdit} = useContext(editorContext);
 
   useEffect(() => {
     const fetchNewPage = async () => {
@@ -87,9 +90,9 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
                 {projectBeingDeleted !== row.original &&
                 <>
                   <span onClick={async () => await onDelete(row.original)}
-                        className={`text-cyan-500 ${selectedProject !== row.original ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                        className={`${selectedProject !== row.original && canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
                   <span onClick={() => setSelectedProject(row.original)}
-                        className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+                        className={`${canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
                 </>
                 }
                 {projectBeingDeleted === row.original && <LoadingCircle color={true}/>}

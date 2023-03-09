@@ -24,4 +24,4 @@ async function generateSignature(req) {
   };
 }
 
-export default initApiRoute(null, {handle: generateSignature, checkAuth: true}, null, null);
+export default initApiRoute(null, {handle: generateSignature, checkCanEdit: true}, null, null);

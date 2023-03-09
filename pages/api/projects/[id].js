@@ -67,5 +67,5 @@ async function deleteProject(req) {
 export default initApiRoute(
   null,
   null,
-  {handle: update, checkAuth: true},
-  {handle: deleteProject, checkAuth: true});
+  {handle: update, checkCanEdit: true},
+  {handle: deleteProject, checkCanEdit: true});

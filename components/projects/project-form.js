@@ -2,12 +2,13 @@ import {useForm} from 'react-hook-form';
 import {create, getUploadSignature, search, update, uploadImage} from '../../lib/client/projectHandler.js';
 import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import ErrorModal from '../modals/error-modal.js';
 import {Toast} from '../toast.js';
 import ActionModal from '../modals/action-modal.js';
 import {Logo} from './logo.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
+import {editorContext} from "../../pages/_app.js";
 
 export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}) {
 
@@ -22,6 +23,8 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchLogo = watch('logo', null);
+
+  const {canEdit} = useContext(editorContext);
 
   async function replaceFormValues() {
     reset();
@@ -191,13 +194,14 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       <ErrorModal message={errorModalMessage} customId="projectFormErrorModal"/>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <input autoComplete="false" name="hidden" type="text" className="hidden"/>
+        <input autoComplete="false" name="hidden" type="text" className="hidden" disabled={!canEdit}/>
         <div className="grid sm:grid-cols-3 sm:gap-4">
           <div className="relative mb-3 md:mb-0 w-full z-0">
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('name', {required: 'Mandatory field', validate: nameIsUnique})}/>
+                   {...register('name', {required: 'Mandatory field', validate: nameIsUnique})}
+                   disabled={!canEdit}/>
             <label htmlFor="name"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Project name</label>
@@ -207,7 +211,8 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
             <input
               aria-describedby="logo_help" {...register('logo', {required: selectedProject ? false : 'Mandatory field'})}
               type="file"
-              className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"/>
+              className={`${!canEdit ? 'cursor-not-allowed' : ''} block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400`}
+              disabled={!canEdit}/>
             <div className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="logo_help">
               Choose a small logo
             </div>
@@ -232,13 +237,13 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
         <div className="flex flex-row-reverse">
           <button type="submit"
                   className="button"
-                  disabled={isSubmitting || !isValid || !isDirty}>
+                  disabled={isSubmitting || !isValid || !isDirty || !canEdit}>
             {isSubmitting && <LoadingCircle/>}
             {selectedProject ? 'Edit' : 'Create'}
           </button>
           <button type="button"
                   className={`button secondary-button mr-4 ${selectedProject ? '' : 'hidden'}`}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !canEdit}
                   onClick={onCancel}>
             Cancel
           </button>

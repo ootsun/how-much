@@ -1,6 +1,4 @@
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../tailwind.config.js'
-import {useEffect, useMemo, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {deleteOperation, findAll, search} from '../../lib/client/operationHandler.js';
 import ErrorModal from '../modals/error-modal.js';
 import {useTable, usePagination} from 'react-table';
@@ -12,6 +10,7 @@ import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
 import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
+import {editorContext} from "../../pages/_app.js";
 
 export function OperationList({
                                 initialOperations,
@@ -33,6 +32,9 @@ export function OperationList({
   const [loading, setLoading] = useState(false);
 
   const isMobileDisplay = useMobileDisplayHook();
+
+  const {canEdit} = useContext(editorContext);
+
   useEffect(() => {setDisplayContractAddress(!isMobileDisplay)}, [isMobileDisplay]);
 
   useEffect(() => {
@@ -116,9 +118,9 @@ export function OperationList({
               {operationBeingDeleted !== operation &&
               <>
                   <span onClick={async () => await onDelete(operation)}
-                        className={`text-cyan-500 ${selectedOperation !== operation ? 'hover:underline cursor-pointer' : 'cursor-not-allowed'} ml-2`}>Delete</span>
+                        className={`${selectedOperation !== operation && canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
                 <span onClick={() => setSelectedOperation(operation)}
-                      className="text-cyan-500 hover:underline cursor-pointer">Edit</span>
+                      className={`${canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
               </>
               }
               {operationBeingDeleted === operation && <LoadingCircle color={true}/>}

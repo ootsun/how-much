@@ -52,7 +52,7 @@ async function update(req) {
     if (!operation) {
       throw new Error('Operation with _id ' + id + ' not found');
     }
-    log.info(`Operation ${operation.functionName} for ${operation.project.name} was updated by ${user.username}`);
+    log.info(`Operation ${operation.functionName} for ${operation.project.name} was updated by ${user.address}`);
     await revalidate('operations');
     return operation;
   } catch (e) {
@@ -82,5 +82,5 @@ async function deleteOperation(req) {
 export default initApiRoute(
   {handle: getById},
   null,
-  {handle: update, checkAuth: true},
-  {handle: deleteOperation, checkAuth: true});
+  {handle: update, checkCanEdit: true},
+  {handle: deleteOperation, checkCanEdit: true});

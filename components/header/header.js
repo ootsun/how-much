@@ -2,10 +2,10 @@ import Link from 'next/link';
 import {slide as Menu} from 'react-burger-menu';
 import ConnectionButton from './connection-button.js';
 import {useContext, useState} from 'react';
-import {authContext} from '../../lib/client/authHandler.js';
 import {ProfileAvatar} from './profile-avatar.js';
 import {WenClaim} from './wen-claim.js';
 import {NavItems} from './nav-items.js';
+import {authContext} from "../../pages/_app.js";
 
 export default function Header() {
 

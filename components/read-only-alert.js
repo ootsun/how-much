@@ -15,7 +15,7 @@ export function ReadOnlyAlert() {
     show && <Alert
       additionalContent={<>
         <div className="mt-2 mb-4 text-sm text-blue-700 dark:text-blue-800">
-          If I see some interest, I'll implement a collaborative edition mechanism. In the meantime, please reach out to ask new protocols support, propose new features or report bugs &#128578;
+          If I see some interest, I&apos;ll implement a collaborative edition mechanism. In the meantime, please reach out to ask new protocols support, propose new features or report bugs &#128578;
         </div>
         <div className="flex flex-row-reverse">
           <a href="https://github.com/ootsun/how-much/issues/new" target="_blank" rel="noreferrer" className="button small-button">

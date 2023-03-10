@@ -20,10 +20,13 @@ export function ContractAddress({address}) {
       <button className="link ml-1" onClick={copyAddress}>
         <ClipboardIcon className="h-5 w-5"/>
       </button>
-      <Link href={`https://etherscan.io/address/${address}`}>
-        <a className="link ml-1" target="_blank">
-          <ExternalLinkIcon className="h-5 w-5"/>
-        </a>
+      <Link
+        href={`https://etherscan.io/address/${address}`}
+        className="link ml-1"
+        target="_blank">
+
+        <ExternalLinkIcon className="h-5 w-5"/>
+
       </Link>
     </span>
   );

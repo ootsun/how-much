@@ -2,13 +2,17 @@ import Head from 'next/head.js';
 import {OperationForm} from '../components/operations/operation-form.js';
 import {OperationList} from '../components/operations/operation-list.js';
 import {search as searchProjects} from './api/projects/search.js';
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import {search} from "./api/operations/search.js";
+import {ReadOnlyAlert} from "../components/read-only-alert.js";
+import {editorContext} from "./_app.js";
 
 export default function Operations({initialOperations, initialProjects}) {
 
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [updateList, setUpdateList] = useState(false);
+
+  const {canEdit} = useContext(editorContext);
 
   return (
     <>
@@ -17,6 +21,9 @@ export default function Operations({initialOperations, initialProjects}) {
       </Head>
       <main>
         <h2 className="text-2xl mb-3">Operations</h2>
+        {!canEdit &&
+          <ReadOnlyAlert/>
+        }
         <section className="card mb-4">
           <OperationForm initialProjects={initialProjects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
         </section>

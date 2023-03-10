@@ -1,18 +1,24 @@
 import Image from "next/image.js";
 import {Alert} from "flowbite-react";
 import {HiInformationCircle} from "react-icons/all";
+import {useState} from "react";
 
 export function ReadOnlyAlert() {
 
+  const [show, setShow] = useState(true);
+
+  const onDismiss = () => {
+    setShow(false);
+  }
+
   return (
-    <Alert
-      color="info"
+    show && <Alert
       additionalContent={<>
         <div className="mt-2 mb-4 text-sm text-blue-700 dark:text-blue-800">
-          If I see some interest, I'll implement a collaborative edition mechanism. In the meantime, please reach out to ask new protocols support, propose new features or report bugs.
+          If I see some interest, I'll implement a collaborative edition mechanism. In the meantime, please reach out to ask new protocols support, propose new features or report bugs &#128578;
         </div>
-        <div className="flex">
-          <a href="https://github.com/ootsun/how-much" target="_blank" rel="noreferrer" className="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <div className="flex flex-row-reverse">
+          <a href="https://github.com/ootsun/how-much/issues/new" target="_blank" rel="noreferrer" className="button small-button">
             <Image
               src="/github.svg"
               alt="Github"
@@ -22,10 +28,12 @@ export function ReadOnlyAlert() {
             />
             <span className="ml-2">Open an issue</span>
           </a>
-          <button type="button" className="rounded-lg border border-blue-700 bg-transparent px-3 py-1.5 text-center text-xs font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:ring-blue-300 dark:border-blue-800 dark:text-blue-800 dark:hover:text-white">Dismiss</button>
         </div>
       </>}
-      icon={HiInformationCircle}>
+      icon={HiInformationCircle}
+      onDismiss={onDismiss}
+      rounded={true}
+      theme={{color: {cyan: '100'}}}>
       <h3 className="text-lg font-medium text-blue-700 dark:text-blue-800">
         Read only - still in beta
       </h3>

@@ -22,13 +22,20 @@ export default function Operations({initialOperations, initialProjects}) {
       <main>
         <h2 className="text-2xl mb-3">Operations</h2>
         {!canEdit &&
-          <ReadOnlyAlert/>
+          <div className="mb-4">
+            <ReadOnlyAlert/>
+          </div>
         }
-        <section className="card mb-4">
-          <OperationForm initialProjects={initialProjects} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
-        </section>
+        {canEdit &&
+          <section className="card mb-4">
+            <OperationForm initialProjects={initialProjects} selectedOperation={selectedOperation}
+                           setSelectedOperation={setSelectedOperation} setUpdateList={setUpdateList}/>
+          </section>
+        }
         <section className="card">
-          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation} selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList} readonlyMode={false} havingLastGasUsage={false}/>
+          <OperationList initialOperations={initialOperations} setSelectedOperation={setSelectedOperation}
+                         selectedOperation={selectedOperation} updateList={updateList} setUpdateList={setUpdateList}
+                         readonlyMode={false} havingLastGasUsage={false}/>
         </section>
       </main>
     </>

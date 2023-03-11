@@ -15,7 +15,7 @@ export function ReadOnlyAlert() {
     show && <Alert
       additionalContent={<>
         <div className="mt-2 mb-4 text-sm text-blue-700 dark:text-blue-800">
-          If I see some interest, I&apos;ll implement a collaborative edition mechanism. In the meantime, please reach out to ask new protocols support, propose new features or report bugs &#128578;
+          For now, the application is read-only for you. If I see some interest, I will set up a collaborative editing mechanism. In the meantime, feel free to reach out for request support for new protocols, propose new features or report bugs &#128578;
         </div>
         <div className="flex flex-row-reverse">
           <a href="https://github.com/ootsun/how-much/issues/new" target="_blank" rel="noreferrer" className="button small-button">
@@ -35,7 +35,7 @@ export function ReadOnlyAlert() {
       rounded={true}
       theme={{color: {cyan: '100'}}}>
       <h3 className="text-lg font-medium text-blue-700 dark:text-blue-800">
-        Read only - still in beta
+        Welcome to the admin area!
       </h3>
     </Alert>
   );

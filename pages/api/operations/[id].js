@@ -26,7 +26,7 @@ async function getById(req) {
       'project.createdBy': 0,
       'project.symbol': 0
     })
-    .populate('project', 'name logoUrl');
+    .populate('project', 'name logoUrl isERC20');
   if (!operation) {
     throw new Error('Operation with _id ' + id + ' not found');
   }

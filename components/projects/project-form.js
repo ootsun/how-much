@@ -3,7 +3,7 @@ import {create, getUploadSignature, search, update, uploadImage} from '../../lib
 import {LoadingCircle} from '../loading-circle.js';
 import {capitalizeFirstLetter} from '../../lib/utils/stringUtils.js';
 import {useContext, useEffect, useState} from 'react';
-import ErrorModal from '../modals/error-modal.js';
+import {ErrorModal} from '../modals/error-modal.js';
 import {Toast} from '../toast.js';
 import ActionModal from '../modals/action-modal.js';
 import {Logo} from './logo.js';
@@ -46,7 +46,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
         if (isDirty) {
           setActionModalTitle('Warning');
           setActionModalMessage('A project is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
-          toggleModal('projectFormActionModal');
         } else {
           await replaceFormValues();
         }
@@ -71,7 +70,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     let res = await getUploadSignature(public_id);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
-      toggleModal('projectFormErrorModal');
       return false;
     }
     const uploadSignature = await res.json();
@@ -81,7 +79,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     res = await uploadImage(formData, uploadSignature.cloudName);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
-      toggleModal('projectFormErrorModal');
       return false;
     }
     const upload = await res.json();
@@ -100,14 +97,12 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
         } else {
           setErrorModalMessage(ERROR_MESSAGES.serverSide);
         }
-        toggleModal('projectFormErrorModal');
         return false;
       }
       setToastMessage('Project successfully created');
       return true;
     }
     setErrorModalMessage(ERROR_MESSAGES.imageUploadFailed);
-    toggleModal('projectFormErrorModal');
     return false;
   }
 
@@ -129,7 +124,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       } else {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
       }
-      toggleModal('projectFormErrorModal');
       return false;
     }
     setSelectedProject(null);
@@ -152,7 +146,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
       }
     } catch (e) {
       setErrorModalMessage(ERROR_MESSAGES.connection);
-      toggleModal('projectFormErrorModal');
     }
   }
 
@@ -177,7 +170,6 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
     });
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
-      toggleModal('projectFormErrorModal');
       return;
     }
     const searchResult = await res.json();
@@ -191,7 +183,7 @@ export function ProjectForm({selectedProject, setSelectedProject, setUpdateList}
   return (
     <>
       <ActionModal title={actionModalTitle} message={actionModalMessage} callback={handleActionModalResponse} customId="projectFormActionModal"/>
-      <ErrorModal message={errorModalMessage} customId="projectFormErrorModal"/>
+      <ErrorModal message={errorModalMessage} setMessage={setErrorModalMessage}/>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden" disabled={!canEdit}/>

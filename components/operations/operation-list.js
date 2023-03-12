@@ -1,6 +1,6 @@
 import {useContext, useEffect, useMemo, useState} from 'react';
 import {deleteOperation, findAll, search} from '../../lib/client/operationHandler.js';
-import ErrorModal from '../modals/error-modal.js';
+import {ErrorModal} from '../modals/error-modal.js';
 import {useTable, usePagination} from 'react-table';
 import {Toast} from '../toast.js';
 import {LoadingCircle} from '../loading-circle.js';
@@ -48,7 +48,6 @@ export function OperationList({
       setLoading(false);
       if (!res.ok) {
         setErrorModalMessage(ERROR_MESSAGES.serverSide);
-        toggleModal('operationListErrorModal');
         return;
       }
       const searchResult = await res.json();
@@ -138,13 +137,11 @@ export function OperationList({
       const res = await findAll();
       if (!res.ok) {
         setErrorModalMessage('A server side error occurred. We could not load the operations.');
-        toggleModal('operationListErrorModal');
         return;
       }
       setOperations(await res.json());
     } catch (e) {
       setErrorModalMessage('An error occurred. We could not load the operations. Check you internet connectivity.');
-      toggleModal('operationListErrorModal');
     }
   }
 
@@ -165,7 +162,6 @@ export function OperationList({
         const res = await deleteOperation(operation._id);
         if (!res.ok) {
           setErrorModalMessage(ERROR_MESSAGES.serverSide);
-          toggleModal('operationListErrorModal');
           await refreshList();
           setOperationBeingDeleted(null);
           return;
@@ -175,7 +171,6 @@ export function OperationList({
         setOperationBeingDeleted(null);
       } catch (e) {
         setErrorModalMessage(ERROR_MESSAGES.connection);
-        toggleModal('operationListErrorModal');
         setOperationBeingDeleted(null);
       }
     }
@@ -184,7 +179,7 @@ export function OperationList({
   return (
     <>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
-      <ErrorModal message={errorModalMessage} customId="operationListErrorModal"/>
+      <ErrorModal message={errorModalMessage} setMessage={setErrorModalMessage}/>
       <Table tableInstance={tableInstance}
              filterPlaceholder={'Search for operations'}
              readonlyMode={readonlyMode}

@@ -1,5 +1,4 @@
 import {Schema, models, model} from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
 
 const UserSchema = new Schema({
   id: {

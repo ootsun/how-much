@@ -18,8 +18,12 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
   //First index starts at 1
   const page = pageIndex + 1;
   await dbConnect();
-  const query = havingLastGasUsage ? {
-    lastGasUsages: {$exists: true, $ne: []}
+  const query = havingLastGasUsage ? { $or: [
+      {lastGasUsages: {$exists: true, $ne: []}},
+      // Ethereum native operations like Ether transfer have no lastGasUsages and no contractAddress
+      {contractAddress: {$exists: false}},
+    ]
+
   } : {};
   if (keyword) {
     const regex = {$regex: keyword.trim(), $options: 'i'};

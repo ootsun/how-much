@@ -8,7 +8,7 @@ export function Logo({url, alt, isERC20}) {
       <Image
         src={url}
         alt={alt}
-        className="absolute inline-block"
+        className={`${isERC20 ? 'absolute' : 'relative'} inline-block`}
         width={20}
         height={20}/>
       {isERC20 &&

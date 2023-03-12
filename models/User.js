@@ -12,12 +12,13 @@ const UserSchema = new Schema({
   address: {
     type: String,
     unique: true,
-    uniqueCaseInsensitive: true,
-    required: true
+    required: true,
+    trim: true,
   },
   avatarUrl: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   isAdmin: {
     type: Boolean,
@@ -28,7 +29,5 @@ const UserSchema = new Schema({
     default: false,
   }
 });
-
-UserSchema.plugin(uniqueValidator);
 
 export default models.User || model('User', UserSchema)

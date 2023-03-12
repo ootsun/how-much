@@ -22,17 +22,21 @@ const OperationSchema = new Schema({
   },
   contractAddress: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   implementationAddress: {
     type: String,
+    trim: true,
   },
   functionName: {
     type: String,
+    trim: true,
     required: true
   },
   methodId: {
     type: String,
+    trim: true,
     required: true
   },
   minGasUsage: {

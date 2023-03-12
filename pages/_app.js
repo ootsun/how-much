@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import Header from '../components/header/header.js';
 import Footer from '../components/footer.js';
 import {createContext, useEffect, useState} from 'react';
-import {isStillAuthenticated} from '../lib/client/authHandler.js';
+import {getUserCanEdit, isStillAuthenticated} from '../lib/client/authHandler.js';
 import WelcomeBanner from '../components/welcome-banner.js';
 
 function MyApp({Component, pageProps}) {
@@ -12,7 +12,11 @@ function MyApp({Component, pageProps}) {
 
   useEffect(() => {
     import('flowbite');
-    setIsAuthenticated(isStillAuthenticated());
+    const stillAuthenticated = isStillAuthenticated();
+    if(stillAuthenticated) {
+      setIsAuthenticated(stillAuthenticated);
+      setCanEdit(getUserCanEdit());
+    }
   }, []);
 
   return (

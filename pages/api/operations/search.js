@@ -23,7 +23,6 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
       // Ethereum native operations like Ether transfer have no lastGasUsages and no contractAddress
       {contractAddress: {$exists: false}},
     ]
-
   } : {};
   if (keyword) {
     const regex = {$regex: keyword.trim(), $options: 'i'};

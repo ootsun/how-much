@@ -12,7 +12,7 @@ export function Logo({url, alt, isERC20}) {
         width={20}
         height={20}/>
       {isERC20 &&
-      <span className="z-10 pt-3 pl-3" title="Is ERC20">
+      <span className="z-10 pt-3 pl-3 block relative" title="Is ERC20">
         <GiTwoCoins color={"gold"}/>
       </span>}
     </>

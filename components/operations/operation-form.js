@@ -154,7 +154,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
 
   const onProjectChange = (project) => {
     loadFunctionNames(project);
-    return setValue('project', project);
+    setValue('project', project);
   }
 
   const loadFunctionNames = async (project) => {
@@ -179,14 +179,17 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
         <div className="grid sm:grid-cols-3 sm:gap-4 mb-3">
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
-              render={({field}) =>
-                <Combobox value={getValues('project')} onChange={onProjectChange} disabled={!canEdit}>
+              render={({onChange, onBlur, value, name, ref}) =>
+                <Combobox value={value} onChange={onProjectChange} disabled={!canEdit}>
                   <div
                     className="relative z-0">
                     <Combobox.Input
-                      {...field}
+                      name={name}
+                      onBlur={onBlur}
+                      ref={ref}
                       className="input peer pr-10"
-                      onChange={(event) => setKeyword(event.target.value)}
+                      onChange={onChange}
+                      onKeyDown={(e) => setKeyword(e.target.value)}
                       displayValue={(project) => project ? project.name : ''}
                       placeholder=" "
                     />
@@ -265,7 +268,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('contractAddress', {required: 'Mandatory field', validate: functionNameIsUnique})}
+                   {...register('contractAddress', { validate: functionNameIsUnique})}
                    disabled={!canEdit}/>
             <label htmlFor="contractAddress"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">

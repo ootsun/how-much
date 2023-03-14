@@ -134,18 +134,10 @@ export function OperationList({
   }
 
   async function refreshList() {
-    try {
-      const res = await findAll();
-      if (!res.ok) {
-        setErrorModalMessage('A server side error occurred. We could not load the operations.');
-        toggleModal('operationListErrorModal');
-        return;
-      }
-      setOperations(await res.json());
-    } catch (e) {
-      setErrorModalMessage('An error occurred. We could not load the operations. Check you internet connectivity.');
-      toggleModal('operationListErrorModal');
-    }
+    setSearchCriteria({
+      pageIndex: searchCriteria?.pageIndex || 0,
+      keyword: searchCriteria?.keyword
+    });
   }
 
   useEffect(() => {
@@ -174,6 +166,7 @@ export function OperationList({
         await refreshList();
         setOperationBeingDeleted(null);
       } catch (e) {
+        console.error(e)
         setErrorModalMessage(ERROR_MESSAGES.connection);
         toggleModal('operationListErrorModal');
         setOperationBeingDeleted(null);

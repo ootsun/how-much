@@ -43,7 +43,7 @@ export function Table({
   const navigate = (pageNumber) => {
     setSearchCriteria({
       pageIndex: pageNumber,
-      keyword: searchCriteria?.keyword || null
+      keyword: searchCriteria?.keyword
     });
   }
 

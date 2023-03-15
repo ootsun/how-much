@@ -25,7 +25,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   const [projects, setProjects] = useState(initialProjects.docs);
   const [totalDocs, setTotalDocs] = useState(initialProjects.totalDocs);
 
-  const {register, handleSubmit, formState, reset, setValue, getValues, watch, control, trigger} = useForm({
+  const {register, handleSubmit, formState, reset, setValue, watch, control, trigger} = useForm({
     mode: 'onTouched'
   });
   let {isSubmitting, errors, isValid, isDirty} = formState;
@@ -59,6 +59,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
     setValue('project', selectedOperation.project);
     setValue('functionName', selectedOperation.functionName);
     setValue('contractAddress', selectedOperation.contractAddress);
+    setValue('version', selectedOperation.version);
+    setValue('isERC20', selectedOperation.isERC20);
     setPreviousSelectedOperation(selectedOperation);
     await loadFunctionNames(selectedOperation.project);
   }
@@ -87,7 +89,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   }, [selectedOperation]);
 
   async function createOperation(form) {
-    const res = await create(form.project, form.functionName, form.contractAddress);
+    const res = await create(form.project, form.functionName, form.contractAddress, form.version, form.isERC20);
     if (!res.ok) {
       if (res.status === 400) {
         setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
@@ -102,7 +104,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   }
 
   async function updateOperation(form) {
-    const res = await update(selectedOperation._id, form.project, form.functionName, form.contractAddress);
+    const res = await update(selectedOperation._id, form.project, form.functionName, form.contractAddress, form.version, form.isERC20);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
       toggleModal('operationFormErrorModal');
@@ -176,7 +178,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
-        <div className="grid sm:grid-cols-3 sm:gap-4 mb-3">
+        <div className="grid sm:grid-cols-5 sm:gap-4 mb-3">
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({onChange, onBlur, value, name, ref}) =>
@@ -257,6 +259,22 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
+                   {...register('version')}
+                   disabled={!canEdit}/>
+            <label htmlFor="version"
+                   className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              Version</label>
+          </div>
+          <div className="relative mb-3 md:mb-0 w-full z-0 flex items-center">
+            <input id="isERC20" type="checkbox" value=""
+                   className="w-4 h-4 text-fuchsia-600 bg-gray-100 border-gray-300 rounded focus:text-fuchsia-500 dark:focus:text-fuchsia-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+            <label htmlFor="isERC20"
+                   className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is ERC20</label>
+          </div>
+          <div className="relative mb-3 md:mb-0 w-full z-0">
+            <input type="text"
+                   className="input peer"
+                   placeholder=" "
                    {...register('functionName', {required: 'Mandatory field', validate: functionNameIsUnique})}
                    disabled={!canEdit}/>
             <label htmlFor="functionName"
@@ -268,7 +286,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
             <input type="text"
                    className="input peer"
                    placeholder=" "
-                   {...register('contractAddress', { validate: functionNameIsUnique})}
+                   {...register('contractAddress', {validate: functionNameIsUnique})}
                    disabled={!canEdit}/>
             <label htmlFor="contractAddress"
                    className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">

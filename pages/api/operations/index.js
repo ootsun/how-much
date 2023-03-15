@@ -16,9 +16,10 @@ export async function findAll() {
 }
 
 async function create(req) {
-  let {contractAddress, functionName, project, user} = req.body;
+  let {version, contractAddress, functionName, project, user, isERC20} = req.body;
   functionName = functionName?.trim().toLowerCase();
   contractAddress = contractAddress.trim();
+  version = version?.trim();
   const exists = await functionExists(contractAddress, functionName);
   if (exists === false) {
     const error = new Error('Function [' + functionName + '] does not exist');
@@ -32,6 +33,8 @@ async function create(req) {
     contractAddress: contractAddress,
     implementationAddress: typeof exists === 'string' ? exists : undefined,
     functionName: functionName,
+    version: version,
+    isERC20: isERC20
   });
 
   log.info(`Operation ${functionName} for ${project.name} was created by ${user.address}`);

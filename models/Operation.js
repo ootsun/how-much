@@ -20,6 +20,10 @@ const OperationSchema = new Schema({
     ref: 'Project',
     required: true
   },
+  version: {
+    type: String,
+    trim: true,
+  },
   contractAddress: {
     type: String,
     required: true,

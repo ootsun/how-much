@@ -31,6 +31,9 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
         'project.name': regex
       },
       {
+        version: regex
+      },
+      {
         functionName: regex
       },
       {
@@ -65,7 +68,7 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
     }
   ])
   const options = {
-    sort: {'project.name': 1},
+    sort: {'project.name': 1, version: 1, functionName: 1},
     page,
     limit: 10,
   };

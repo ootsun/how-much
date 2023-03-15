@@ -26,7 +26,7 @@ async function getById(req) {
       'project.createdBy': 0,
       'project.symbol': 0
     })
-    .populate('project', 'name logoUrl isERC20');
+    .populate('project', 'name logoUrl');
   if (!operation) {
     throw new Error('Operation with _id ' + id + ' not found');
   }
@@ -37,15 +37,17 @@ async function update(req) {
   const {
     query: {id}
   } = req;
-  const {contractAddress, functionName, project, user} = req.body;
+  const {version, contractAddress, functionName, project, user, isERC20} = req.body;
 
   await dbConnect();
 
   try {
     const operation = await Operation.findByIdAndUpdate(id, {
+        version,
         contractAddress,
         functionName,
-        project: project._id
+        project: project._id,
+        isERC20
       },
       {runValidators: true})
       .populate('project', 'name logoUrl');

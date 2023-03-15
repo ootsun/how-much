@@ -37,7 +37,10 @@ const OperationSchema = new Schema({
   methodId: {
     type: String,
     trim: true,
-    required: true
+  },
+  isERC20: {
+    type: Boolean,
+    default: false,
   },
   minGasUsage: {
     type: Number

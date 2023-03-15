@@ -30,10 +30,6 @@ const ProjectSchema = new Schema({
     type: String,
     trim: true,
     required: true,
-  },
-  isERC20: {
-    type: Boolean,
-    default: false,
   }
 });
 

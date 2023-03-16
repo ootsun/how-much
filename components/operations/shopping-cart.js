@@ -33,6 +33,9 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
               if (!res.ok) {
                 const data = await res.json();
                 console.error('Error while retrieving an operation based on shopping cart local storage :', data.error);
+                if(res.status === 404) {
+                  removeObsoleteFromCart(res);
+                }
                 return;
               }
               savedOps.push(await res.json());
@@ -101,6 +104,14 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
   const saveInLocalStorage = (operations) => {
     localStorage.setItem(LOCAL_STORAGE_SELECTED_OPS_KEY, JSON.stringify(operations.map(o => o._id)));
   }
+
+  const removeObsoleteFromCart = (res) => {
+    const operationId = res.url.split('/').pop();
+    const operation = selectedOperations.find(o => o._id === operationId);
+    onRemove(operation);
+  }
+
+  console.log(selectedOperations)
 
   return (
     <>

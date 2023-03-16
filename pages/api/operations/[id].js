@@ -28,7 +28,9 @@ async function getById(req) {
     })
     .populate('project', 'name logoUrl');
   if (!operation) {
-    throw new Error('Operation with _id ' + id + ' not found');
+    const error = new Error('Operation with _id ' + id + ' not found');
+    error.statusCode = 404;
+    throw error;
   }
   return operation;
 }

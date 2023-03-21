@@ -11,9 +11,7 @@ export function ProjectNameLogo({project, loading}) {
           <Skeleton/>
         </> :
         <>
-          <span className="w-6">
-            <Logo url={project.logoUrl} alt={project.name} isERC20={project.isERC20}/>
-          </span>
+          <Logo url={project.logoUrl} alt={project.name}/>
           <span className="ml-2 text-sm">{project.name}</span>
         </>
       }

@@ -83,7 +83,7 @@ export function OperationList({
     const columns = [
       {
         Header: readonlyMode ? '' : 'Project',
-        Cell: ({row}) => <ProjectNameLogo project={row.original.project} loading={loading}/>,
+        Cell: ({row}) => <ProjectNameLogo operation={row.original} project={row.original.project} loading={loading} short={false}/>,
         accessor: 'project.name',
         id: 'project.name'
       },

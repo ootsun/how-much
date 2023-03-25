@@ -111,8 +111,6 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     onRemove(operation);
   }
 
-  console.log(selectedOperations)
-
   return (
     <>
       <ul>

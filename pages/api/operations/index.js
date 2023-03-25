@@ -1,4 +1,4 @@
-import functionExists from '../../../lib/ethereum/operationValidator.js';
+import getMethodBasedOn from '../../../lib/ethereum/operationValidator.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Operation from '../../../models/Operation.js';
 // Keep the import -> need to initialize the schema
@@ -20,8 +20,8 @@ async function create(req) {
   functionName = functionName?.trim().toLowerCase();
   contractAddress = contractAddress.trim();
   version = version?.trim();
-  const exists = await functionExists(contractAddress, functionName);
-  if (exists === false) {
+  const method = await getMethodBasedOn(contractAddress, functionName);
+  if (!method) {
     const error = new Error('Function [' + functionName + '] does not exist');
     error.statusCode = 400;
     throw error;
@@ -31,8 +31,9 @@ async function create(req) {
     createdBy: user._id,
     project: project._id,
     contractAddress: contractAddress,
-    implementationAddress: typeof exists === 'string' ? exists : undefined,
-    functionName: functionName,
+    implementationAddress: method.implementationAddress,
+    functionName: method.name,
+    methodId: method.methodId,
     version: version,
     isERC20: isERC20
   });

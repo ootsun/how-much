@@ -11,6 +11,7 @@ import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
 import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
 import {editorContext} from "../../pages/_app.js";
+import {FunctionName} from "./function-name.js";
 
 export function OperationList({
                                 initialOperations,
@@ -92,7 +93,7 @@ export function OperationList({
         Cell: ({row}) =>
           loading ?
             <Skeleton functionName={true}/> :
-            <span className="function-name">{row.original.functionName}</span>,
+            <FunctionName name={row.original.functionName}/>,
         accessor: 'functionName',
         id: 'functionName',
       }

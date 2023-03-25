@@ -1,5 +1,6 @@
 import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {LoadingCircle} from '../loading-circle.js';
+import {FunctionName} from "./function-name.js";
 
 export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) {
 
@@ -11,7 +12,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
         </span>
         <span className="basis-3/5 flex justify-between">
           <span className="pr-1">
-            <span className="function-name">{operation.functionName}</span>
+            <FunctionName name={operation.functionName}/>
           </span>
           {averagePrice !== null && maxPrice !== null &&
           <>

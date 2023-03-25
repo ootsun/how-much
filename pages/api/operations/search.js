@@ -46,7 +46,6 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
       },
     ]});
   }
-  console.log(query);
   const aggregate = Operation.aggregate([
     {
       $lookup: {

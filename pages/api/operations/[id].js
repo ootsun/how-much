@@ -6,6 +6,7 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
+import getMethodBasedOn from "../../../lib/ethereum/operationValidator.js";
 
 async function getById(req) {
   const {
@@ -39,15 +40,24 @@ async function update(req) {
   const {
     query: {id}
   } = req;
-  const {version, contractAddress, functionName, project, user, isERC20} = req.body;
-
+  let {version, contractAddress, functionName, project, user, isERC20} = req.body;
+  functionName = functionName?.trim().toLowerCase();
+  contractAddress = contractAddress.trim();
+  version = version?.trim();
+  const method = await getMethodBasedOn(contractAddress, functionName);
+  if (!method) {
+    const error = new Error('Function [' + functionName + '] does not exist');
+    error.statusCode = 400;
+    throw error;
+  }
   await dbConnect();
 
   try {
     const operation = await Operation.findByIdAndUpdate(id, {
         version,
         contractAddress,
-        functionName,
+        functionName: method.name,
+        methodId: method.methodId,
         project: project._id,
         isERC20
       },

@@ -19,7 +19,7 @@ async function create(req) {
   let {version, contractAddress, functionName, project, user, isERC20} = req.body;
   functionName = functionName?.trim().toLowerCase();
   contractAddress = contractAddress.trim();
-  version = version?.trim();
+  version = version?.trim() || null;
   const method = await getMethodBasedOn(contractAddress, functionName);
   if (!method) {
     const error = new Error('Function [' + functionName + '] does not exist');

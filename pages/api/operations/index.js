@@ -1,4 +1,4 @@
-import getMethodBasedOn from '../../../lib/ethereum/operationValidator.js';
+import getMethodBasedOn from '../../../lib/ethereum/operationHelper.js';
 import dbConnect from '../../../lib/database/dbConnect.js';
 import Operation from '../../../models/Operation.js';
 // Keep the import -> need to initialize the schema

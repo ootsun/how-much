@@ -6,7 +6,7 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
-import getMethodBasedOn from "../../../lib/ethereum/operationValidator.js";
+import getMethodBasedOn from "../../../lib/ethereum/operationHelper.js";
 
 async function getById(req) {
   const {

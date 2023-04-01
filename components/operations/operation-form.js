@@ -198,8 +198,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                 onBlur={onBlur}
                 ref={ref}
                 className="input peer pr-10"
-                onChange={onChange}
-                onKeyDown={(e) => setKeyword(e.target.value)}
+                onChange={(e) => {setKeyword(e.target.value);onChange(e);}}
                 displayValue={(project) => project ? project.name : ''}
                 placeholder=" "
                   />

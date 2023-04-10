@@ -17,6 +17,7 @@ export async function findAll() {
 
 async function create(req) {
   let {version, contractAddress, functionName, project, user, isERC20} = req.body;
+  log.debug(`Create operation: ${version}, ${contractAddress}, ${functionName}, ${project.name}, ${user.address}, ${isERC20}`);
   functionName = functionName?.trim().toLowerCase();
   contractAddress = contractAddress.trim();
   version = version?.trim() || null;

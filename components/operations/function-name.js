@@ -1,4 +1,4 @@
-import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
+import {useMobileDisplayHook} from "../../lib/client/hooks/use-mobile-display-hook.js";
 import {InformationCircleIcon} from '@heroicons/react/outline';
 import {Tooltip} from "flowbite-react";
 

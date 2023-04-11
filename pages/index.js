@@ -4,6 +4,8 @@ import {useState} from 'react';
 import {ShoppingCart} from '../components/operations/shopping-cart.js';
 import {InformationCircleIcon, ShoppingCartIcon} from '@heroicons/react/outline';
 import {search} from "./api/operations/search.js";
+import {BiGasPump} from "react-icons/all.js";
+import {GasStation} from "../components/operations/gas-station.js";
 
 export default function Home({initialOperations}) {
 
@@ -20,9 +22,12 @@ export default function Home({initialOperations}) {
       </Head>
       <main className="lg:flex lg:flex-row-reverse">
         <section className={`${cartIsEmpty ? 'hidden sm:block' : 'block'} card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start`}>
-          <p className="italic align-middle mb-1 md:ml-3">
-            <InformationCircleIcon className="information-circle"/>
-            Click on a row to remove it
+          <p className="italic align-middle mb-1 md:ml-3 flex justify-between">
+            <span>
+              <InformationCircleIcon className="information-circle"/>
+              Click on a row to remove it
+            </span>
+            <GasStation/>
           </p>
           <div className={`flex justify-between items-center pb-1.5 ${cartIsEmpty ? '' : 'border-gray-200 border-b'}`}>
             <div className={`flex basis-3/5 pr-1 items-center`}>

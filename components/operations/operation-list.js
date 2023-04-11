@@ -9,7 +9,7 @@ import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
-import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
+import {useMobileDisplayHook} from "../../lib/client/hooks/use-mobile-display-hook.js";
 import {editorContext} from "../../pages/_app.js";
 import {FunctionName} from "./function-name.js";
 

@@ -6,7 +6,7 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/outline';
 import {useEffect, useState} from "react";
-import {useMobileDisplayHook} from "../lib/client/hooks/useMobileDisplayHook.js";
+import {useMobileDisplayHook} from "../lib/client/hooks/use-mobile-display-hook.js";
 
 export function Table({
                         tableInstance,

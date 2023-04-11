@@ -10,9 +10,6 @@ export function FunctionName({name, tooltip = false}) {
     // Split the string into two parts at the capital letter, lowercase letter, or digit
     const regex = /([a-z0-9]+|[A-Z0-9]+(?![a-z])|[A-Z0-9][a-z0-9]*)/g;
     const parts = str.match(regex);
-    if(str == 'addLiquidityETH') {
-      console.log(parts);
-    }
 
     // If there is only one part, return it as-is
     if (parts.length === 1) {

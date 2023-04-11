@@ -1,5 +1,10 @@
+import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
+import {InformationCircleIcon} from '@heroicons/react/outline';
+import {Tooltip} from "flowbite-react";
 
-export function FunctionName({name}) {
+export function FunctionName({name, tooltip = false}) {
+
+  const isMobileDisplay = useMobileDisplayHook();
 
   const formatCamelCaseToWords = (str) => {
     // Split the string into two parts at the capital letter, lowercase letter, or digit
@@ -20,6 +25,14 @@ export function FunctionName({name}) {
       return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
     });
     return formattedParts.join(' ');
+  }
+
+  if(tooltip && isMobileDisplay) {
+    return (
+      <Tooltip content={formatCamelCaseToWords(name)}>
+        <InformationCircleIcon className="information-circle" onClick={event => event.stopPropagation()}/>
+      </Tooltip>
+    );
   }
 
   return (

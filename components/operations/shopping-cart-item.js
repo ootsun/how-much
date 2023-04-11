@@ -12,7 +12,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
         </span>
         <span className="basis-3/5 flex justify-between">
           <span className="pr-1">
-            <FunctionName name={operation.functionName}/>
+            <FunctionName name={operation.functionName} tooltip={true}/>
           </span>
           {averagePrice !== null && maxPrice !== null &&
           <>

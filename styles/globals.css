@@ -124,6 +124,10 @@
   .information-circle {
     @apply inline h-5 w-5 mr-1 text-cyan-500 align-sub
   }
+
+  #gasPriceUpdateCircle {
+    @apply stroke-cyan-500
+  }
 }
 
 /* Firefox */
@@ -196,4 +200,10 @@ input[type=number] {
   100% {
     background-color: hsl(200, 20%, 95%);
   }
+}
+
+#gasPriceUpdateCircle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }

@@ -1,18 +1,18 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {getById} from '../../lib/client/operationHandler.js';
 import {ShoppingCartItem} from './shopping-cart-item.js';
 import {atCurrentGasPriceInUSD} from '../../lib/ethereum/ethereumUtils.js';
 import {roundPrice} from '../../lib/utils/numberUtils.js';
 import {ERROR_MESSAGES} from "../../lib/client/constants.js";
-import {useGasAndEthPricesHook} from "../../lib/client/hooks/use-gas-and-eth-prices-hook.js";
+import { currentPricesContext} from "../../pages/_app.js";
 
 export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setMaxSum}) {
   const LOCAL_STORAGE_SELECTED_OPS_KEY = 'shopping-cart-selected-operations';
 
   const [selectedOperations, setSelectedOperations] = useState(null);
-  const prices = useGasAndEthPricesHook();
-  const currentGasPrice = prices?.gasPriceInWei;
-  const currentEtherPrice = prices?.etherPrice;
+  const currentPrices = useContext(currentPricesContext);
+  const currentGasPrice = currentPrices?.gasPriceInWei;
+  const currentEtherPrice = currentPrices?.etherPrice;
 
   useEffect(() => {
     if(lastSelected) {
@@ -26,7 +26,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
 
   useEffect(() => {
     refreshShoppingCartSums()
-  }, [prices, selectedOperations]);
+  }, [currentPrices, selectedOperations]);
 
   const retrieveFromLocalStorage = async () => {
     const savedOpIds = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SELECTED_OPS_KEY));
@@ -61,8 +61,8 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
   }
 
   function getPriceInUSD(gasQuantity) {
-    if (prices) {
-      return roundPrice(atCurrentGasPriceInUSD(gasQuantity, prices.etherPrice, prices.gasPriceInWei));
+    if (currentPrices) {
+      return roundPrice(atCurrentGasPriceInUSD(gasQuantity, currentPrices.etherPrice, currentPrices.gasPriceInWei));
     } else {
       return null;
     }
@@ -72,7 +72,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
     if (!operations) {
       await retrieveFromLocalStorage();
     }
-    if (prices && operations?.length > 0) {
+    if (currentPrices && operations?.length > 0) {
       let averageSum = 0;
       let maxSum = 0;
       for (const operation of operations) {

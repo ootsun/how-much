@@ -1,14 +1,17 @@
 import {useContext, useEffect, useState} from 'react';
-import {getById} from '../../lib/client/operationHandler.js';
+import {getById} from '../../../lib/client/operationHandler.js';
 import {ShoppingCartItem} from './shopping-cart-item.js';
-import {atCurrentGasPriceInUSD} from '../../lib/ethereum/ethereumUtils.js';
-import {roundPrice} from '../../lib/utils/numberUtils.js';
-import {ERROR_MESSAGES} from "../../lib/client/constants.js";
-import { currentPricesContext} from "../../pages/_app.js";
+import {atCurrentGasPriceInUSD} from '../../../lib/ethereum/ethereumUtils.js';
+import {roundPrice} from '../../../lib/utils/numberUtils.js';
+import {ERROR_MESSAGES} from "../../../lib/client/constants.js";
+import { currentPricesContext} from "../../../pages/_app.js";
+import ShoppingCartHeader from "./shopping-cart-header.js";
 
-export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setMaxSum}) {
+export function ShoppingCart({lastSelected, setLastSelected}) {
   const LOCAL_STORAGE_SELECTED_OPS_KEY = 'shopping-cart-selected-operations';
 
+  const [averageSum, setAverageSum] = useState('0');
+  const [maxSum, setMaxSum] = useState('0');
   const [selectedOperations, setSelectedOperations] = useState(null);
   const currentPrices = useContext(currentPricesContext);
   const currentGasPrice = currentPrices?.gasPriceInWei;
@@ -104,6 +107,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setAverageSum, setM
 
   return (
     <>
+      <ShoppingCartHeader averageSum={averageSum} maxSum={maxSum} selectedOperations={selectedOperations}/>
       <ul>
         {selectedOperations?.map((operation, index) =>
           <ShoppingCartItem operation={operation}

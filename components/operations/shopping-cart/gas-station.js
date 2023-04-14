@@ -1,8 +1,8 @@
 import {BiGasPump} from "react-icons/all.js";
 import {ethers} from "ethers";
 import {useContext, useEffect, useState} from "react";
-import {BLOCK_INTERVAL_IN_MS} from "../../lib/ethereum/ethereumUtils.js";
-import {blockCountdownContext, currentPricesContext} from "../../pages/_app.js";
+import {BLOCK_INTERVAL_IN_MS} from "../../../lib/ethereum/ethereumUtils.js";
+import {blockCountdownContext, currentPricesContext} from "../../../pages/_app.js";
 
 export function GasStation() {
 

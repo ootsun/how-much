@@ -1,6 +1,6 @@
-import {ProjectNameLogo} from '../projects/project-name-logo.js';
-import {LoadingCircle} from '../loading-circle.js';
-import {FunctionName} from "./function-name.js";
+import {ProjectNameLogo} from '../../projects/project-name-logo.js';
+import {LoadingCircle} from '../../loading-circle.js';
+import {FunctionName} from "../function-name.js";
 
 export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) {
 

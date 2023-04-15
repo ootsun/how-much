@@ -4,10 +4,12 @@ import {ShoppingCartItem} from './shopping-cart-item.js';
 import {atCurrentGasPriceInUSD} from '../../../lib/ethereum/ethereumUtils.js';
 import {roundPrice} from '../../../lib/utils/numberUtils.js';
 import {ERROR_MESSAGES} from "../../../lib/client/constants.js";
-import { currentPricesContext} from "../../../pages/_app.js";
+import {currentPricesContext} from "../../../pages/_app.js";
 import ShoppingCartHeader from "./shopping-cart-header.js";
+import {InformationCircleIcon} from "@heroicons/react/outline";
+import {GasStation} from "./gas-station.js";
 
-export function ShoppingCart({lastSelected, setLastSelected}) {
+export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
   const LOCAL_STORAGE_SELECTED_OPS_KEY = 'shopping-cart-selected-operations';
 
   const [averageSum, setAverageSum] = useState('0');
@@ -18,7 +20,7 @@ export function ShoppingCart({lastSelected, setLastSelected}) {
   const currentEtherPrice = currentPrices?.etherPrice;
 
   useEffect(() => {
-    if(lastSelected) {
+    if (lastSelected) {
       const updated = [...selectedOperations, lastSelected];
       setSelectedOperations(updated);
       saveInLocalStorage(updated);
@@ -28,25 +30,26 @@ export function ShoppingCart({lastSelected, setLastSelected}) {
   }, [lastSelected]);
 
   useEffect(() => {
-    refreshShoppingCartSums()
+    refreshShoppingCartSums();
+    setCartIsEmpty(setSelectedOperations?.length === 0);
   }, [currentPrices, selectedOperations]);
 
   const retrieveFromLocalStorage = async () => {
     const savedOpIds = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SELECTED_OPS_KEY));
-    if(savedOpIds) {
+    if (savedOpIds) {
       const promises = [];
-      for(const id of savedOpIds) {
+      for (const id of savedOpIds) {
         promises.push(getById(id));
       }
       try {
         const responses = await Promise.all(promises);
         const savedOps = [];
-        for(const res of responses) {
+        for (const res of responses) {
           try {
             if (!res.ok) {
               const data = await res.json();
               console.error('Error while retrieving an operation based on shopping cart local storage :', data.error);
-              if(res.status === 404) {
+              if (res.status === 404) {
                 await removeObsoleteFromCart(res);
               }
               return;
@@ -107,16 +110,27 @@ export function ShoppingCart({lastSelected, setLastSelected}) {
 
   return (
     <>
-      <ShoppingCartHeader averageSum={averageSum} maxSum={maxSum} selectedOperations={selectedOperations}/>
-      <ul>
-        {selectedOperations?.map((operation, index) =>
-          <ShoppingCartItem operation={operation}
-                            averagePrice={getPriceInUSD(operation.averageGasUsage)}
-                            maxPrice={getPriceInUSD(operation.maxGasUsage)}
-                            onRemove={onRemove}
-                            key={index}/>
-        )}
-      </ul>
+      <p className="italic align-middle mb-1 md:ml-3 flex justify-between">
+        <span>
+          <InformationCircleIcon className="information-circle"/>
+          Click on a row to remove it
+        </span>
+        <GasStation/>
+      </p>
+      <table className="w-full">
+        <thead>
+          <ShoppingCartHeader averageSum={averageSum} maxSum={maxSum} selectedOperations={selectedOperations}/>
+        </thead>
+        <tbody>
+          {selectedOperations?.map((operation, index) =>
+            <ShoppingCartItem operation={operation}
+                              averagePrice={getPriceInUSD(operation.averageGasUsage)}
+                              maxPrice={getPriceInUSD(operation.maxGasUsage)}
+                              onRemove={onRemove}
+                              key={index}/>
+          )}
+        </tbody>
+      </table>
     </>
   );
 }

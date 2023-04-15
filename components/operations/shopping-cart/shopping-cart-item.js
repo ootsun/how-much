@@ -4,28 +4,32 @@ import {FunctionName} from "../function-name.js";
 
 export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) {
 
+  let pricesSection;
+  if (averagePrice !== null && maxPrice !== null) {
+    pricesSection = (
+      <>
+        <td className="pr-1">
+          <span className="average-price-sm">${averagePrice}</span>
+        </td>
+        <td>
+          <span className="max-price-sm">${maxPrice}</span>
+        </td>
+      </>
+    );
+  } else {
+    pricesSection = <td colSpan={2}><LoadingCircle color={true}/></td>;
+  }
+
   return (
-    <li onClick={() => onRemove(operation)}
-        className="py-1 md:pl-3 w-full hover:bg-gray-100 rounded-lg transition duration-200 cursor-pointer flex items-center animate-shopping-cart-item">
-        <span className="basis-2/5 pr-1">
+    <tr onClick={() => onRemove(operation)}
+        className="py-1 md:pl-3 w-full hover:bg-gray-100 rounded-lg cursor-pointer transition duration-200 animate-shopping-cart-item">
+        <td>
             <ProjectNameLogo operation={operation} project={operation.project}/>
-        </span>
-        <span className="basis-3/5 flex justify-between">
-          <span className="pr-1">
-            <FunctionName name={operation.functionName} tooltip={true}/>
-          </span>
-          {averagePrice !== null && maxPrice !== null &&
-          <>
-            <span className="pr-1">
-              <span className="average-price-sm">${averagePrice}</span>
-            </span>
-            <span>
-              <span className="max-price-sm">${maxPrice}</span>
-            </span>
-          </>
-          }
-          {(averagePrice === null || maxPrice === null) && <LoadingCircle color={true}/>}
-        </span>
-    </li>
+        </td>
+        <td>
+          <FunctionName name={operation.functionName} tooltip={true}/>
+        </td>
+        {pricesSection}
+    </tr>
   );
 }

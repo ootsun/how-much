@@ -13,13 +13,17 @@ export function FunctionName({name, tooltip = false}) {
 
     // If there is only one part, return it as-is
     if (parts.length === 1) {
-      return parts[0];
+      return capitalizeFirstLetter(parts[0]);
     }
 
     // Capitalize the first letter of the first word and join the parts with a space in between
-    parts[0] = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-    const formattedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
+    parts[0] = capitalizeFirstLetter(parts[0]);
+    const formattedParts = parts.map(part => capitalizeFirstLetter(part));
     return formattedParts.join(' ');
+  }
+
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   if(tooltip && isMobileDisplay) {

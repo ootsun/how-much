@@ -4,6 +4,17 @@ export default function ShoppingCartHeader({averageSum, maxSum, selectedOperatio
 
   const cartIsEmpty = selectedOperations?.length === 0;
 
+  const buildTotalBadge = (type, value) => {
+    return (
+      <th className="font-normal">
+        <div className={type === 'avg' ? 'avg-price-header' : 'max-price-header'}>
+          <span className="block sm:inline text-center text-xs text-white">{type}</span>
+          <span className="border-white inline-border-t sm:border-l sm:ml-1 sm:pl-1 bg-white rounded px-1">${value}</span>
+        </div>
+      </th>
+    );
+  }
+
   return (
     <tr className="text-left">
       <th colSpan={2} className="font-normal">
@@ -17,16 +28,8 @@ export default function ShoppingCartHeader({averageSum, maxSum, selectedOperatio
         </div>
       </th>
       {!cartIsEmpty && <>
-        <th className="font-normal">
-          <span className="average-price">Avg&nbsp;
-            <span className="border-l border-white ml-1 pl-1 ">${averageSum}</span>
-          </span>
-        </th>
-        <th className="font-normal">
-          <span className="max-price">Max&nbsp;
-            <span className="border-l border-white ml-1 pl-1">${maxSum}</span>
-          </span>
-        </th>
+        {buildTotalBadge('avg', averageSum)}
+        {buildTotalBadge('max', maxSum)}
       </>
       }
     </tr>

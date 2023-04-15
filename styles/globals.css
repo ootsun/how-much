@@ -93,32 +93,20 @@
     @apply rounded-r-lg
   }
 
-  .rectangular-badge-sm {
-    @apply text-white italic capitalize px-2 py-1 rounded text-sm
-  }
-
   .rectangular-badge {
-    @apply text-white italic capitalize px-2 py-1 rounded
+    @apply text-white capitalize p-1 rounded text-sm
   }
 
   .function-name {
-    @apply rectangular-badge-sm bg-cyan-500
+    @apply rectangular-badge bg-cyan-500
   }
 
-  .average-price-sm {
-    @apply rectangular-badge-sm bg-fuchsia-500
+  .avg-price-header {
+    @apply rectangular-badge bg-fuchsia-500 text-gray-800
   }
 
-  .max-price-sm {
-    @apply rectangular-badge-sm bg-orange-500
-  }
-
-  .average-price {
-    @apply rectangular-badge bg-fuchsia-500
-  }
-
-  .max-price {
-    @apply rectangular-badge bg-orange-500
+  .max-price-header {
+    @apply rectangular-badge bg-orange-500 text-gray-800
   }
 
   .information-circle {

@@ -8,11 +8,11 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
   if (averagePrice !== null && maxPrice !== null) {
     pricesSection = (
       <>
-        <td className="pr-1">
-          <span className="average-price-sm">${averagePrice}</span>
+        <td className="text-center">
+          <span><span className="underline decoration-2 decoration-fuchsia-500">{averagePrice}</span></span>
         </td>
-        <td>
-          <span className="max-price-sm">${maxPrice}</span>
+        <td className="text-center">
+          <span><span className="underline decoration-2 decoration-orange-500">{maxPrice}</span></span>
         </td>
       </>
     );

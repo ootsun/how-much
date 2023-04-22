@@ -17,7 +17,7 @@ export default function Home({initialOperations}) {
       </Head>
       <main className="lg:flex lg:flex-row-reverse">
         <section className={`${cartIsEmpty ? 'hidden sm:block' : 'block'} card mb-4 lg:basis-1/3 lg:ml-2 lg:self-start`}>
-          <ShoppingCart selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setCartIsEmpty={setCartIsEmpty}/>
+          <ShoppingCart lastSelected={selectedOperation} setLastSelected={setSelectedOperation} setCartIsEmpty={setCartIsEmpty}/>
         </section>
         <section className="card mb-4 lg:basis-2/3">
           <p className="italic align-middle mb-1 md:ml-6">

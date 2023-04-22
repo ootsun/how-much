@@ -110,8 +110,8 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
 
   return (
     <>
-      <p className="italic align-middle mb-1 md:ml-3 flex justify-between">
-        <span>
+      <p className="italic align-middle mb-2 md:ml-3 flex justify-between">
+        <span className="mr-2">
           <InformationCircleIcon className="information-circle"/>
           Click on a row to remove it
         </span>

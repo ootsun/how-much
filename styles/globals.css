@@ -10,7 +10,7 @@
   }
 
   .card {
-    @apply rounded-xl shadow-lg p-3 lg:p-4
+    @apply rounded-xl shadow-lg p-1.5 sm:p-3 lg:p-4
     bg-white
     dark:bg-gray-800
   }
@@ -102,7 +102,7 @@
   }
 
   .price-header {
-    @apply rectangular-badge bg-gradient-to-r from-primary to-secondary text-gray-800 flex justify-between items-center py-1
+    @apply rectangular-badge bg-gradient-to-r from-primary to-secondary text-gray-800 sm:flex sm:justify-between sm:items-center sm:py-1
   }
 
   .price-header-value {

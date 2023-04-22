@@ -44,7 +44,7 @@ export default function Header() {
         </div>
         }
       </div>
-      <h1 className="text-center text-4xl font-cursive flex-2 flex items-center mx-3 md:mx-6 dark:text-secondary-l">
+      <h1 className="text-center text-2xl sm:text-4xl font-cursive flex-2 flex items-center mx-3 md:mx-6 dark:text-secondary-l">
         <Link href="/">
           <span className="m-1">How much</span>
           <span>?</span>
@@ -76,17 +76,18 @@ const burgerStyles = {
     marginTop: '1rem',
   },
   bmBurgerBars: {
-    background: '#373a47'
+    background: '#1f2937'
   },
   bmBurgerBarsHover: {
     background: '#a90000'
   },
   bmCrossButton: {
     height: '24px',
-    width: '24px'
+    width: '24px',
+    right: '22px'
   },
   bmCross: {
-    background: '#bdc3c7'
+    background: '#1f2937'
   },
   bmMenuWrap: {
     position: 'fixed',
@@ -99,7 +100,7 @@ const burgerStyles = {
     fontSize: '1.15em'
   },
   bmMorphShape: {
-    fill: '#373a47'
+    fill: '#1f2937'
   },
   bmItemList: {
     color: '#b8b7ad',

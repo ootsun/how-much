@@ -114,7 +114,7 @@
   }
 
   #gasPriceUpdateCircle {
-    @apply stroke-secondary-l dark:stroke-primary
+    @apply stroke-primary
   }
 
   .gwei-amount-gas-station {

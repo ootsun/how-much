@@ -7,9 +7,9 @@ export default function ShoppingCartHeader({averageSum, maxSum, selectedOperatio
   const buildTotalBadge = (type, value) => {
     return (
       <th className="font-normal">
-        <div className={type === 'avg' ? 'avg-price-header' : 'max-price-header'}>
+        <div className="price-header">
           <span className="block sm:inline text-center text-xs text-white">{type}</span>
-          <span className="border-white inline-border-t sm:border-l sm:ml-1 sm:pl-1 bg-white rounded px-1">${value}</span>
+          <span className="price-header-value">${value}</span>
         </div>
       </th>
     );

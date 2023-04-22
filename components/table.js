@@ -81,7 +81,7 @@ export function Table({
                           className={`py-1 px-2 md:py-3 md:px-6 font-medium text-left w-1/${headerGroups.length}`}>
                         {column.render('Header')}{column.isSorted ? column.isSortedDesc ?
                         <span>
-                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"
+                            <svg className="w-3 h-3 inline ml-1 text-primary" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -89,7 +89,7 @@ export function Table({
                             </svg>
                           </span> :
                         <span>
-                            <svg className="w-3 h-3 inline ml-1 text-orange-500" fill="none" stroke="currentColor"
+                            <svg className="w-3 h-3 inline ml-1 text-primary" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -156,7 +156,7 @@ export function Table({
                     if (pageMustBeDisplayed(index)) {
                       return <li key={`lipageCount-${index}`}>
                         <button disabled={pageIndex === index} onClick={() => navigate(index)}
-                                className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-orange-500 disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
+                                className="py-1.5 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white disabled:text-primary disabled:hover:dark:bg-gray-800 disabled:hover:bg-white">
                           {index + 1}
                         </button>
                       </li>

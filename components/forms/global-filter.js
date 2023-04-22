@@ -15,7 +15,7 @@ export function GlobalFilter({searchCriteria, setSearchCriteria, placeholder}) {
       <label htmlFor="table-search" className="sr-only">Search</label>
       <div className="relative mt-1 ml-0.5 md:ml-6">
         <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-          <SearchIcon className="w-5 h-5 text-fuchsia-500"/>
+          <SearchIcon className="w-5 h-5 text-primary"/>
         </div>
         <DebounceInput type="text" id="table-search"
                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

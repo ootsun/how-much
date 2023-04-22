@@ -14,7 +14,7 @@ export function ReadOnlyAlert() {
   return (
     show && <Alert
       additionalContent={<>
-        <div className="mt-2 mb-4 text-sm text-blue-700 dark:text-blue-800">
+        <div className="mt-2 mb-4 text-sm text-secondary dark:text-white">
           For now, the application is read-only for you. If I see some interest, I will set up a collaborative editing mechanism. In the meantime, feel free to reach out and request support for new protocols, propose new features or report bugs &#128578;
         </div>
         <div className="flex flex-row-reverse">
@@ -33,8 +33,9 @@ export function ReadOnlyAlert() {
       icon={HiInformationCircle}
       onDismiss={onDismiss}
       rounded={true}
-      theme={{color: {cyan: '100'}}}>
-      <h3 className="text-lg font-medium text-blue-700 dark:text-blue-800">
+      className="bg-secondary-l dark:bg-secondary-d"
+      color="black">
+      <h3 className="text-lg font-medium text-secondary-d dark:text-white">
         Welcome to the admin area!
       </h3>
     </Alert>

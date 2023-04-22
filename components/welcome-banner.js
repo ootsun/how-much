@@ -21,7 +21,7 @@ export default function WelcomeBanner() {
     <div
       className={`${show ? '' : 'hidden'} welcome-banner-wrapper bg-white shadow-xl w-max max-w-full fixed z-10 bottom-10 left-1/2 -translate-x-1/2 px-2 py-3 rounded-lg border dark:bg-gray-800`}>
       <p className="mr-10">Hi <span
-        className="text-orange-500 font-bold">{process.env.NEXT_PUBLIC_WELCOME_BANNER_TARGET}</span>!
+        className="text-primary font-bold">{process.env.NEXT_PUBLIC_WELCOME_BANNER_TARGET}</span>!
         &nbsp;Be Aware that this tool is still in development. There are tons of bugs to fix and lots of functionalities
         are missing. But it should give you an idea of what it will become :)
       </p>

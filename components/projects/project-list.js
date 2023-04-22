@@ -90,9 +90,9 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
                 {projectBeingDeleted !== row.original &&
                 <>
                   <span onClick={async () => await onDelete(row.original)}
-                        className={`${selectedProject !== row.original && canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
+                        className={`${selectedProject !== row.original && canEdit ? 'text-secondary hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
                   <span onClick={() => setSelectedProject(row.original)}
-                        className={`${canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
+                        className={`${canEdit ? 'text-secondary hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
                 </>
                 }
                 {projectBeingDeleted === row.original && <LoadingCircle color={true}/>}

@@ -119,9 +119,9 @@ export function OperationList({
               {operationBeingDeleted !== operation &&
               <>
                   <span onClick={async () => await onDelete(operation)}
-                        className={`${selectedOperation !== operation && canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
+                        className={`${selectedOperation !== operation && canEdit ? 'text-secondary hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'} ml-2`}>Delete</span>
                 <span onClick={() => setSelectedOperation(operation)}
-                      className={`${canEdit ? 'text-cyan-500 hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
+                      className={`${canEdit ? 'text-secondary hover:underline cursor-pointer' : 'text-gray-500 cursor-not-allowed'}`}>Edit</span>
               </>
               }
               {operationBeingDeleted === operation && <LoadingCircle color={true}/>}

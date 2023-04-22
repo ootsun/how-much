@@ -203,7 +203,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                 placeholder=" "
                   />
                   <Combobox.Label htmlFor="project"
-                className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                className="label peer-focus:left-0 peer-focus:text-primary-d peer-focus:dark:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Project</Combobox.Label>
                 <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                   <SelectorIcon
@@ -230,7 +230,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                         <Combobox.Option
                           key={project._id}
                           className={({active}) =>
-                            `h-9 hover:bg-cyan-50 cursor-default select-none relative py-2 pl-10 pr-4 ${active ? 'bg-cyan-50' : ''}`
+                            `h-9 hover:bg-gray-100 cursor-default select-none relative py-2 pl-10 pr-4 ${active ? 'bg-gray-100' : ''}`
                           }
                           value={project}>
                           {({selected}) => (
@@ -272,14 +272,14 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                    {...register('version')}
                    disabled={!canEdit}/>
             <label htmlFor="version"
-                   className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                   className="label peer-focus:left-0 peer-focus:text-primary-d peer-focus:dark:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Version</label>
           </div>
           <div className="relative mb-3 md:mb-0 w-full z-0 flex items-center">
             <input id="isERC20" type="checkbox"
                    {...register('isERC20')}
                    disabled={!canEdit}
-                   className="w-4 h-4 text-fuchsia-600 bg-gray-100 border-gray-300 rounded focus:text-fuchsia-500 dark:focus:text-fuchsia-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                   className="w-4 h-4 text-primary-d bg-gray-100 border-gray-300 rounded focus:text-primary dark:focus:text-primary-d dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
             <label htmlFor="isERC20"
                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is ERC20</label>
           </div>
@@ -290,7 +290,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                    {...register('functionName', {required: 'Mandatory field', validate: functionNameIsUnique})}
                    disabled={!canEdit}/>
             <label htmlFor="functionName"
-                   className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                   className="label peer-focus:left-0 peer-focus:text-primary-d peer-focus:dark:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Function name</label>
             {errors.functionName && <span className="error">{errors.functionName.message}</span>}
           </div>
@@ -301,7 +301,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
                    {...register('contractAddress', {validate: functionNameIsUnique})}
                    disabled={!canEdit}/>
             <label htmlFor="contractAddress"
-                   className="label peer-focus:left-0 peer-focus:text-fuchsia-600 peer-focus:dark:text-fuchsia-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                   className="label peer-focus:left-0 peer-focus:text-primary-d peer-focus:dark:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
               Contract address</label>
             {errors.contractAddress && <span className="error">{errors.contractAddress.message}</span>}
           </div>

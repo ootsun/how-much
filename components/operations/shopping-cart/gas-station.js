@@ -37,7 +37,6 @@ export function GasStation() {
         width={radius * 2}>
         <circle
           id="gasPriceUpdateCircle"
-          stroke="blue"
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={circumference + ' ' + circumference}
@@ -47,7 +46,7 @@ export function GasStation() {
           cy={radius}
         />
       </svg>
-      <span className="absolute top-3 left-5 bg-white/80 rounded-full p-1 text-xs font-bold h-[30px] w-[30px] flex items-center justify-center not-italic">
+      <span className="gwei-amount-gas-station">
         <span>{gweiAmount}</span>
       </span>
     </span>

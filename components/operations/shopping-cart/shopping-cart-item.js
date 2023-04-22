@@ -9,10 +9,10 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
     pricesSection = (
       <>
         <td className="text-center">
-          <span><span className="underline decoration-2 decoration-fuchsia-500">{averagePrice}</span></span>
+          <span><span className="">{averagePrice}</span></span>
         </td>
         <td className="text-center">
-          <span><span className="underline decoration-2 decoration-orange-500">{maxPrice}</span></span>
+          <span><span className="">{maxPrice}</span></span>
         </td>
       </>
     );
@@ -26,7 +26,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
         <td>
             <ProjectNameLogo operation={operation} project={operation.project}/>
         </td>
-        <td>
+        <td className="py-1">
           <FunctionName name={operation.functionName} tooltip={true}/>
         </td>
         {pricesSection}

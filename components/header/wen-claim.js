@@ -3,7 +3,7 @@ import Link from 'next/link.js';
 export function WenClaim() {
 
   return (
-    <button className="link-wrapper group group-hover:from-cyan-500 group-hover:to-fuchsia-500">
+    <button className="link-wrapper group group-hover:from-primary group-hover:to-secondary">
       <Link href="https://wenclaim.xyz"
             target="_blank"
             title="Optimize the frequency of your claims and compounds in DeFi"

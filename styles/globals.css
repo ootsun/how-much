@@ -98,7 +98,9 @@
   }
 
   .function-name {
-    @apply rectangular-badge shadow shadow-secondary/40 text-secondary border border-secondary dark:shadow-none dark:text-secondary-l dark:border-secondary-l
+    @apply rectangular-badge shadow shadow-secondary/40 text-secondary border border-secondary
+    dark:shadow-none dark:text-secondary-l dark:border-secondary-l
+    text-ellipsis overflow-hidden whitespace-nowrap inline-block
   }
 
   .price-header {

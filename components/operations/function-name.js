@@ -2,7 +2,7 @@ import {useMobileDisplayHook} from "../../lib/client/hooks/use-mobile-display-ho
 import {InformationCircleIcon} from '@heroicons/react/outline';
 import {Tooltip} from "flowbite-react";
 
-export function FunctionName({name, tooltip = false}) {
+export function FunctionName({name, inShoppingCart = false}) {
 
   const isMobileDisplay = useMobileDisplayHook();
 
@@ -19,15 +19,16 @@ export function FunctionName({name, tooltip = false}) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  if(tooltip && isMobileDisplay) {
+  const content = (<span className={`${inShoppingCart || isMobileDisplay ? 'max-w-[7rem]' : ''} function-name`}>{formatCamelCaseToWords(name)}</span>);
+  if(inShoppingCart && isMobileDisplay) {
     return (
-      <Tooltip content={formatCamelCaseToWords(name)}>
-        <InformationCircleIcon className="information-circle" onClick={event => event.stopPropagation()}/>
-      </Tooltip>
+      <InformationCircleIcon className="information-circle" onClick={event => event.stopPropagation()}/>
     );
   }
 
   return (
-    <span className="function-name">{formatCamelCaseToWords(name)}</span>
+    <Tooltip content={formatCamelCaseToWords(name)}>
+      {content}
+    </Tooltip>
   );
 }

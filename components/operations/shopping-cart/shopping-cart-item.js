@@ -27,7 +27,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
             <ProjectNameLogo operation={operation} project={operation.project}/>
         </td>
         <td className="py-1">
-          <FunctionName name={operation.functionName} tooltip={true}/>
+          <FunctionName name={operation.functionName} inShoppingCart={true}/>
         </td>
         {pricesSection}
     </tr>

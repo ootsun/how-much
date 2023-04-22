@@ -22,7 +22,7 @@ export function ShoppingCartItem({operation, averagePrice, maxPrice, onRemove}) 
 
   return (
     <tr onClick={() => onRemove(operation)}
-        className="py-1 md:pl-3 w-full hover:bg-gray-100 rounded-lg cursor-pointer transition duration-200 animate-shopping-cart-item">
+        className="py-1 md:pl-3 w-full hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition duration-200 animate-shopping-cart-item">
         <td>
             <ProjectNameLogo operation={operation} project={operation.project}/>
         </td>

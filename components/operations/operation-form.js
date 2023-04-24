@@ -31,8 +31,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchFunctionName = watch('functionName', null);
   const watchContractAddress = watch('contractAddress', null);
-  const watchProject = watch('project', null);
-  console.log('watchProject', watchProject)
 
   const {canEdit} = useContext(editorContext);
 
@@ -172,8 +170,7 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
 
   return (
     <>
-      <ActionModal title={actionModalTitle} message={actionModalMessage} callback={handleActionModalResponse}
-                   customId="operationFormActionModal"/>
+      <ActionModal title={actionModalTitle} message={actionModalMessage} setMessage={setActionModalMessage} callback={handleActionModalResponse}/>
       <ErrorModal message={errorModalMessage} setMessage={setErrorModalMessage}/>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -182,8 +179,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({ field: { onChange, onBlur, value, name, ref }}) => {
-
-                console.log('rendering project combobox', value)
                 return <Combobox value={value} onChange={onProjectChange} disabled={!canEdit}>
               <div
                 className="relative z-0">

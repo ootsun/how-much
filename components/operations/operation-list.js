@@ -1,5 +1,5 @@
 import {useContext, useEffect, useMemo, useState} from 'react';
-import {deleteOperation, findAll, search} from '../../lib/client/operationHandler.js';
+import {deleteOperation, search} from '../../lib/client/operationHandler.js';
 import {ErrorModal} from '../modals/error-modal.js';
 import {useTable, usePagination} from 'react-table';
 import {Toast} from '../toast.js';

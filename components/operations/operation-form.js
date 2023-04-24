@@ -1,7 +1,7 @@
 import {Controller, useForm} from 'react-hook-form';
 import {LoadingCircle} from '../loading-circle.js';
 import {useEffect, useState, Fragment, useContext} from 'react';
-import ErrorModal from '../modals/error-modal.js';
+import {ErrorModal} from '../modals/error-modal.js';
 import {Toast} from '../toast.js';
 import ActionModal from '../modals/action-modal.js';
 import {ERROR_MESSAGES} from '../../lib/client/constants.js';
@@ -31,8 +31,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
   let {isSubmitting, errors, isValid, isDirty} = formState;
   const watchFunctionName = watch('functionName', null);
   const watchContractAddress = watch('contractAddress', null);
-  const watchProject = watch('project', null);
-  console.log('watchProject', watchProject)
 
   const {canEdit} = useContext(editorContext);
 
@@ -45,7 +43,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
         const res = await searchProject({pageIndex: 0, keyword});
         if (!res.ok) {
           setErrorModalMessage(ERROR_MESSAGES.serverSide);
-          toggleModal('operationFormErrorModal');
           return;
         }
         const searchResult = await res.json();
@@ -81,7 +78,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
         if (isDirty) {
           setActionModalTitle('Warning');
           setActionModalMessage('A operation is already in the process of being created or edited. Are you sure you want to overwrite the changes?')
-          toggleModal('operationFormActionModal');
         } else {
           await replaceFormValues();
         }
@@ -92,15 +88,14 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
 
   async function createOperation(form) {
     const res = await create(form.project, form.functionName, form.contractAddress, form.version, form.isERC20);
-    // if (!res.ok) {
-    //   if (res.status === 400) {
-    //     setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
-    //   } else {
-    //     setErrorModalMessage(ERROR_MESSAGES.serverSide);
-    //   }
-    //   toggleModal('operationFormErrorModal');
-    //   return false;
-    // }
+    if (!res.ok) {
+      if (res.status === 400) {
+        setErrorModalMessage(ERROR_MESSAGES.invalidOperation);
+      } else {
+        setErrorModalMessage(ERROR_MESSAGES.serverSide);
+      }
+      return false;
+    }
     setToastMessage('Operation successfully created');
     return true;
   }
@@ -109,7 +104,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
     const res = await update(selectedOperation._id, form.project, form.functionName, form.contractAddress, form.version, form.isERC20);
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
-      toggleModal('operationFormErrorModal');
       return false;
     }
     setSelectedOperation(null);
@@ -136,7 +130,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
       }
     } catch (e) {
       setErrorModalMessage(ERROR_MESSAGES.connection);
-      toggleModal('operationFormErrorModal');
     }
   }
 
@@ -169,7 +162,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
     const res = await search({projectId: project._id});
     if (!res.ok) {
       setErrorModalMessage(ERROR_MESSAGES.serverSide);
-      toggleModal('operationFormErrorModal');
       return;
     }
     setFunctionNames(await res.json());
@@ -178,9 +170,8 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
 
   return (
     <>
-      <ActionModal title={actionModalTitle} message={actionModalMessage} callback={handleActionModalResponse}
-                   customId="operationFormActionModal"/>
-      <ErrorModal message={errorModalMessage} customId="operationFormErrorModal"/>
+      <ActionModal title={actionModalTitle} message={actionModalMessage} setMessage={setActionModalMessage} callback={handleActionModalResponse}/>
+      <ErrorModal message={errorModalMessage} setMessage={setErrorModalMessage}/>
       <Toast message={toastMessage} setMessage={setToastMessage}/>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <input autoComplete="false" name="hidden" type="text" className="hidden"/>
@@ -188,8 +179,6 @@ export function OperationForm({initialProjects, selectedOperation, setSelectedOp
           <div className="relative mb-3 md:mb-0 w-full z-10">
             <Controller
               render={({ field: { onChange, onBlur, value, name, ref }}) => {
-
-                console.log('rendering project combobox', value)
                 return <Combobox value={value} onChange={onProjectChange} disabled={!canEdit}>
               <div
                 className="relative z-0">

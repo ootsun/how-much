@@ -9,6 +9,8 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseWallet from '@web3-onboard/coinbase';
 import Router from 'next/router';
 import {authContext, editorContext} from "../../pages/_app.js";
+import {ERROR_MESSAGES} from "../../lib/client/constants.js";
+import {ErrorModal} from "../modals/error-modal.js";
 
 const injected = injectedModule();
 const walletConnect = walletConnectModule();
@@ -49,7 +51,7 @@ init({
 export default function ConnectionButton({closeMenu}) {
 
   let [isLoading, setIsLoading] = useState(false);
-  // let [modalMessage, setModalMessage] = useState(null);
+  let [modalMessage, setModalMessage] = useState(null);
 
   const {isAuthenticated, setIsAuthenticated} = useContext(authContext);
   const {setCanEdit} = useContext(editorContext);
@@ -62,9 +64,7 @@ export default function ConnectionButton({closeMenu}) {
       res = await getNonce(address);
     } catch (e) {
       console.error(e);
-      //FIXME modal doesn't show up if created in the header
-      // setModalMessage(ERROR_MESSAGES.connection);
-      // toggleModal("signInButtonErrorModal");
+      setModalMessage(ERROR_MESSAGES.connection);
       return false;
     }
     if (res.ok) {
@@ -80,8 +80,7 @@ export default function ConnectionButton({closeMenu}) {
       return message.prepareMessage();
     }
     console.error(res);
-    // setModalMessage(ERROR_MESSAGES.serverSide);
-    // toggleModal("signInButtonErrorModal");
+    setModalMessage(ERROR_MESSAGES.serverSide);
     return false;
   }
 
@@ -109,8 +108,7 @@ export default function ConnectionButton({closeMenu}) {
             setIsAuthenticated(true);
             setCanEdit(user.canEdit);
           } else {
-            // setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
-            // toggleModal("operationListErrorModal");
+            setModalMessage('The server couldn\'t verify your signature. Please, retry later.');
             console.error('User is null');
           }
         }
@@ -134,7 +132,7 @@ export default function ConnectionButton({closeMenu}) {
 
   return (
     <>
-      {/*<ErrorModal message={modalMessage} customId="signInButtonErrorModal"/>*/}
+      <ErrorModal message={modalMessage} setMessage={setModalMessage}/>
       {isAuthenticated ? <button className="button" onClick={handleSignOut}>Sign out</button> :
         <button className="button" onClick={connectWalletAndSignIn} disabled={isLoading || connecting}>
           {isLoading && <LoadingCircle/>}Connect your wallet & sign in

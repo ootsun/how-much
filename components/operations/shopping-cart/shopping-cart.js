@@ -14,12 +14,13 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
 
   const [averageSum, setAverageSum] = useState('0');
   const [maxSum, setMaxSum] = useState('0');
-  const [selectedOperations, setSelectedOperations] = useState(null);
+  const [selectedOperations, setSelectedOperations] = useState([]);
   const currentPrices = useContext(currentPricesContext);
   const currentGasPrice = currentPrices?.gasPriceInWei;
   const currentEtherPrice = currentPrices?.etherPrice;
 
   useEffect(() => {
+    console.log(selectedOperations)
     if (lastSelected) {
       const updated = [...selectedOperations, lastSelected];
       setSelectedOperations(updated);
@@ -31,7 +32,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
 
   useEffect(() => {
     refreshShoppingCartSums();
-    setCartIsEmpty(setSelectedOperations?.length === 0);
+    setCartIsEmpty(selectedOperations?.length === 0);
   }, [currentPrices, selectedOperations]);
 
   const retrieveFromLocalStorage = async () => {
@@ -60,6 +61,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
           }
         }
         setSelectedOperations(savedOps);
+        console.log(selectedOperations)
       } catch (e) {
         console.error('Error while retrieving an operation based on shopping cart local storage :', e);
       }
@@ -94,6 +96,8 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
     const index = selectedOperations.indexOf(operation);
     selectedOperations.splice(index, 1);
     setSelectedOperations(selectedOperations);
+    console.log(selectedOperations)
+
     saveInLocalStorage(selectedOperations);
     await refreshShoppingCartSums();
   }

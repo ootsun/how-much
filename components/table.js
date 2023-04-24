@@ -6,7 +6,7 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/outline';
 import {useEffect, useState} from "react";
-import {useMobileDisplayHook} from "../lib/client/hooks/useMobileDisplayHook.js";
+import {useMobileDisplayHook} from "../lib/client/hooks/use-mobile-display-hook.js";
 
 export function Table({
                         tableInstance,
@@ -43,7 +43,7 @@ export function Table({
   const navigate = (pageNumber) => {
     setSearchCriteria({
       pageIndex: pageNumber,
-      keyword: searchCriteria?.keyword || null
+      keyword: searchCriteria?.keyword
     });
   }
 

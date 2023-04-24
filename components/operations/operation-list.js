@@ -9,8 +9,9 @@ import {ProjectNameLogo} from '../projects/project-name-logo.js';
 import {ContractAddress} from './contract-address.js';
 import {Table} from "../table.js";
 import {Skeleton} from "../skeleton.js";
-import {useMobileDisplayHook} from "../../lib/client/hooks/useMobileDisplayHook.js";
+import {useMobileDisplayHook} from "../../lib/client/hooks/use-mobile-display-hook.js";
 import {editorContext} from "../../pages/_app.js";
+import {FunctionName} from "./function-name.js";
 
 export function OperationList({
                                 initialOperations,
@@ -82,7 +83,7 @@ export function OperationList({
     const columns = [
       {
         Header: readonlyMode ? '' : 'Project',
-        Cell: ({row}) => <ProjectNameLogo project={row.original.project} loading={loading}/>,
+        Cell: ({row}) => <ProjectNameLogo operation={row.original} project={row.original.project} loading={loading} short={false}/>,
         accessor: 'project.name',
         id: 'project.name'
       },
@@ -91,7 +92,7 @@ export function OperationList({
         Cell: ({row}) =>
           loading ?
             <Skeleton functionName={true}/> :
-            <span className="function-name">{row.original.functionName}</span>,
+            <FunctionName name={row.original.functionName}/>,
         accessor: 'functionName',
         id: 'functionName',
       }
@@ -133,16 +134,10 @@ export function OperationList({
   }
 
   async function refreshList() {
-    try {
-      const res = await findAll();
-      if (!res.ok) {
-        setErrorModalMessage('A server side error occurred. We could not load the operations.');
-        return;
-      }
-      setOperations(await res.json());
-    } catch (e) {
-      setErrorModalMessage('An error occurred. We could not load the operations. Check you internet connectivity.');
-    }
+    setSearchCriteria({
+      pageIndex: searchCriteria?.pageIndex || 0,
+      keyword: searchCriteria?.keyword
+    });
   }
 
   useEffect(() => {
@@ -170,6 +165,7 @@ export function OperationList({
         await refreshList();
         setOperationBeingDeleted(null);
       } catch (e) {
+        console.error(e)
         setErrorModalMessage(ERROR_MESSAGES.connection);
         setOperationBeingDeleted(null);
       }

@@ -20,20 +20,31 @@ const OperationSchema = new Schema({
     ref: 'Project',
     required: true
   },
+  version: {
+    type: String,
+    trim: true,
+  },
   contractAddress: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   implementationAddress: {
     type: String,
+    trim: true,
   },
   functionName: {
     type: String,
+    trim: true,
     required: true
   },
   methodId: {
     type: String,
-    required: true
+    trim: true,
+  },
+  isERC20: {
+    type: Boolean,
+    default: false,
   },
   minGasUsage: {
     type: Number

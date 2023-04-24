@@ -107,16 +107,10 @@ export function ProjectList({initialProjects, selectedProject, setSelectedProjec
   }
 
   async function refreshList() {
-    try {
-      const res = await search(searchCriteria);
-      if (!res.ok) {
-        setErrorModalMessage('A server side error occurred. We could not load the projects.');
-        return;
-      }
-      setAllProjects(await res.json());
-    } catch (e) {
-      setErrorModalMessage('An error occurred. We could not load the projects. Check you internet connectivity.');
-    }
+    setSearchCriteria({
+      pageIndex: searchCriteria?.pageIndex || 0,
+      keyword: searchCriteria?.keyword
+    });
   }
 
   useEffect(() => {

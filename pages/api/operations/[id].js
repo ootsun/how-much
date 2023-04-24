@@ -6,6 +6,7 @@ import User from '../../../models/User.js';
 import Project from '../../../models/Project.js';
 import log from '../../../lib/log/logger.js';
 import {revalidate} from '../../../lib/utils/revalidationHandler.js';
+import getMethodBasedOn from "../../../lib/ethereum/operationHelper.js";
 
 async function getById(req) {
   const {
@@ -26,9 +27,11 @@ async function getById(req) {
       'project.createdBy': 0,
       'project.symbol': 0
     })
-    .populate('project', 'name logoUrl isERC20');
+    .populate('project', 'name logoUrl');
   if (!operation) {
-    throw new Error('Operation with _id ' + id + ' not found');
+    const error = new Error('Operation with _id ' + id + ' not found');
+    error.statusCode = 404;
+    throw error;
   }
   return operation;
 }
@@ -37,15 +40,26 @@ async function update(req) {
   const {
     query: {id}
   } = req;
-  const {contractAddress, functionName, project, user} = req.body;
-
+  let {version, contractAddress, functionName, project, user, isERC20} = req.body;
+  functionName = functionName?.trim().toLowerCase();
+  contractAddress = contractAddress.trim();
+  version = version?.trim() || null;
+  const method = await getMethodBasedOn(contractAddress, functionName);
+  if (!method) {
+    const error = new Error('Function [' + functionName + '] does not exist');
+    error.statusCode = 400;
+    throw error;
+  }
   await dbConnect();
 
   try {
     const operation = await Operation.findByIdAndUpdate(id, {
+        version,
         contractAddress,
-        functionName,
-        project: project._id
+        functionName: method.name,
+        methodId: method.methodId,
+        project: project._id,
+        isERC20
       },
       {runValidators: true})
       .populate('project', 'name logoUrl');

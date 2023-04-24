@@ -14,7 +14,7 @@ export function ContractAddress({address}) {
   }
 
   return (
-    <span className="flex" onClick={event => event.stopPropagation()}>
+    address && <span className="flex" onClick={event => event.stopPropagation()}>
       <ClipboardToast show={showToast} setShow={setShowToast}/>
       {truncateEthAddress(address)}
       <button className="link ml-1" onClick={copyAddress}>
@@ -24,9 +24,7 @@ export function ContractAddress({address}) {
         href={`https://etherscan.io/address/${address}`}
         className="link ml-1"
         target="_blank">
-
         <ExternalLinkIcon className="h-5 w-5"/>
-
       </Link>
     </span>
   );

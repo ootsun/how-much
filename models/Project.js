@@ -1,5 +1,4 @@
 import {Schema, models, model} from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
 import * as mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const ProjectSchema = new Schema({
@@ -18,25 +17,22 @@ const ProjectSchema = new Schema({
   name: {
     type: String,
     required: true,
+    trim: true,
     unique: true,
-    uniqueCaseInsensitive: true
   },
   symbol: {
     type: String,
-    unique: true,
-    uniqueCaseInsensitive: true
+    trim: true,
+    sparse: true,
+    uppercase: true
   },
   logoUrl: {
     type: String,
+    trim: true,
     required: true,
-  },
-  isERC20: {
-    type: Boolean,
-    default: false,
   }
 });
 
 ProjectSchema.plugin(mongooseAggregatePaginate);
-ProjectSchema.plugin(uniqueValidator);
 
 export default models.Project || model('Project', ProjectSchema)

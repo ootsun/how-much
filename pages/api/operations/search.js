@@ -18,14 +18,25 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
   //First index starts at 1
   const page = pageIndex + 1;
   await dbConnect();
-  const query = havingLastGasUsage ? {
-    lastGasUsages: {$exists: true, $ne: []}
-  } : {};
+  const query = {};
+  if(havingLastGasUsage) {
+    query['$and'] = [];
+    query['$and'].push({ $or: [
+      {lastGasUsages: {$exists: true, $ne: []}},
+      // Ethereum native operations like Ether transfer have no lastGasUsages and no contractAddress
+      {contractAddress: {$exists: false}},
+    ]
+    });
+  }
   if (keyword) {
+    query['$and'] = query['$and'] || [];
     const regex = {$regex: keyword.trim(), $options: 'i'};
-    query['$or'] = [
+    query['$and'].push({'$or': [
       {
         'project.name': regex
+      },
+      {
+        version: regex
       },
       {
         functionName: regex
@@ -33,7 +44,7 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
       {
         contractAddress: regex
       },
-    ];
+    ]});
   }
   const aggregate = Operation.aggregate([
     {
@@ -62,7 +73,7 @@ export async function search(pageIndex, keyword, havingLastGasUsage) {
     }
   ])
   const options = {
-    sort: {'project.name': 1},
+    sort: {'project.name': 1, version: 1, functionName: 1},
     page,
     limit: 10,
   };

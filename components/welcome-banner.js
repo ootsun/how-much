@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import Image from "next/image.js";
 
 export default function WelcomeBanner() {
 
@@ -20,10 +21,18 @@ export default function WelcomeBanner() {
   return (
     <div
       className={`${show ? '' : 'hidden'} welcome-banner-wrapper bg-white shadow-xl w-max max-w-full fixed z-10 bottom-10 left-1/2 -translate-x-1/2 px-2 py-3 rounded-lg border dark:bg-gray-800`}>
-      <p className="mr-10">Hi <span
+      <p className="mr-10">Hi&nbsp;<span
         className="text-primary font-bold">{process.env.NEXT_PUBLIC_WELCOME_BANNER_TARGET}</span>!
-        &nbsp;Be Aware that this tool is still in development. There are tons of bugs to fix and lots of functionalities
-        are missing. But it should give you an idea of what it will become :)
+        &nbsp;Be aware, as this tool is very recent, it may still have bugs. Please report them on Github! An operation is missing? Reach out! :)
+        <a href="https://github.com/ootsun/how-much" target="_blank" rel="noreferrer" className="ml-2 align-bottom">
+          <Image
+            src="/github.svg"
+            alt="Github"
+            className="inline"
+            width={24}
+            height={24}
+          />
+        </a>
       </p>
       <button type="button"
               className="m-2 fixed right-0 top-0 bg-gray-100 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"

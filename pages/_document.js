@@ -11,7 +11,7 @@ export default class MyDocument extends NextDocument {
         <Head>
           <meta charSet="utf-8"/>
           <meta name="robots" content="follow, index"/>
-          <meta name="description" content="Add transactions to your shopping cart to start visualizing your transaction workflow"/>
+          <meta name="description" content="Add operations to your shopping cart to start estimating your operation workflow"/>
           <link rel="preconnect" href="https://fonts.googleapis.com"/>
           <link rel="preconnect" href="https://fonts.gstatic.com"/>
           <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&family=Lobster&display=swap"

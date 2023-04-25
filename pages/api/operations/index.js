@@ -44,4 +44,4 @@ async function create(req) {
   return operation;
 }
 
-export default initApiRoute({handle: findAll}, {handle: create, checkCanEdit: true}, null, null);
+export default initApiRoute({handle: findAll, checkCanEdit: true}, {handle: create, checkCanEdit: true}, null, null);

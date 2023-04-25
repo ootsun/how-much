@@ -63,7 +63,7 @@ export function Table({
   return (
     <div className="overflow-x-auto">
       <div className="inline-block min-w-full align-middle dark:bg-gray-800">
-        <div className="mb-4">
+        <div className="mb-1">
           <GlobalFilter searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria}
                         placeholder={filterPlaceholder}/>
         </div>

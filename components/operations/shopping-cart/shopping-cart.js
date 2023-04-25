@@ -20,7 +20,6 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
   const currentEtherPrice = currentPrices?.etherPrice;
 
   useEffect(() => {
-    console.log(selectedOperations)
     if (lastSelected) {
       const updated = [...selectedOperations, lastSelected];
       setSelectedOperations(updated);

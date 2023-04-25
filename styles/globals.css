@@ -108,7 +108,8 @@
   }
 
   .price-header-value {
-    @apply border-white sm:border-l sm:ml-1 bg-white rounded px-1 dark:bg-secondary-d dark:text-white dark:border-none
+    @apply border-white sm:border-l sm:ml-1 bg-white rounded px-1 block text-center w-auto
+    dark:bg-secondary-d dark:text-white dark:border-none
   }
 
   .information-circle {

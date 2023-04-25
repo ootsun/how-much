@@ -12,6 +12,7 @@ function MyApp({Component, pageProps}) {
   const [canEdit, setCanEdit] = useState(false);
   const [currentPrices, setCurrentPrices] = useState(null);
   const [blockCountdown, setBlockCountdown] = useState(0);
+  const [pageIsVisible, setPageIsVisible] = useState(true);
 
   useEffect(() => {
     import('flowbite');
@@ -36,19 +37,27 @@ function MyApp({Component, pageProps}) {
     }
 
     const intervalId = initCountdown();
+
+    document.addEventListener("visibilitychange", () => {
+      setPageIsVisible(!document.hidden);
+    });
     return () => clearInterval(intervalId)
   }, []);
 
   useEffect(() => {
     const refreshPrices = async () => {
-      try {
-        const res = await fetch('/api/ethereum/prices');
-        if (res.ok) {
-          const data = await res.json();
-          setCurrentPrices(data);
+      if(pageIsVisible) {
+        try {
+          const res = await fetch('/api/ethereum/prices');
+          if (res.ok) {
+            const data = await res.json();
+            setCurrentPrices(data);
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
+        console.log('Page is not visible, not refreshing prices.')
       }
     }
 

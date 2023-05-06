@@ -60,7 +60,6 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
           }
         }
         setSelectedOperations(savedOps);
-        console.log(selectedOperations)
       } catch (e) {
         console.error('Error while retrieving an operation based on shopping cart local storage :', e);
       }
@@ -76,7 +75,7 @@ export function ShoppingCart({lastSelected, setLastSelected, setCartIsEmpty}) {
   }
 
   async function refreshShoppingCartSums(operations = selectedOperations) {
-    if (!operations) {
+    if (selectedOperations?.length === 0) {
       await retrieveFromLocalStorage();
     }
     if (currentPrices && operations?.length > 0) {
